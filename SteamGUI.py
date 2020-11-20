@@ -15,7 +15,7 @@ class SteamGUI:
         self.afsluitButton = Button(text="Afsluiten", command=self.quit,
                                     background="#5a565a", foreground="white", font=groot_font)
         self.afsluitButton.pack(side=BOTTOM, pady=5)
-        #self.display_naam("test")
+        self.display_naam("test")
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
 
@@ -28,8 +28,8 @@ class SteamGUI:
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
         with open('finalAIteam1.txt') as json_file:
             data = json.load(json_file)
-            for p in data:
-                self.naamframe["text"] = p["name"]
+            for line in data:
+                self.naamframe["text"] = line["name"]
                 return
 
     def sorteer_data(self, data):
