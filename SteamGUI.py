@@ -24,7 +24,7 @@ class SteamGUI:
         self.root.destroy()
         return
 
-    def display_naam(self, naam):
+    def display_naam(self):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
         with open('finalAIteam1.txt') as json_file:
             data = json.load(json_file)
