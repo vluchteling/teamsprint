@@ -15,7 +15,7 @@ class SteamGUI:
         self.afsluitButton = Button(text="Afsluiten", command=self.quit,
                                     background="#5a565a", foreground="white", font=groot_font)
         self.afsluitButton.pack(side=BOTTOM, pady=5)
-        self.display_naam("test")
+        self.display_naam()
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
 
