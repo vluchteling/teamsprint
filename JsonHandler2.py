@@ -4,7 +4,11 @@ with urllib.request.urlopen("https://raw.githubusercontent.com/tijmenjoppe/Analy
 file_name = 'finalAIteam1.txt'
 f = open(file_name, 'w')
 # open file in append mode
+#text = "["
+text= ""
 for i in data:
-    text = str(i) + "\n"
-    f.write(text.replace("'", '"'))
+    text += f"{i},\n"
+
+#text += "]"
+json.dump(data, f)
 f.close()
