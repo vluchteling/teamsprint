@@ -17,12 +17,12 @@ github: https://github.com/tijmenjoppe/AnalyticalSkills-student/tree/master/proj
  
 auteurs SG28 team B:
 
-1789397: F. Schaaf (username)
+1789397: F. Schaaf, BIM (username)
 
-1780887: M. Kuijf (username)
+1780887: M. Kuijf, SD (username)
 
-1789777: A. van Schaick Zillesen (Alexandervsz)
+1789777: A.N. van Schaick Zillesen, AI (Alexandervsz)
 
-1776703: E. J. Kayadibi (username)
+1776703: E. J. Kayadibi, TI (username)
 
-1783113 :A. Yusofi (username)
+1783113 :A. Yusofi, CSC (username)
