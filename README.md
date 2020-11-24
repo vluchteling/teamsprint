@@ -8,12 +8,18 @@ Je kunt de Python-bestanden (.py) op je eigen computer krijgen door ze te downlo
 Allereerst moet het programma ‘JsonHandler2.py’ worden gestart. 
 Dit programma haalt de spelgegevens op van github, en slaat ze op in een JSON file. Als dit programma klaar is kan het volgende programma genaamd ‘SteamGUI.py’ worden gestart. Dit programma toont de GUI, en het eerst spel uit de JSON file.
 Bij onduidelijkheden zijn wij te bereiken via het email adres: a-vl@outlook.com.
+
  
 Bronnen:
+
 Google: https://www.google.nl/ 
+
 canvas: https://canvas.hu.nl/courses/16189/assignments/113382?module_item_id=447696
+
 pycham: https://www.jetbrains.com/pycharm/
+
 github: https://github.com/tijmenjoppe/AnalyticalSkills-student/tree/master/project/data
+
  
 auteurs SG28 team B:
 
