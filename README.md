@@ -2,8 +2,11 @@
 
 
 Deze repository bevat de bestanden die gebruikt worden voor het project steam sprint 1 van de Hogeschool Utrecht. 
+
 Het doel van het project steam is om een grafische weergave te creëren die inzicht geeft in het gaming gedrag van jouw vrienden op steam, ondersteund door een netwerk waarbij 	gebruik wordt gemaakt van een Raspberry Pi.
-Je kunt de Python-bestanden (.py) op je eigen computer krijgen door ze te downloaden of te kopiëren en te plakken in uw bestand. Om de Gui te zien moet eerst het programma ‘JsonHandler2.py’ worden gestart. Dit programma haalt de gegevens van github die later te zien zijn op de Gui. Als dit programma klaar is kan het volgende programma genaamd ‘SteamGUI.py’ worden gestart. Dit programma zorgt ervoor dat de Gui te zien is.
+Je kunt de Python-bestanden (.py) op je eigen computer krijgen door ze te downloaden of te kopiëren en te plakken in uw bestand. 
+Om de Gui te zien moet eerst het programma ‘JsonHandler2.py’ worden gestart. 
+Dit programma haalt de gegevens van github die later te zien zijn op de Gui. Als dit programma klaar is kan het volgende programma genaamd ‘SteamGUI.py’ worden gestart. Dit programma zorgt ervoor dat de Gui te zien is.
 Bij onduidelijkheden kunt u ons bereiken via de mail op a-vl@outlook.com.
  
 Bronnen:
