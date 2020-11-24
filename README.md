@@ -16,8 +16,13 @@ pycham: https://www.jetbrains.com/pycharm/
 github: https://github.com/tijmenjoppe/AnalyticalSkills-student/tree/master/project/data
  
 auteurs SG28 team B:
+
 1789397: F. Schaaf (username)
+
 1780887: M. Kuijf (username)
-1789777: A. van Schaick Zillesen (username)
+
+1789777: A. van Schaick Zillesen (Alexandervsz)
+
 1776703: E. J. Kayadibi (username)
+
 1783113 :A. Yusofi (username)
