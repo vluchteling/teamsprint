@@ -1,4 +1,4 @@
-<t><b>Basisapplicatie met data</t></b>
+<t><b>Sprint 1- project Steam</t></b>
 
 
 Deze repository bevat de bestanden die gebruikt worden voor het project steam sprint 1 van de Hogeschool Utrecht. 
