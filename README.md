@@ -1,4 +1,4 @@
-<title><b>Sprint 1- project Steam</title></b>
+<h1>Sprint 1- project Steam</h1>
 
 
 Deze repository bevat de bestanden die gebruikt worden voor het project steam sprint 1 van de Hogeschool Utrecht. </br>
