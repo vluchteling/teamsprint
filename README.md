@@ -15,7 +15,7 @@ canvas: https://canvas.hu.nl/courses/16189/assignments/113382?module_item_id=447
 pycham: https://www.jetbrains.com/pycharm/</br>
 github: https://github.com/tijmenjoppe/AnalyticalSkills-student/tree/master/project/data</br>
  
-<b>auteurs SG28 team B:</b></br>
+<b>Auteurs SG28 team B:</b></br>
 1789397: F. Schaaf, BIM (username)</br>
 1780887: M. Kuijf, SD (username)</br>
 1789777: A.N. van Schaick Zillesen, AI (Alexandervsz)</br>
