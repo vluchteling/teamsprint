@@ -7,7 +7,7 @@ resp = requests.get(url)
 resp_parsed = re.sub(r"^jsonp\d+\(|\)\s+$", "", resp.text)
 data = json.loads(resp_parsed)
 file_name = 'finalAIteam1.txt'
-f = open(file_name, 'w')
+f = open(file_name, 'a')
 # open file in append mode
 for i in data:
     text = str(i) + "\n"

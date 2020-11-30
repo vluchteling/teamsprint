@@ -6,7 +6,7 @@ import json
 class SteamGUI:
     def __init__(self, parent):
         groot_font = Font(size="30")
-        #De GUI code
+        # De GUI code
         self.root = parent
         self.root.attributes("-fullscreen", True)
         self.root.configure(bg="#2f2c2f")

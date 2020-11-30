@@ -4,6 +4,6 @@ with urllib.request.urlopen("https://raw.githubusercontent.com/tijmenjoppe/Analy
     data = json.loads(url.read().decode())
 file_name = 'finalAIteam1.txt'
 f = open(file_name, 'w')
-# open file in append mode
+# open file in write mode
 json.dump(data, f)
 f.close()
