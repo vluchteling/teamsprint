@@ -28,9 +28,9 @@ class SteamGUI:
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
         with open('finalAIteam1.txt') as json_file:
             data = json.load(json_file)
-            for x in data:
-                self.naamframe["text"] = x["name"]
-                return
+
+            self.naamframe["text"] = data["response"]["games"][0]["name"]
+
 
     def sorteer_data(self, data):
         """ Deze funtie sorteert de ingevoerde data."""
