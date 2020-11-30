@@ -20,4 +20,4 @@ github: https://github.com/tijmenjoppe/AnalyticalSkills-student/tree/master/proj
 1780887: M. Kuijf, SD (Maartenk1)</br>
 1789777: A.N. van Schaick Zillesen, AI (Alexandervsz)</br>
 1776703: E. J. Kayadibi, TI (username)</br>
-1783113 :A. Yusofi, CSC (username)</br>
+1783113: A. Yusofi, CSC (username)</br>
