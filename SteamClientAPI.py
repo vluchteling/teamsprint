@@ -7,7 +7,7 @@ from steam.enums import EPersonaState
 
 class SteamClientAPI:
 
-    def __init__(self):
+    def __init__(self, functie, status=None):
         self.credentials = {
             'username': input("Steam user: "),
             'password': getpass("Password: "),
@@ -30,7 +30,10 @@ class SteamClientAPI:
 
         @self.client.on('logged_on')
         def handle_after_logon():
-            self.log_in()
+            if functie == "logon":
+                self.log_in()
+            if functie == "change_status" and status is not None:
+                self.change_status(status)
 
         try:
             result = self.client.cli_login(**self.credentials)
@@ -53,7 +56,10 @@ class SteamClientAPI:
         print("Last logon:", self.client.user.last_logon)
         print("Last logoff:", self.client.user.last_logoff)
         print("Press ^C to exit")
-        self.client.change_status(persona_state=EPersonaState.Away)  # hiermee zet je je status op afwezig.
+
+    def change_status(self, status):
+        self.client.change_status(persona_state=status)
+        self.log_in()
 
 
-SteamClientAPI()
+SteamClientAPI("change_status", EPersonaState.Away)  # hiermee zet je je status op afwezig.
