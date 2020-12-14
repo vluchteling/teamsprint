@@ -15,12 +15,18 @@ class SteamClientAPI:
         }
 
         self.client = SteamClient()
+        self.client.set_credential_location(".")  # where to store sentry files and other stuff
 
         @self.client.on('error')
         def error(result):
 
             if result != EResult.AccountLogonDenied:
                 print("Logon result:", repr(result))
+
+        @self.client.on("channel_secured")
+        def send_login():
+            if self.client.relogin_available:
+                self.client.relogin()
 
         @self.client.on('logged_on')
         def handle_after_logon():
