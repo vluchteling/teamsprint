@@ -13,8 +13,8 @@ LOGON_DETAILS = {
 client = SteamClient()
 
 
-@client.on('error')
-def error(result):
+#@client.on('error')
+#def error(result):
     #print("Logon result:", repr(result))
 
 
