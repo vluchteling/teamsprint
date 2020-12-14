@@ -1,5 +1,6 @@
 from __future__ import print_function
 from steam.client import SteamClient
+from getpass import getpass
 from steam.enums import EResult
 
 print("One-off login recipe")
@@ -7,7 +8,7 @@ print("-" * 20)
 
 LOGON_DETAILS = {
     'username': input("Steam user: "),
-    'password': input("Password: "),
+    'password': getpass("password please: "),
 }
 
 client = SteamClient()
