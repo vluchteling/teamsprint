@@ -2,6 +2,7 @@ from __future__ import print_function
 from steam.client import SteamClient
 from getpass import getpass
 from steam.enums import EResult
+from steam.enums import EPersonaState
 
 
 class SteamClientAPI:
@@ -10,7 +11,7 @@ class SteamClientAPI:
         self.credentials = {
             'username': input("Steam user: "),
             'password': getpass("Password: "),
-            # VERGEET IN CONFIGURATION "emulate terminal in output console" aan te doen!
+            # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
 
         self.client = SteamClient()
@@ -33,6 +34,7 @@ class SteamClientAPI:
                 raise SystemExit
 
             self.client.run_forever()
+
         except KeyboardInterrupt:
             if self.client.connected:
                 print("Logout")
@@ -45,6 +47,7 @@ class SteamClientAPI:
         print("Last logon:", self.client.user.last_logon)
         print("Last logoff:", self.client.user.last_logoff)
         print("Press ^C to exit")
+        self.client.change_status(persona_state=EPersonaState.Away)  # hiermee zet je je status op afwezig.
 
 
 SteamClientAPI()
