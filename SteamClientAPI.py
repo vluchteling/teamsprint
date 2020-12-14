@@ -13,33 +13,38 @@ class SteamClientAPI:
             # VERGEET IN CONFIGURATION "emulate terminal in output console" aan te doen!
         }
 
-        client = SteamClient()
+        self.client = SteamClient()
 
-        # @client.on('error')
-        # def error(result):
-        # print("Logon result:", repr(result))
+        @self.client.on('error')
+        def error(result):
 
-        @client.on("logged_on")
+            if result != EResult.AccountLogonDenied:
+                print("Logon result:", repr(result))
+
+        @self.client.on('logged_on')
         def handle_after_logon():
-            print("-" * 20)
-            print("Logged on as:", client.user.name)
-            print("Community profile:", client.steam_id.community_url)
-            print("Last logon:", client.user.last_logon)
-            print("Last logoff:", client.user.last_logoff)
-            print("Press ^C to exit")
+            self.log_in()
 
         try:
-            result = client.cli_login(**self.credentials)
+            result = self.client.cli_login(**self.credentials)
 
             if result != EResult.OK:
                 print("Failed to login: %s" % repr(result))
                 raise SystemExit
 
-            client.run_forever()
+            self.client.run_forever()
         except KeyboardInterrupt:
-            if client.connected:
+            if self.client.connected:
                 print("Logout")
-                client.logout()
+                self.client.logout()
+
+    def log_in(self):
+        print("-" * 20)
+        print("Logged on as:", self.client.user.name)
+        print("Community profile:", self.client.steam_id.community_url)
+        print("Last logon:", self.client.user.last_logon)
+        print("Last logoff:", self.client.user.last_logoff)
+        print("Press ^C to exit")
 
 
 SteamClientAPI()
