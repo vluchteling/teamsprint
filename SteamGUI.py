@@ -26,7 +26,10 @@ class SteamGUI:
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
         data = SteamWebAPI().get_steam_games_from_user(steamid)
-        self.naamframe["text"] = data["response"]["games"][0]["name"]
+        try:
+            self.naamframe["text"] = data["response"]["games"][0]["name"]
+        except KeyError:
+            self.naamframe["text"] = "Deze gebruiker heeft geen games."
 
     def sorteer_data(self, data):
         """ Deze funtie sorteert de ingevoerde data."""
