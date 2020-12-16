@@ -5,7 +5,6 @@ from SteamWebAPI import SteamWebAPI
 
 class SteamGUI:
     def __init__(self):
-
         # De GUI code
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
@@ -24,7 +23,6 @@ class SteamGUI:
         self.root.destroy()
         raise SystemExit
 
-
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
         data = SteamWebAPI().get_steam_games_from_user(steamid)
@@ -36,5 +34,3 @@ class SteamGUI:
 
     def start(self):
         self.root.mainloop()
-
-

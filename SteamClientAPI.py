@@ -70,4 +70,4 @@ class SteamClientAPI:
 
 
 
-SteamClientAPI("gui")  # hiermee zet je je status op afwezig. EPersonaState.Away
+SteamClientAPI("gui")  # hiermee zet je je status op afwezig: EPersonaState.Away
