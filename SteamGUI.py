@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter.font import Font
-import json
+from SteamWebAPI import SteamWebAPI
 
 
 class SteamGUI:
@@ -15,7 +15,7 @@ class SteamGUI:
         self.afsluitButton = Button(text="Afsluiten", command=self.quit,
                                     background="#5a565a", foreground="white", font=groot_font)
         self.afsluitButton.pack(side=BOTTOM, pady=5)
-        self.display_naam()
+        self.display_owned_games()
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
 
@@ -26,11 +26,9 @@ class SteamGUI:
 
     def display_owned_games(self):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
-        with open('finalAIteam1.txt') as json_file:
-            data = json.load(json_file)
-
-            self.naamframe["text"] = data["response"]["games"][0]["name"]
-
+        steamid = 76561197995118880
+        data = SteamWebAPI().get_steam_games_from_user(steamid)
+        self.naamframe["text"] = data["response"]["games"][0]["name"]
 
     def sorteer_data(self, data):
         """ Deze funtie sorteert de ingevoerde data."""
