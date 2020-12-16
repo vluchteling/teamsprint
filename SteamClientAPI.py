@@ -64,7 +64,8 @@ class SteamClientAPI:
 
     def start_gui(self):
         steamgui = SteamGUI()
-        steamgui.display_owned_games()
+        steamid = self.client.steam_id.as_64
+        steamgui.display_owned_games(steamid)
         steamgui.start()
 
 
