@@ -3,6 +3,7 @@ from steam.client import SteamClient
 from getpass import getpass
 from steam.enums import EResult
 from steam.enums import EPersonaState
+from SteamGUI import SteamGUI
 
 
 class SteamClientAPI:
@@ -19,9 +20,7 @@ class SteamClientAPI:
 
         @self.client.on('error')
         def error(result):
-
-            if result != EResult.AccountLogonDenied:
-                print("Logon result:", repr(result))
+            print("Logon result:", repr(result))
 
         @self.client.on("channel_secured")
         def send_login():
@@ -34,6 +33,8 @@ class SteamClientAPI:
                 self.log_in()
             if functie == "change_status" and status is not None:
                 self.change_status(status)
+            if functie == "gui":
+                self.start_gui()
 
         try:
             result = self.client.cli_login(**self.credentials)
@@ -61,5 +62,11 @@ class SteamClientAPI:
         self.client.change_status(persona_state=status)
         self.log_in()
 
+    def start_gui(self):
+        steamgui = SteamGUI()
+        steamgui.display_owned_games()
+        steamgui.start()
 
-SteamClientAPI("change_status", EPersonaState.Away)  # hiermee zet je je status op afwezig.
+
+
+SteamClientAPI("gui")  # hiermee zet je je status op afwezig. EPersonaState.Away

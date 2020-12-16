@@ -4,12 +4,13 @@ from SteamWebAPI import SteamWebAPI
 
 
 class SteamGUI:
-    def __init__(self, parent):
-        groot_font = Font(size="30")
+    def __init__(self):
+
         # De GUI code
-        self.root = parent
+        self.root = Tk()
         self.root.attributes("-fullscreen", True)
         self.root.configure(bg="#2f2c2f")
+        groot_font = Font(size="30")
         self.titelframe = Label(font=groot_font, background="#5a565a", text="Titel van het eerste spel:")
         self.naamframe = Label(font=groot_font, background="#5a565a")
         self.afsluitButton = Button(text="Afsluiten", command=self.quit,
@@ -34,7 +35,7 @@ class SteamGUI:
         """ Deze funtie sorteert de ingevoerde data."""
         return sorted(data)
 
+    def start(self):
+        self.root.mainloop()
 
-root = Tk()
-myapp = SteamGUI(root)
-root.mainloop()
+
