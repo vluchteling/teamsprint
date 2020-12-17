@@ -69,5 +69,4 @@ class SteamClientAPI:
         steamgui.start()
 
 
-
 SteamClientAPI("gui")  # hiermee zet je je status op afwezig: EPersonaState.Away
