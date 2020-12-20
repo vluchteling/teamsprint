@@ -31,7 +31,7 @@ def uitklokje(shift_clock_pin, latch_clock_pin, data_pin, delay):
 
         GPIO.output(latch_clock_pin, 0)
         GPIO.output(latch_clock_pin, 1)
-        time.sleep(1)
+        time.sleep(delay)
     stopje()
 
 
