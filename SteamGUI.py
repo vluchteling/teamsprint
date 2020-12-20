@@ -5,11 +5,12 @@ from SteamWebAPI import SteamWebAPI
 
 class SteamGUI:
     def __init__(self):
+
         # De GUI code
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
-        self.root.configure(bg="#2f2c2f")
         groot_font = Font(size="30")
+        self.root.configure(bg="#2f2c2f")
         self.titelframe = Label(font=groot_font, background="#5a565a", text="Titel van het eerste spel:")
         self.naamframe = Label(font=groot_font, background="#5a565a")
         self.afsluitButton = Button(text="Afsluiten", command=self.quit,
@@ -25,6 +26,7 @@ class SteamGUI:
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
+
         data = SteamWebAPI().get_steam_games_from_user(steamid)
         try:
             self.naamframe["text"] = data["response"]["games"][0]["name"]

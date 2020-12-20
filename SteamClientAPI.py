@@ -9,9 +9,14 @@ from SteamGUI import SteamGUI
 class SteamClientAPI:
 
     def __init__(self, functie, status=None):
-        self.credentials = {
+        """self.credentials = {
             'username': input("Steam user: "),
             'password': getpass("Password: "),
+            # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
+        }"""
+        self.credentials = {
+            'username': "steamprojecthu",
+            'password': "Roodbesje1",
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
 
@@ -20,7 +25,8 @@ class SteamClientAPI:
 
         @self.client.on('error')
         def error(result):
-            print("Logon result:", repr(result))
+            # print("Logon result:", repr(result))
+            pass
 
         @self.client.on("channel_secured")
         def send_login():
