@@ -9,7 +9,7 @@ class SteamGUI:
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')
 
-        # De GUI code
+        # De GUIcode
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
         groot_font = Font(size="30")
