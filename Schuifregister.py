@@ -54,9 +54,8 @@ def hc595(shift_clock_pin, latch_clock_pin, data_pin, delay):
 
 delay = 1
 
-test = True
-while test:
-    test = False
-    hc595(shift_clock_pin, latch_clock_pin, data_pin, delay)
 
-    uitklokje(shift_clock_pin, latch_clock_pin, data_pin, delay)
+
+hc595(shift_clock_pin, latch_clock_pin, data_pin, delay)
+
+uitklokje(shift_clock_pin, latch_clock_pin, data_pin, delay)

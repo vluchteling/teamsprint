@@ -26,9 +26,9 @@ for i in range(0, 50, 1):
 
 player = input("welke speller nr kiest u :")
 
-player0 = "ofline"
+player0 = "offline"
 player1 = 'online'
-player2 = 'ofline'
+player2 = 'offline'
 player3 = "online"
 
 steam_list = [player0, player1, player2, player3]
@@ -39,6 +39,6 @@ GPIO.setup(servo, GPIO.OUT)
 if player == 'online':
     for i in range(50, 100, 1):
         servo_pulse(servo, i)
-elif player == 'ofline':
+elif player == 'offline':
     for i in range(50, 0, -1):
         servo_pulse(servo, i)

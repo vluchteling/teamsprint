@@ -16,7 +16,7 @@ GPIO.setup(led, GPIO.OUT)
 GPIO.setup(knopuno, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 while True:
-    if (GPIO.input(knopuno)):
+    if GPIO.input(knopuno):
         GPIO.output(led, GPIO.HIGH)
         jargo()
         time.sleep(0.5)
