@@ -7,9 +7,9 @@ from SteamWebAPI import SteamWebAPI
 class SteamGUI:
     def __init__(self):
         if os.environ.get('DISPLAY', '') == '':
-            os.environ.__setitem__('DISPLAY', ':0.0')
+            os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
-        # De GUIcode
+        # De GUI code
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
         groot_font = Font(size="30")
