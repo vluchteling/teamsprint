@@ -1,3 +1,4 @@
+import os
 from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
@@ -5,6 +6,8 @@ from SteamWebAPI import SteamWebAPI
 
 class SteamGUI:
     def __init__(self):
+        if os.environ.get('DISPLAY', '') == '':
+            os.environ.__setitem__('DISPLAY', ':0.0')
 
         # De GUI code
         self.root = Tk()
