@@ -15,8 +15,6 @@ class SteamClientAPI:
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }"""
         self.credentials = {
-            'username': "steamprojecthu",
-            'password': "Roodbesje1",
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
 

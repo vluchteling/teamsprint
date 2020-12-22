@@ -2,6 +2,7 @@ import os
 from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
+from Button import Button
 
 
 class SteamGUI:
@@ -12,7 +13,7 @@ class SteamGUI:
         # De GUI code
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
-        groot_font = Font(size="30")
+        groot_font = Font(size=30)
         self.root.configure(bg="#2f2c2f")
         self.titelframe = Label(font=groot_font, background="#5a565a", text="Titel van het eerste spel:")
         self.naamframe = Label(font=groot_font, background="#5a565a")
@@ -21,6 +22,8 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
+        self.Button = Button()
+
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
