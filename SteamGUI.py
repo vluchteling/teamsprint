@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
 from LoginButton import LoginButton
+from SteamClientAPI import SteamClientAPI
 
 
 class SteamGUI:
@@ -22,7 +23,10 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
+        #self.client = SteamClientAPI()
         self.Button = LoginButton()
+        #self.client.start()
+        self.start()
 
 
     def quit(self):
@@ -45,3 +49,5 @@ class SteamGUI:
 
     def start(self):
         self.root.mainloop()
+
+SteamGUI()

@@ -30,6 +30,7 @@ def speaker(gpio20, gpio21):
     afstand = (Time * 34300) / 2
     if afstand <= 60 or afstand >= 250:
         print(f"{str(afstand)}aanwezig")
+        # hiermee zet je je status op afwezig: EPersonaState.Away
     else:
         print(f"{str(afstand)}afwezig")
     # return f'{str(afstand)} druk vingers tegen speaker'

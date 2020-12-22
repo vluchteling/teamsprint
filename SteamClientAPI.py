@@ -3,23 +3,37 @@ from steam.client import SteamClient
 from getpass import getpass
 from steam.enums import EResult
 from steam.enums import EPersonaState
-from SteamGUI import SteamGUI
+
 
 
 class SteamClientAPI:
 
-    def __init__(self, functie, status=None):
+    def __init__(self):
         """self.credentials = {
             'username': input("Steam user: "),
             'password': getpass("Password: "),
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }"""
         self.credentials = {
+            #voer hier de inloggegevens in
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
 
         self.client = SteamClient()
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
+        try:
+            result = self.client.cli_login(**self.credentials)
+
+            if result != EResult.OK:
+                print("Failed to login: %s" % repr(result))
+                raise SystemExit
+
+
+
+        except KeyboardInterrupt:
+            if self.client.connected:
+                print("Logout")
+                self.client.logout()
 
         @self.client.on('error')
         def error(result):
@@ -31,28 +45,11 @@ class SteamClientAPI:
             if self.client.relogin_available:
                 self.client.relogin()
 
-        @self.client.on('logged_on')
-        def handle_after_logon():
-            if functie == "logon":
-                self.log_in()
-            if functie == "change_status" and status is not None:
-                self.change_status(status)
-            if functie == "gui":
-                self.start_gui()
+        """"@self.client.on('logged_on')
+        def handle_after_logon():"""
 
-        try:
-            result = self.client.cli_login(**self.credentials)
 
-            if result != EResult.OK:
-                print("Failed to login: %s" % repr(result))
-                raise SystemExit
 
-            self.client.run_forever()
-
-        except KeyboardInterrupt:
-            if self.client.connected:
-                print("Logout")
-                self.client.logout()
 
     def log_in(self):
         print("-" * 20)
@@ -64,13 +61,10 @@ class SteamClientAPI:
 
     def change_status(self, status):
         self.client.change_status(persona_state=status)
-        self.log_in()
 
-    def start_gui(self):
-        steamgui = SteamGUI()
-        steamid = self.client.steam_id.as_64
-        steamgui.display_owned_games(steamid)
-        steamgui.start()
+    def log_out(self):
+        self.client.logout()
+        return
 
 
-SteamClientAPI("gui")  # hiermee zet je je status op afwezig: EPersonaState.Away
+
