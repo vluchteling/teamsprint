@@ -23,6 +23,7 @@ class LoginButton:
                 GPIO.output(self.led, GPIO.LOW)
                 self.loggedin = False
                 self.client.log_out()
+                self.client = None
                 self.SteamGUI.set_client(None)
 
             else:
