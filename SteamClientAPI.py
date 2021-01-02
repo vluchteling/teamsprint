@@ -5,7 +5,6 @@ from steam.enums import EResult
 from steam.enums import EPersonaState
 
 
-
 class SteamClientAPI:
 
     def __init__(self):
@@ -15,7 +14,7 @@ class SteamClientAPI:
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }"""
         self.credentials = {
-            #voer hier de inloggegevens in
+            # voer hier de inloggegevens in
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
         self.client = SteamClient()
@@ -47,9 +46,6 @@ class SteamClientAPI:
         """"@self.client.on('logged_on')
         def handle_after_logon():"""
 
-
-
-
     def log_in(self):
         print("-" * 20)
         print("Logged on as:", self.client.user.name)
@@ -62,8 +58,5 @@ class SteamClientAPI:
         self.client.change_status(persona_state=status)
 
     def log_out(self):
-        self.client.logout()
-        return
-
-
-
+        if self.client.connected:
+            self.client.logout()
