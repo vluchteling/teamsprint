@@ -1,4 +1,6 @@
 from __future__ import print_function
+from gevent import monkey
+monkey.patch_all(thread=False)
 from steam.client import SteamClient
 from getpass import getpass
 from steam.enums import EResult
@@ -15,6 +17,7 @@ class SteamClientAPI:
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }"""
         self.credentials = {
+
             #voer hier de inloggegevens in
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
@@ -63,8 +66,8 @@ class SteamClientAPI:
         self.client.change_status(persona_state=status)
 
     def log_out(self):
-        self.client.logout()
-        return
+        if self.client.connected:
+            self.client.logout()
 
 
 
