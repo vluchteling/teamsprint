@@ -1,7 +1,4 @@
 from __future__ import print_function
-from gevent import monkey
-
-monkey.patch_all(thread=False)
 from steam.client import SteamClient
 from getpass import getpass
 from steam.enums import EResult

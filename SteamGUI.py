@@ -2,8 +2,9 @@ import os
 from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
-from LoginButton import LoginButton
-from SteamClientAPI import SteamClientAPI
+#from LoginButton import LoginButton -- deze zorgt dat servo niet werkt
+from Servo import Servo
+#from SteamClientAPI import SteamClientAPI -- deze zorgt dat servo niet werkt
 
 
 class SteamGUI:
@@ -24,7 +25,8 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
-        self.Button = LoginButton(self)
+        #self.Button = LoginButton(self)
+        self.Servo = Servo()
         self.start()
 
     def quit(self):
@@ -50,6 +52,8 @@ class SteamGUI:
 
     def set_client(self, client):
         self.client = client
+        if self.client is not None:
+            self.display_owned_games(self.client.steam_id.as_64)
 
 
 SteamGUI()
