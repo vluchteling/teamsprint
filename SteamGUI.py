@@ -27,6 +27,7 @@ class SteamGUI:
         self.naamframe.pack(side=TOP, pady=5)
         #self.Button = LoginButton(self)
         self.Servo = Servo()
+        self.Servo.start_spel()
         self.start()
 
     def quit(self):
