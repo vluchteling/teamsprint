@@ -25,6 +25,7 @@ class SteamGUI:
         self.naamframe.pack(side=TOP, pady=5)
         #self.client = SteamClientAPI()
         self.Button = LoginButton()
+
         #self.client.start()
         self.start()
 
