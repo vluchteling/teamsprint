@@ -8,6 +8,7 @@ from SteamClientAPI import SteamClientAPI
 
 class SteamGUI:
     def __init__(self):
+        self.client = None
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
@@ -23,11 +24,8 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
-        #self.client = SteamClientAPI()
-        self.Button = LoginButton()
-        #self.client.start()
+        self.Button = LoginButton(self)
         self.start()
-
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
@@ -49,5 +47,9 @@ class SteamGUI:
 
     def start(self):
         self.root.mainloop()
+
+    def set_client(self, client):
+        self.client = client
+
 
 SteamGUI()

@@ -1,11 +1,11 @@
 from __future__ import print_function
 from gevent import monkey
+
 monkey.patch_all(thread=False)
 from steam.client import SteamClient
 from getpass import getpass
 from steam.enums import EResult
 from steam.enums import EPersonaState
-
 
 
 class SteamClientAPI:
@@ -18,7 +18,7 @@ class SteamClientAPI:
         }"""
         self.credentials = {
 
-            #voer hier de inloggegevens in
+            # voer hier de inloggegevens in
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
 
@@ -51,9 +51,6 @@ class SteamClientAPI:
         """"@self.client.on('logged_on')
         def handle_after_logon():"""
 
-
-
-
     def log_in(self):
         print("-" * 20)
         print("Logged on as:", self.client.user.name)
@@ -68,6 +65,3 @@ class SteamClientAPI:
     def log_out(self):
         if self.client.connected:
             self.client.logout()
-
-
-
