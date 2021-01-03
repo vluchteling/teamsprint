@@ -2,9 +2,10 @@ import os
 from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
-#from LoginButton import LoginButton -- deze zorgt dat servo niet werkt
+from LoginButton import LoginButton
 from Servo import Servo
-#from SteamClientAPI import SteamClientAPI -- deze zorgt dat servo niet werkt
+from Neopixel import Neopixel
+from SteamClientAPI import SteamClientAPI
 
 
 class SteamGUI:
@@ -25,15 +26,25 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
-        #self.Button = LoginButton(self)
-        self.Servo = Servo()
-        self.Servo.start_spel()
+        self.servo()
+        self.Button = LoginButton(self)
+        #self.sr04 = Sr04()
+
+
         self.start()
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
         raise SystemExit
+
+    def servo(self):
+        servo = Servo()
+        servo.start_spel()
+
+    def speel_bericht(self):
+        neopixel = Neopixel()
+        neopixel.speel_berichtanimatie()
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""

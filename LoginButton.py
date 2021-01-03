@@ -1,3 +1,4 @@
+import time
 import RPi.GPIO as GPIO
 from SteamClientAPI import SteamClientAPI
 
@@ -25,10 +26,13 @@ class LoginButton:
                 self.client.log_out()
                 self.client = None
                 self.SteamGUI.set_client(None)
+                time.sleep(1)
 
             else:
                 print("u wordt ingelogd.")
                 GPIO.output(self.led, GPIO.HIGH)
                 self.loggedin = True
                 self.client = SteamClientAPI()
-                self.SteamGUI.set_client(self.client)
+                self.client.open_client()
+                self.SteamGUI.set_client(self.client.get_client())
+                time.sleep(1)

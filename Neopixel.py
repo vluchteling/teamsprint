@@ -59,7 +59,7 @@ class Neopixel:
                 result.append(off)
         return result
 
-    def speel_berichtanimatie(self, delay):
+    def speel_berichtanimatie(self, delay=0.3):
         blue = [8, 0, 0]
         green = [0, 255, 0]
         red = [0, 0, 255]
@@ -79,7 +79,3 @@ class Neopixel:
             time.sleep(delay)
         print("Bericht ontvangen ")
 
-
-neopixel = Neopixel()
-neopixel.speel_berichtanimatie(0.3)
-# walk( clock_pin, data_pin, 0.3 )

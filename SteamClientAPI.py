@@ -8,15 +8,19 @@ from steam.enums import EPersonaState
 class SteamClientAPI:
 
     def __init__(self):
-        """self.credentials = {
-            'username': input("Steam user: "),
-            'password': getpass("Password: "),
-            # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
-        }"""
         self.credentials = {
             # voer hier de inloggegevens in
             # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
         }
+        self.client = None
+
+    def open_client(self):
+        """self.credentials = {
+                    'username': input("Steam user: "),
+                    'password': getpass("Password: "),
+                    # VERGEET IN CONFIGURATION "emulate terminal in output console" NIET AAN TE DOEN!
+                }"""
+
         self.client = SteamClient()
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
         try:
@@ -60,3 +64,6 @@ class SteamClientAPI:
     def log_out(self):
         if self.client.connected:
             self.client.logout()
+
+    def get_client(self):
+        return self.client
