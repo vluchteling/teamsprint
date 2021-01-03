@@ -28,6 +28,7 @@ class SteamGUI:
         self.naamframe.pack(side=TOP, pady=5)
         self.servo()
         self.Button = LoginButton(self)
+        self.display_owned_games(None)
         #self.sr04 = Sr04()
 
 
@@ -48,6 +49,9 @@ class SteamGUI:
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
+        if steamid is None:
+            self.naamframe["text"] = "Uitgelogd."
+            return
 
         data = SteamWebAPI().get_steam_games_from_user(steamid)
         try:
@@ -66,6 +70,8 @@ class SteamGUI:
         self.client = client
         if self.client is not None:
             self.display_owned_games(self.client.steam_id.as_64)
+        else:
+            self.display_owned_games(None)
 
 
 SteamGUI()
