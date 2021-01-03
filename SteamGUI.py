@@ -28,7 +28,7 @@ class SteamGUI:
         self.naamframe.pack(side=TOP, pady=5)
         self.servo()
         self.Button = LoginButton(self)
-        self.display_owned_games(None)
+        self.display_owned_games(steamid=None)
         #self.sr04 = Sr04()
 
 
