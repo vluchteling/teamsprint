@@ -26,9 +26,9 @@ def check_status():
 
     StartTime = time.time()
     StopTime = time.time()
-    while GPIO.input(gpio21) == False:
+    while not GPIO.input(gpio21):
         StartTime = time.time()
-    while GPIO.input(gpio21) == True:
+    while GPIO.input(gpio21):
         StopTime = time.time()
     Time = StopTime - StartTime
     afstand = (Time * 34300) / 2

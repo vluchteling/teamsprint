@@ -3,14 +3,14 @@ from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
 from LoginButton import LoginButton
-from Servo import Servo
-from Neopixel import Neopixel
+#from Servo import Servo
+#from Neopixel import Neopixel
 from SteamClientAPI import SteamClientAPI
 
 
 class SteamGUI:
-    def __init__(self):
-        self.client = None
+    def __init__(self, client):
+        self.client = client
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
@@ -26,9 +26,9 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
-        self.servo()
-        self.Button = LoginButton(self)
-        self.display_owned_games(steamid=None)
+        #self.servo()
+        self.Button = LoginButton(self, self.client)
+        self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
         #self.sr04 = Sr04()
 
 
@@ -39,13 +39,13 @@ class SteamGUI:
         self.root.destroy()
         raise SystemExit
 
-    def servo(self):
+    """def servo(self):
         servo = Servo()
         servo.start_spel()
 
     def speel_bericht(self):
         neopixel = Neopixel()
-        neopixel.speel_berichtanimatie()
+        neopixel.speel_berichtanimatie()"""
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
@@ -73,5 +73,3 @@ class SteamGUI:
         else:
             self.display_owned_games(None)
 
-
-SteamGUI()
