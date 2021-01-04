@@ -74,7 +74,6 @@ class SteamClientAPI:
         @self.client.on('logged_on')
         def handle_after_logon():
             self.log_in()
-            print("kaas")
 
     def bevestig_2fa_code(self):
 
