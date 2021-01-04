@@ -1,6 +1,7 @@
 import time
 import RPi.GPIO as GPIO
 from SteamClientAPI import SteamClientAPI
+import atexit
 
 
 class LoginButton:
@@ -16,6 +17,7 @@ class LoginButton:
         GPIO.setup(self.led, GPIO.OUT)
         GPIO.setup(self.knopuno, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.knopuno, GPIO.RISING, callback=self.login_checker)
+        atexit.register(self.exit_handler)
 
     def login_checker(self, twentythree):
         print(twentythree)
@@ -37,3 +39,6 @@ class LoginButton:
                 self.client.open_client()
                 self.SteamGUI.set_client(self.client.get_client())
                 time.sleep(1)
+
+    def exit_handler(self):
+        GPIO.cleanup()

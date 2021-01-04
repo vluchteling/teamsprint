@@ -38,7 +38,6 @@ class SteamGUI:
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
-        GPIO.cleanup()
         raise SystemExit
 
     """def servo(self):
