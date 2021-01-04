@@ -21,7 +21,7 @@ class Beginscherm:
         self.password_entry = Entry(width=35)
         self.password_entry.configure(show="*")
         afsluitButton = Button(text="Afsluiten", command=self.quit,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
+                               background="#5a565a", foreground="white", font=self.groot_font)
         self.bevestigButton = Button(text="Bevestig", command=self.start_client,
                                      background="#5a565a", foreground="white", font=self.groot_font)
         afsluitButton.pack(side=BOTTOM, pady=5)
@@ -41,17 +41,21 @@ class Beginscherm:
         if self.password_entry.get().strip() != "" and self.user_entry.get().strip() != "":
             username = self.user_entry.get()
             password = self.password_entry.get()
-            self.root.destroy()
-            client = SteamClientAPI(username, password)
-            client.open_client()
-            SteamGUI(client)
 
+            client = SteamClientAPI(username, password)
+            result = client.open_client(root=self.root, beginscherm=self)
+
+            if result == "ok":
+                self.root.destroy()
+                self.open_GUI(client)
+            if result == "password":
+                self.user_label["text"] = "Wachtwoord verkeerd!\nusername:"
 
         else:
             self.user_label["text"] = "lege velden!\nusername:"
 
-
-
+    def open_GUI(self, client):
+        SteamGUI(client)
 
 
 Beginscherm()
