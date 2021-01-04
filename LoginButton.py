@@ -17,7 +17,7 @@ class LoginButton:
         GPIO.setup(self.led, GPIO.OUT)
         GPIO.setup(self.knopuno, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.add_event_detect(self.knopuno, GPIO.RISING, callback=self.login_checker)
-        atexit.register(self.exit_handler)
+        atexit.register(GPIO.cleanup)
 
     def login_checker(self, twentythree):
         print(twentythree)
@@ -26,7 +26,6 @@ class LoginButton:
                 print("u wordt uitgelogd.")
                 GPIO.output(self.led, GPIO.LOW)
                 self.loggedin = False
-                #self.client.log_out()
                 self.client = None
                 self.SteamGUI.set_client(None)
                 time.sleep(1)
@@ -40,5 +39,3 @@ class LoginButton:
                 self.SteamGUI.set_client(self.client.get_client())
                 time.sleep(1)
 
-    def exit_handler(self):
-        GPIO.cleanup()

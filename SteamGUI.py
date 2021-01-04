@@ -3,7 +3,8 @@ from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
 from LoginButton import LoginButton
-#from Servo import Servo
+from Servo import Servo
+from EchoSensor import Sr04
 #from Neopixel import Neopixel
 
 
@@ -38,11 +39,11 @@ class SteamGUI:
         self.root.destroy()
         raise SystemExit
 
-    """def servo(self):
+    def servo(self):
         servo = Servo()
         servo.start_spel()
 
-    def speel_bericht(self):
+    """def speel_bericht(self):
         neopixel = Neopixel()
         neopixel.speel_berichtanimatie()"""
 

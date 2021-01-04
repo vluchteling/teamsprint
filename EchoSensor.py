@@ -1,34 +1,38 @@
 import RPi.GPIO as GPIO
 import time
 import threading
+import atexit
 
 
 class Sr04(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
+        atexit.register(GPIO.cleanup)
 
     def run(self):
         check_status()
+
+
 
 
 def check_status():
     GPIO.setmode(GPIO.BCM)
     GPIO.setwarnings(0)
 
-    gpio20 = 20
-    gpio21 = 21
-    GPIO.setup(gpio20, GPIO.OUT)
-    GPIO.setup(gpio21, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.output(gpio20, True)
+    trig = 20
+    echo = 21
+    GPIO.setup(trig, GPIO.OUT)
+    GPIO.setup(echo, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.output(trig, True)
     time.sleep(0.00001)
-    GPIO.output(gpio20, False)
+    GPIO.output(trig, False)
 
     StartTime = time.time()
     StopTime = time.time()
-    while not GPIO.input(gpio21):
+    while not GPIO.input(echo):
         StartTime = time.time()
-    while GPIO.input(gpio21):
+    while GPIO.input(echo):
         StopTime = time.time()
     Time = StopTime - StartTime
     afstand = (Time * 34300) / 2

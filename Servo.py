@@ -1,11 +1,15 @@
 import RPi.GPIO as GPIO
 import time
+import atexit
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(0)
 
 
 class Servo:
+
+    def __init__(self):
+        atexit.register(GPIO.cleanup)
 
     def pulse(self, pin_nr, high_time, low_time):
         GPIO.output(pin_nr, GPIO.HIGH)
@@ -39,3 +43,6 @@ class Servo:
         elif player == 'ofline':
             for i in range(50, 0, -1):
                 self.servo_pulse(servo, i)
+
+    def exit_handler(self):
+        GPIO.cleanup()

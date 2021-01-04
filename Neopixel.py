@@ -1,11 +1,13 @@
 import time
 import RPi.GPIO as GPIO
+import atexit
 
 
 class Neopixel:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
+        atexit.register(GPIO.cleanup)
 
     def sendsignaal(self, clock_pin, data_pin, byte):
         timeToSleep = 1 / 19000
