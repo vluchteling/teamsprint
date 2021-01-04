@@ -5,7 +5,7 @@ from SteamClientAPI import SteamClientAPI
 from SteamGUI import SteamGUI
 
 
-class Beginscherm():
+class Beginscherm:
     def __init__(self):
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi

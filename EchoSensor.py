@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 import threading
-import atexit
 
 
 class Sr04(threading.Thread):
@@ -45,4 +44,3 @@ def check_status():
         print(afstand)
     time.sleep(1)
     check_status()
-    atexit.register(GPIO.cleanup)
