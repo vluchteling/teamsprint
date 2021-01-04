@@ -3,10 +3,8 @@ from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
 from LoginButton import LoginButton
-import RPi.GPIO as GPIO
 #from Servo import Servo
 #from Neopixel import Neopixel
-from SteamClientAPI import SteamClientAPI
 
 
 class SteamGUI:
