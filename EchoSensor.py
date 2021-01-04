@@ -8,7 +8,7 @@ class Sr04(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self)
-        atexit.register(GPIO.cleanup)
+
 
     def run(self):
         check_status()
@@ -45,3 +45,4 @@ def check_status():
         print(afstand)
     time.sleep(1)
     check_status()
+    atexit.register(GPIO.cleanup)

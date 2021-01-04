@@ -27,9 +27,10 @@ class SteamGUI:
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
         #self.servo()
-        self.Button = LoginButton(self, self.client)
-        self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
-        #self.sr04 = Sr04()
+        #self.Button = LoginButton(self, self.client)
+        #self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
+        self.sr04 = Sr04()
+        self.sr04.start()
 
 
         self.start()
