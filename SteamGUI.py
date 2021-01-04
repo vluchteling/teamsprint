@@ -6,7 +6,7 @@ from LoginButton import LoginButton
 from Servo import Servo
 from Schuifregister import Schuifregister
 from EchoSensor import Sr04
-#from Neopixel import Neopixel
+from Neopixel import Neopixel
 
 
 class SteamGUI:
@@ -27,12 +27,14 @@ class SteamGUI:
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
         self.naamframe.pack(side=TOP, pady=5)
-        #self.servo()
+        self.servo()
+        neopixel = Neopixel()
+        neopixel.speel_berichtanimatie()
         Schuifregister()
         self.Button = LoginButton(self, self.client)
         self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
-        #self.sr04 = Sr04()
-        #self.sr04.start()
+        self.sr04 = Sr04()
+        self.sr04.start()
 
 
 
@@ -41,6 +43,7 @@ class SteamGUI:
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
+        #self.sr04.stop()
         raise SystemExit
 
     def servo(self):

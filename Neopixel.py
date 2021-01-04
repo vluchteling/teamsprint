@@ -78,4 +78,3 @@ class Neopixel:
             self.apa102(clock_pin, data_pin, self.colors(x, n, red, blue))
             time.sleep(delay)
         print("Bericht ontvangen ")
-
