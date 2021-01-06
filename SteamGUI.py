@@ -46,7 +46,7 @@ class SteamGUI:
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
         self.sr04.stop()
-        #raise SystemExit
+        quit()
 
     def servo(self):
         servo = Servo()

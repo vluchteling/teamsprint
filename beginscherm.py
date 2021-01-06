@@ -35,11 +35,11 @@ class Beginscherm:
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
-        raise SystemExit
+        quit()
 
     def start_client(self):
         if self.password_entry.get().strip() != "" and self.user_entry.get().strip() != "":
-            username = self.user_entry.get()
+            username = self.user_entry.get().lower()
             password = self.password_entry.get()
 
             client = SteamClientAPI(username, password)
