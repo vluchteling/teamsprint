@@ -2,7 +2,6 @@ import multiprocessing
 
 import RPi.GPIO as GPIO
 import time
-import threading
 
 
 class Sr04:
