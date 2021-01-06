@@ -11,32 +11,35 @@ from Neopixel import Neopixel
 
 class SteamGUI:
     def __init__(self, client):
-        self.client = client
-        if os.environ.get('DISPLAY', '') == '':
-            os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
+        try:
+            self.client = client
+            if os.environ.get('DISPLAY', '') == '':
+                os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
-        # De GUI code
-        self.root = Tk()
-        self.root.attributes("-fullscreen", True)
-        groot_font = Font(size=30)
-        self.root.configure(bg="#2f2c2f")
-        self.titelframe = Label(font=groot_font, background="#5a565a", text="Titel van het eerste spel:")
-        self.naamframe = Label(font=groot_font, background="#5a565a")
-        self.afsluitButton = Button(text="Afsluiten", command=self.quit,
-                                    background="#5a565a", foreground="white", font=groot_font)
-        self.afsluitButton.pack(side=BOTTOM, pady=5)
-        self.titelframe.pack(side=TOP, pady=30)
-        self.naamframe.pack(side=TOP, pady=5)
-        self.servo()
-        neopixel = Neopixel()
-        neopixel.speel_berichtanimatie()
-        Schuifregister()
-        self.Button = LoginButton(self, self.client)
-        self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
-        self.sr04 = Sr04()
-        self.sr04.start()
+            # De GUI code
+            self.root = Tk()
+            self.root.attributes("-fullscreen", True)
+            groot_font = Font(size=30)
+            self.root.configure(bg="#2f2c2f")
+            self.titelframe = Label(font=groot_font, background="#5a565a", text="Titel van het eerste spel:")
+            self.naamframe = Label(font=groot_font, background="#5a565a")
+            self.afsluitButton = Button(text="Afsluiten", command=self.quit,
+                                        background="#5a565a", foreground="white", font=groot_font)
+            self.afsluitButton.pack(side=BOTTOM, pady=5)
+            self.titelframe.pack(side=TOP, pady=30)
+            self.naamframe.pack(side=TOP, pady=5)
+            self.servo()
+            neopixel = Neopixel()
+            neopixel.speel_berichtanimatie()
+            Schuifregister()
+            self.Button = LoginButton(self, self.client)
+            self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
+            self.sr04 = Sr04()
+            self.sr04.start()
 
-        self.start()
+            self.start()
+        except:
+            self.sr04.stop()
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
