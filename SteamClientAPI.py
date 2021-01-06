@@ -1,12 +1,10 @@
 from __future__ import print_function
 
-
 from steam.client import SteamClient
 from tkinter import *
 from tkinter.font import Font
 from steam.enums import EResult
 from steam.enums import EPersonaState
-
 
 
 class SteamClientAPI:

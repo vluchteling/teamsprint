@@ -9,19 +9,12 @@ class Sr04:
     def __init__(self):
         self.proc = multiprocessing.Process(target=self.check_status)
 
-
-
     def start(self):
         self.proc.start()
 
     def stop(self):
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
-
-
-
-
-
 
     def check_status(self):
         GPIO.setmode(GPIO.BCM)
