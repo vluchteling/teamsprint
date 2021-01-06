@@ -36,14 +36,12 @@ class SteamGUI:
         self.sr04 = Sr04()
         self.sr04.start()
 
-
-
         self.start()
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
-        #self.sr04.stop()
+        self.sr04.stop()
         raise SystemExit
 
     def servo(self):
@@ -79,4 +77,3 @@ class SteamGUI:
             self.display_owned_games(self.client.steam_id.as_64)
         else:
             self.display_owned_games(None)
-
