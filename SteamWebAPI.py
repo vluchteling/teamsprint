@@ -25,3 +25,7 @@ class SteamWebAPI:
         with urllib.request.urlopen(text) as url:
             data = json.loads(url.read().decode())
         return data
+
+
+
+

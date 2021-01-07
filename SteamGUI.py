@@ -37,16 +37,40 @@ class SteamGUI:
             #self.Button = LoginButton(self, self.client)
             #self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
             self.api = SteamWebAPI()
-            self.show_friends()
-            print(self.api.friendstatus(self.client.get_client().steam_id.as_64))
+            data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
 
 
+            try:
+                friendlist = data['friendslist']['friends']
+                print(friendlist)
+                for friend in friendlist:
+                    try:
+                        games = self.api.friendstatus(friend['steamid'])
+                        status = games['response']['players'][0]['personastate']
+                        naam = games['response']['players'][0]['personaname']
+                        if status == 0:
+                            print(f"{naam}: offline")
+                        elif status == 1:
+                            print(f"{naam}: online")
+                        elif status == 3:
+                            print(f"{naam}: afwezig")
+                        else:
+                            print(f"{naam}: iets anders")
+                    except KeyError:
+                        print(f"{naam}: zwerver")
+            except KeyError:
+                print("Deze gebruiker is een zwerver.")
+
+            """if test == "76561197995118880":
+                print("hallo Adil")"""
 
             self.start()
+
+
+
+
         except:
             self.quit()
-    def show_friends(self):
-        print(self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64))
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
