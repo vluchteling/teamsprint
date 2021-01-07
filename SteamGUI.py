@@ -2,11 +2,11 @@ import os
 from tkinter import *
 from tkinter.font import Font
 from SteamWebAPI import SteamWebAPI
-from LoginButton import LoginButton
-from Servo import Servo
-from Schuifregister import Schuifregister
-from EchoSensor import Sr04
-from Neopixel import Neopixel
+#from LoginButton import LoginButton
+#from Servo import Servo
+#from Schuifregister import Schuifregister
+#from EchoSensor import Sr04
+#from Neopixel import Neopixel
 
 
 class SteamGUI:
@@ -28,29 +28,34 @@ class SteamGUI:
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
-            self.sr04 = Sr04()
-            self.sr04.start()
-            self.servo()
-            neopixel = Neopixel()
-            neopixel.speel_berichtanimatie()
-            Schuifregister()
-            self.Button = LoginButton(self, self.client)
-            self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
+            #self.sr04 = Sr04()
+            #self.sr04.start()
+            #self.servo()
+            #neopixel = Neopixel()
+            #neopixel.speel_berichtanimatie()
+            #Schuifregister()
+            #self.Button = LoginButton(self, self.client)
+            #self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
+            self.api = SteamWebAPI()
+            self.show_friends()
+
 
 
             self.start()
         except:
             self.quit()
+    def show_friends(self):
+        print(self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64))
 
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
-        self.sr04.stop()
+        #self.sr04.stop()
         quit()
 
-    def servo(self):
+    """def servo(self):
         servo = Servo()
-        servo.start_spel()
+        servo.start_spel()"""
 
     """def speel_bericht(self):
         neopixel = Neopixel()
