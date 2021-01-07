@@ -38,6 +38,7 @@ class SteamGUI:
             #self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
             self.api = SteamWebAPI()
             self.show_friends()
+            print(self.api.friendstatus(self.client.get_client().steam_id.as_64))
 
 
 

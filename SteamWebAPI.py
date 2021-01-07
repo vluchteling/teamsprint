@@ -18,3 +18,10 @@ class SteamWebAPI:
         with urllib.request.urlopen(text) as url:
             data = json.loads(url.read().decode())
         return data
+
+    def friendstatus(self,steamid):
+
+        text=f'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={self.APIKEY}&steamids={steamid}'
+        with urllib.request.urlopen(text) as url:
+            data = json.loads(url.read().decode())
+        return data
