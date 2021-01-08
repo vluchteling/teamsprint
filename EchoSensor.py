@@ -42,8 +42,9 @@ class Sr04:
             StopTime = time.time()
         Time = StopTime - StartTime
         afstand = (Time * 34300) / 2
-        if afstand <= 80:
+        if afstand >= 80:
             print("status aanwezig")
+
             self.client.change_personastate("aanwezig")
             print(afstand)
 
