@@ -156,14 +156,9 @@ class SteamGUI:
 
     def quicksort(self, lijst, begin, eind):
         if begin < eind:
-            # pi is partitioning index, arr[p] is now
-            # at right place
-            pi = self.split_lst(lijst, begin, eind)
-
-            # Separately sort elements before
-            # partition and after partition
-            self.quicksort(lijst, begin, pi - 1)
-            self.quicksort(lijst, pi + 1, eind)
+            huidige_iteratie = self.split_lst(lijst, begin, eind)
+            self.quicksort(lijst, begin, huidige_iteratie - 1)
+            self.quicksort(lijst, huidige_iteratie + 1, eind)
 
     def set_client(self, client):
         self.client = client
