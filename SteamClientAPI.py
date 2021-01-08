@@ -104,5 +104,10 @@ class SteamClientAPI:
         self.root.destroy()
         self.open_client(guirequired=True, beginscherm=self.beginscherm)
 
+    def message(self):
+        pass
+
+
     def quit(self):
         quit()
+

@@ -43,6 +43,29 @@ class SteamGUI:
             try:
                 friendlist = data['friendslist']['friends']
                 print(friendlist)
+                friend = friendlist[0]['steamid']
+                gameslst=self.api.get_steam_games_from_user(friend)
+                appid= gameslst['response']['games'][0]['appid']
+                data2 = self.api.get_procent(Appid=appid)
+                #print(data2)
+
+                percentages=data2['achievementpercentages']['achievements']
+                #print(percentages)
+
+                leeglst=[]
+                for percentage in percentages:
+                    #print(percentage)
+                    #print(percentage['percent'])
+                    dict=percentage
+                    print(list(dict.keys()))
+                    print(list(dict.values()))
+                    print(list)
+                    print(percentage.keys())
+                    print(percentage.values())
+                    #leegldicst = []
+                    #leeglst.append(percentage)
+                    #print(type(leeglst))
+                    #print(sorted(leeglst))
                 for friend in friendlist:
                     try:
                         games = self.api.friendstatus(friend['steamid'])
@@ -65,7 +88,6 @@ class SteamGUI:
                 print("hallo Adil")"""
 
             self.start()
-
 
 
 

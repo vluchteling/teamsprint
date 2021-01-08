@@ -26,5 +26,17 @@ class SteamWebAPI:
         return data
 
 
+    def get_news(self):
+        text = f' http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=440&count=3&maxlength=300&format=json'
+        with urllib.request.urlopen(text) as url:
+            data = json.loads(url.read().decode())
+        return data
+
+    def get_procent(self, Appid):
+        text = f'http://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid={Appid}&format=json'
+        with urllib.request.urlopen(text) as url:
+            data = json.loads(url.read().decode())
+        return data
+
 
 
