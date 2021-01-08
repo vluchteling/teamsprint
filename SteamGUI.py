@@ -134,24 +134,24 @@ class SteamGUI:
         """ Deze funtie sorteert de ingevoerde data."""
         return data
 
-    def split_lst(self, lijst, begin, eind):
-        begin = (begin - 1)  # paK de index van het aan het begin
-        eind = lijst[eind]  # het getal in het eind van de lijst
+    def partition(self, arr, min, max):
+        kleinste = (min - 1)
+        grootste = arr[max]
 
-        for i in range(begin, eind):
+        for j in range(min, max):
 
-            if lijst[i] < eind:
-                begin = begin + 1
-                lijst[begin], lijst[i] = lijst[i], lijst[begin]
+            if arr[j] < grootste:
+                kleinste = kleinste + 1
+                arr[kleinste], arr[j] = arr[j], arr[kleinste]
 
-        lijst[begin + 1], lijst[eind] = lijst[eind], lijst[begin + 1]
-        return begin + 1
+        arr[kleinste + 1], arr[max] = arr[max], arr[kleinste + 1]
+        return (kleinste + 1)
 
-    def quicksort(self, lijst, begin, eind):
-        if begin < eind:
-            huidige_iteratie = self.split_lst(lijst, begin, eind)
-            self.quicksort(lijst, begin, huidige_iteratie - 1)
-            self.quicksort(lijst, huidige_iteratie + 1, eind)
+    def quicksort(self, lst, min, max):
+        if min < max:
+            pi = self.partition(lst, min, max)
+            self.quicksort(lst, min, pi - 1)
+            self.quicksort(lst, pi + 1, max)
 
     def set_client(self, client):
         self.client = client
