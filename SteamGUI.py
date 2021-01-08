@@ -24,7 +24,7 @@ class SteamGUI:
         self.api = SteamWebAPI()
         self.stuur_bericht(76561197995118880, "Yo, alles goed?")
 
-        #self.client.change_personastate("afwezig")
+        # self.client.change_personastate("afwezig")
 
         self.toon_friendlist()
         self.sr04 = Sr04(self.client)
@@ -130,7 +130,7 @@ class SteamGUI:
             self.naamframe["text"] = "Deze gebruiker heeft geen games."
 
     def sorteer_data(self, data):
-        self.quickSort(data, 0, len(data) - 1)
+        self.quicksort(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
         return data
 
@@ -141,40 +141,29 @@ class SteamGUI:
     # array, and places all smaller (smaller than pivot)
     # to left of pivot and all greater elements to right
     # of pivot
-    def partition(self, arr, low, high):
-        i = (low - 1)  # index of smaller element
-        pivot = arr[high]  # pivot
+    def split_lst(self, lijst, begin, eind):
+        begin = (begin - 1)  # paK de index van het aan het begin
+        eind = lijst[eind]  # het getal in het eind van de lijst
 
-        for j in range(low, high):
+        for i in range(begin, eind):
 
-            # If current element is smaller than the pivot
-            if arr[j] < pivot:
-                # increment index of smaller element
-                i = i + 1
-                arr[i], arr[j] = arr[j], arr[i]
+            if lijst[i] < eind:
+                begin = begin + 1
+                lijst[begin], lijst[i] = lijst[i], lijst[begin]
 
-        arr[i + 1], arr[high] = arr[high], arr[i + 1]
-        return i + 1
+        lijst[begin + 1], lijst[eind] = lijst[eind], lijst[begin + 1]
+        return begin + 1
 
-        # The main function that implements QuickSort
-
-    # arr[] --> Array to be sorted,
-    # low --> Starting index,
-    # high --> Ending index
-
-    # Function to do Quick sort
-    def quickSort(self, arr, low, high):
-        if low < high:
+    def quicksort(self, lijst, begin, eind):
+        if begin < eind:
             # pi is partitioning index, arr[p] is now
             # at right place
-            pi = self.partition(arr, low, high)
+            pi = self.split_lst(lijst, begin, eind)
 
             # Separately sort elements before
             # partition and after partition
-            self.quickSort(arr, low, pi - 1)
-            self.quickSort(arr, pi + 1, high)
-
-            # Driver code to test above
+            self.quicksort(lijst, begin, pi - 1)
+            self.quicksort(lijst, pi + 1, eind)
 
     def set_client(self, client):
         self.client = client

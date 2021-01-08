@@ -59,12 +59,13 @@ class Neopixel:
                 result.append(off)
         return result
 
-    def speel_berichtanimatie(self, delay=0.3):
+    def speel_berichtanimatie(self, delay=0.1):
         blue = [8, 0, 0]
         green = [0, 255, 0]
         red = [0, 0, 255]
+        yellow = [0,  255,255]
         purple = [255, 0, 255]
-        off = [0,0,0]
+        off = [0, 0, 0]
 
         clock_pin = 19
         data_pin = 26
@@ -73,10 +74,10 @@ class Neopixel:
         GPIO.setup(data_pin, GPIO.OUT)
         n = 8
         for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
+            self.apa102(clock_pin, data_pin, self.colors(x, n, yellow, blue))
             time.sleep(delay)
-        for x in range(n - 1, 1, -1):
+        """for x in range(n - 1, 1, -1):
             self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
-            time.sleep(delay)
+            time.sleep(delay)"""
         for x in range(0, n):
             self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
