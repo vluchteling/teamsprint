@@ -22,7 +22,7 @@ class SteamGUI:
         self.sr04 = None
         self.Button = None
         self.api = SteamWebAPI()
-        self.stuur_bericht(76561199119177557, "Yo Adil, alles goed?")
+        self.stuur_bericht(76561197995118880, "Yo, alles goed?")
 
         #self.client.change_personastate("afwezig")
 
