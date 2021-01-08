@@ -40,8 +40,6 @@ class Beginscherm:
         if self.password_entry.get().strip() != "" and self.user_entry.get().strip() != "":
             username = self.user_entry.get().lower()
             password = self.password_entry.get()
-            username = "steamprojecthu"
-            password = "Roodbesje1"
 
             client = SteamClientAPI(username, password)
             result = client.open_client(root=self.root, beginscherm=self)

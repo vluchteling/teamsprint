@@ -23,6 +23,8 @@ class SteamGUI:
         self.Button = None
         self.api = SteamWebAPI()
         #self.stuur_bericht(76561199119177557, "Yo Adil, alles goed?")
+        self.sr04 = Sr04(self.client)
+        self.sr04.start()
 
         self.toon_friendlist()
         self.open_gui()
@@ -111,7 +113,7 @@ class SteamGUI:
         if self.root is not None:
             self.root.destroy()
             self.root = None
-        # self.sr04.stop()
+        self.sr04.stop()
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""

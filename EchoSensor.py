@@ -6,8 +6,9 @@ import time
 
 class Sr04:
 
-    def __init__(self):
+    def __init__(self, client):
         self.proc = multiprocessing.Process(target=self.check_status)
+        self.client = client
 
     def start(self):
         self.proc.start()
@@ -38,10 +39,12 @@ class Sr04:
         afstand = (Time * 34300) / 2
         if afstand <= 80:
             print("status aanwezig")
+            self.client.change_status("aanwezig")
             print(afstand)
 
         else:
             print("status afwezig")
+            self.client.change_status("afwezig")
             print(afstand)
-        time.sleep(1)
+        time.sleep(30)
         self.check_status()
