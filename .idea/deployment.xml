@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="pi@raspberrypi:22 password (1)">
+  <component name="PublishConfigData" autoUpload="Always" serverName="pi@raspberrypi:22 password">
     <serverData>
-      <paths name="pi@raspberrypi:22 password (1)">
+      <paths name="pi@raspberrypi:22 password">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/pycharm_project_671" local="$PROJECT_DIR$" />
+            <mapping deploy="/teamsprint" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

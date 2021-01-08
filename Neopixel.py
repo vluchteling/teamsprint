@@ -40,12 +40,12 @@ class Neopixel:
         bv: colors = [ [ 0, 0, 0 ], [ 255, 255, 255 ], [ 128, 0, 0 ] ]
         zet de eerste LED uit, de tweede vol aan (wit) en de derde op blauw, halve strekte.
         """
-        # apa102_send_bytes(clock_pin, data_pin, blue)
         vierbytes = [0, 0, 0, 0]
         byteMetEnen = [255]
         bytesMetEnen = [255, 255, 255, 255]
-        byteToSend = vierbytes + byteMetEnen
+        byteToSend = vierbytes
         for item in colors:
+            byteToSend.extend(byteMetEnen)
             byteToSend.extend(item)
         byteToSend.extend(bytesMetEnen)
         self.apa102_send_bytes(clock_pin, data_pin, byteToSend)
@@ -63,6 +63,7 @@ class Neopixel:
         blue = [8, 0, 0]
         green = [0, 255, 0]
         red = [0, 0, 255]
+        purple = [255, 0, 255]
 
         clock_pin = 19
         data_pin = 26
@@ -70,11 +71,9 @@ class Neopixel:
         GPIO.setup(clock_pin, GPIO.OUT)
         GPIO.setup(data_pin, GPIO.OUT)
         n = 8
-        print("u heeft een bericht ")
         for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, red, blue))
+            self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
             time.sleep(delay)
         for x in range(n - 1, 1, -1):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, red, blue))
+            self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
             time.sleep(delay)
-        print("Bericht ontvangen ")

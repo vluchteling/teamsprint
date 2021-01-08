@@ -35,18 +35,21 @@ class Beginscherm:
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()
-        quit()
 
     def start_client(self):
         if self.password_entry.get().strip() != "" and self.user_entry.get().strip() != "":
             username = self.user_entry.get().lower()
             password = self.password_entry.get()
+            username = "steamprojecthu"
+            password = "Roodbesje1"
 
             client = SteamClientAPI(username, password)
             result = client.open_client(root=self.root, beginscherm=self)
 
             if result == "ok":
-                self.root.destroy()
+                if self.root is not None:
+                    self.root.destroy()
+                self.root = None
                 self.open_GUI(client)
             if result == "password":
                 self.user_label["text"] = "Wachtwoord verkeerd!\nusername:"
