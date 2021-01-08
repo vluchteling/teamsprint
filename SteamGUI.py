@@ -134,13 +134,6 @@ class SteamGUI:
         """ Deze funtie sorteert de ingevoerde data."""
         return data
 
-    # Python program for implementation of Quicksort Sort
-
-    # This function takes last element as pivot, places
-    # the pivot element at its correct position in sorted
-    # array, and places all smaller (smaller than pivot)
-    # to left of pivot and all greater elements to right
-    # of pivot
     def split_lst(self, lijst, begin, eind):
         begin = (begin - 1)  # paK de index van het aan het begin
         eind = lijst[eind]  # het getal in het eind van de lijst
