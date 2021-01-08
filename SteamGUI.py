@@ -22,12 +22,13 @@ class SteamGUI:
         self.sr04 = None
         self.Button = None
         self.api = SteamWebAPI()
-        #self.stuur_bericht(76561199119177557, "Yo Adil, alles goed?")
-        self.sr04 = Sr04(self.client)
-        self.sr04.start()
+        self.stuur_bericht(76561199119177557, "Yo Adil, alles goed?")
+
         #self.client.change_personastate("afwezig")
 
         self.toon_friendlist()
+        self.sr04 = Sr04(self.client)
+        self.sr04.start()
         self.open_gui()
 
     def stuur_bericht(self, steam_id, text):
