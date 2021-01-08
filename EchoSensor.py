@@ -3,6 +3,8 @@ import multiprocessing
 import RPi.GPIO as GPIO
 import time
 
+import gevent
+
 
 class Sr04:
 
@@ -17,7 +19,10 @@ class Sr04:
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
 
+
+
     def check_status(self):
+        #self.client.log_in()
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
 
@@ -26,7 +31,7 @@ class Sr04:
         GPIO.setup(trig, GPIO.OUT)
         GPIO.setup(echo, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.output(trig, True)
-        time.sleep(0.00001)
+        gevent.sleep(0.00001)
         GPIO.output(trig, False)
 
         StartTime = time.time()
@@ -39,12 +44,12 @@ class Sr04:
         afstand = (Time * 34300) / 2
         if afstand <= 80:
             print("status aanwezig")
-            self.client.change_status("aanwezig")
+            self.client.change_personastate("aanwezig")
             print(afstand)
 
         else:
             print("status afwezig")
-            self.client.change_status("afwezig")
+            self.client.change_personastate("afwezig")
             print(afstand)
-        time.sleep(30)
+        gevent.sleep(1)
         self.check_status()

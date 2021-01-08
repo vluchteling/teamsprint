@@ -32,6 +32,7 @@ class Beginscherm:
         self.bevestigButton.pack()
         self.root.mainloop()
 
+
     def quit(self):
         """ Deze functie sluit de applicatie af. """
         self.root.destroy()

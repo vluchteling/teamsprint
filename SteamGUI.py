@@ -25,6 +25,7 @@ class SteamGUI:
         #self.stuur_bericht(76561199119177557, "Yo Adil, alles goed?")
         self.sr04 = Sr04(self.client)
         self.sr04.start()
+        #self.client.change_personastate("afwezig")
 
         self.toon_friendlist()
         self.open_gui()

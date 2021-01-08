@@ -72,14 +72,13 @@ class SteamClientAPI:
         print("Last logoff:", self.client.user.last_logoff)
         print("Press ^C to exit")
 
-    def change_status(self, status):
+    def change_personastate(self, status):
         if status == "afwezig":
             print("afwezig")
-            afwezig = EPersonaState.Busy
-            self.client.change_status(persona_state=afwezig)
+            self.client.change_status(persona_state=3)
         if status == "aanwezig":
             print("aanwezig")
-            self.client.change_status(persona_state=EPersonaState.Online)
+            self.client.change_status(persona_state=1)
 
     def log_out(self):
         if self.client.connected:
