@@ -28,6 +28,7 @@ class SteamGUI:
         # self.client.change_personastate("afwezig")
 
         self.toon_friendlist()
+        self.loginbutton = LoginButton(self, self.client)
         self.sr04 = Sr04(self.client, self)
         self.sr04.start()
         self.open_gui()
@@ -39,9 +40,7 @@ class SteamGUI:
             text = self.bericht_entry.get()
         print(text)
 
-        client = self.client.get_client()
-        adil = client.get_user(steam_id)
-        adil.send_message(text)
+        self.client.get_client().get_user(steam_id).send_message(text)
         neopixel = Neopixel()
         neopixel.speel_berichtanimatie()
 
@@ -136,7 +135,10 @@ class SteamGUI:
         if self.root is not None:
             self.root.destroy()
             self.root = None
-        self.sr04.stop()
+        try:
+            self.sr04.stop()
+        except AttributeError:
+            pass
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
@@ -177,6 +179,14 @@ class SteamGUI:
     def set_client(self, client):
         self.client = client
         if self.client is not None:
-            self.display_owned_games(self.client.steam_id.as_64)
+            self.sr04 = Sr04(self.client, self)
+            self.sr04.start()
+            self.display_owned_games(self.client.get_client().steam_id.as_64)
         else:
+            try:
+                self.sr04.stop()
+            except AttributeError:
+                pass
+
             self.display_owned_games(None)
+

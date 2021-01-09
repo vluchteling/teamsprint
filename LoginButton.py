@@ -1,5 +1,8 @@
 import time
 import RPi.GPIO as GPIO
+import gevent
+from gevent.exceptions import LoopExit
+
 from SteamClientAPI import SteamClientAPI
 import atexit
 
@@ -21,15 +24,32 @@ class LoginButton:
         atexit.register(self.lights_out)
 
     def login_checker(self, twentythree):
-        print(twentythree)
+
         if GPIO.input(self.knopuno):
+
             if self.loggedin:
+
+                while True:
+                    print("iteratie")
+                    try:
+                        if self.client is not None:
+                            self.client.log_out()
+                        self.client = None
+                        break
+
+                    except LoopExit:
+                        print("loopexit")
+                        continue
+
                 print("u wordt uitgelogd.")
                 GPIO.output(self.led, GPIO.LOW)
                 self.loggedin = False
-                self.client = None
+
                 self.SteamGUI.set_client(None)
-                time.sleep(1)
+
+
+
+
 
             else:
                 print("u wordt ingelogd.")
@@ -37,8 +57,8 @@ class LoginButton:
                 self.loggedin = True
                 self.client = SteamClientAPI(self.username, self.password)
                 self.client.open_client()
-                self.SteamGUI.set_client(self.client.get_client())
-                time.sleep(1)
+                self.SteamGUI.set_client(self.client)
+        gevent.sleep(1)
 
     def lights_out(self):
         GPIO.output(self.led, GPIO.LOW)
