@@ -5,6 +5,7 @@ from tkinter import *
 from tkinter.font import Font
 from steam.enums import EResult
 from steam.enums import EPersonaState
+from steam.enums.emsg import EMsg
 
 
 class SteamClientAPI:
@@ -62,6 +63,7 @@ class SteamClientAPI:
         def send_login():
             if self.client.relogin_available:
                 self.client.relogin()
+
 
 
     def log_in(self):

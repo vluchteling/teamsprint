@@ -1,5 +1,6 @@
 import time
 import RPi.GPIO as GPIO
+import gevent
 
 
 class Neopixel:
@@ -59,7 +60,7 @@ class Neopixel:
                 result.append(off)
         return result
 
-    def speel_berichtanimatie(self, delay=0.1):
+    def speel_berichtanimatie(self, delay=0):
         blue = [8, 0, 0]
         green = [0, 255, 0]
         red = [0, 0, 255]
@@ -75,7 +76,7 @@ class Neopixel:
         n = 8
         for x in range(0, n):
             self.apa102(clock_pin, data_pin, self.colors(x, n, yellow, blue))
-            time.sleep(delay)
+            gevent.sleep(delay)
         """for x in range(n - 1, 1, -1):
             self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
             time.sleep(delay)"""

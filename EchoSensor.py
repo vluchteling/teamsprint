@@ -8,9 +8,10 @@ import gevent
 
 class Sr04:
 
-    def __init__(self, client):
+    def __init__(self, client, gui):
         self.proc = multiprocessing.Process(target=self.check_status)
         self.client = client
+        self.gui = gui
 
     def start(self):
         self.proc.start()
@@ -46,11 +47,13 @@ class Sr04:
             print("status aanwezig")
 
             self.client.change_personastate("aanwezig")
+            self.gui.stuur_bericht(76561197995118880, "Ik ben weer terug!")
             print(afstand)
 
         else:
             print("status afwezig")
             self.client.change_personastate("afwezig")
+            self.gui.stuur_bericht(76561197995118880, "Ik ben even koffie halen")
             print(afstand)
-        gevent.sleep(1)
+        gevent.sleep(30)
         self.check_status()

@@ -1,4 +1,5 @@
 import os
+import time
 from tkinter import *
 from tkinter.font import Font
 
@@ -22,16 +23,22 @@ class SteamGUI:
         self.sr04 = None
         self.Button = None
         self.api = SteamWebAPI()
-        self.stuur_bericht(76561197995118880, "Yo, alles goed?")
+        #self.stuur_bericht(76561197995118880, "Yo, alles goed?")
 
         # self.client.change_personastate("afwezig")
 
         self.toon_friendlist()
-        self.sr04 = Sr04(self.client)
+        self.sr04 = Sr04(self.client, self)
         self.sr04.start()
         self.open_gui()
 
-    def stuur_bericht(self, steam_id, text):
+    def stuur_bericht(self, steam_id=None, text=None):
+        if steam_id is None:
+            steam_id = self.user_entry.get()
+        if text is None:
+            text = self.bericht_entry.get()
+        print(text)
+
         client = self.client.get_client()
         adil = client.get_user(steam_id)
         adil.send_message(text)
@@ -91,9 +98,23 @@ class SteamGUI:
             self.naamframe = Label(font=groot_font, background="#5a565a")
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                         background="#5a565a", foreground="white", font=groot_font)
+            berichtframe = Frame()
+            self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="steamid_64 van vriend")
+            self.user_entry = Entry(berichtframe)
+            self.bericht_label= Label(berichtframe, font=groot_font, background = "#5a565a", text = "Titel van het eerste spel:")
+            self.bericht_entry = Entry(berichtframe)
+            self.msg_button = Button(berichtframe, text="versturen", command=self.stuur_bericht,
+                                     background="#5a565a", foreground="white", font=groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
+
+            berichtframe.pack(side=RIGHT)
+            self.user_label.pack()
+            self.user_entry.pack()
+            self.bericht_label.pack()
+            self.bericht_entry.pack()
+            self.msg_button.pack()
             self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
             self.root.mainloop()
         except:
@@ -101,7 +122,7 @@ class SteamGUI:
 
     def start_sensoren(self):
 
-        self.sr04 = Sr04()
+        self.sr04 = Sr04(self.client, self)
         self.sr04.start()
         servo = Servo()
         servo.start_spel()
