@@ -101,7 +101,7 @@ class SteamGUI:
             berichtframe = Frame()
             self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="steamid_64 van vriend")
             self.user_entry = Entry(berichtframe)
-            self.bericht_label= Label(berichtframe, font=groot_font, background = "#5a565a", text = "Titel van het eerste spel:")
+            self.bericht_label= Label(berichtframe, font=groot_font, background="#5a565a", text="bericht text")
             self.bericht_entry = Entry(berichtframe)
             self.msg_button = Button(berichtframe, text="versturen", command=self.stuur_bericht,
                                      background="#5a565a", foreground="white", font=groot_font)
