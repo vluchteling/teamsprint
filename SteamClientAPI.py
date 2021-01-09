@@ -2,10 +2,7 @@ from __future__ import print_function
 
 from steam.client import SteamClient
 from tkinter import *
-from tkinter.font import Font
 from steam.enums import EResult
-from steam.enums import EPersonaState
-from steam.enums.emsg import EMsg
 
 
 class SteamClientAPI:
@@ -64,8 +61,6 @@ class SteamClientAPI:
             if self.client.relogin_available:
                 self.client.relogin()
 
-
-
     def log_in(self):
         print("-" * 20)
         print("Logged on as:", self.client.user.name)
@@ -76,10 +71,8 @@ class SteamClientAPI:
 
     def change_personastate(self, status):
         if status == "afwezig":
-            print("afwezig")
             self.client.change_status(persona_state=3)
         if status == "aanwezig":
-            print("aanwezig")
             self.client.change_status(persona_state=1)
 
     def log_out(self):
@@ -114,7 +107,5 @@ class SteamClientAPI:
     def message(self):
         pass
 
-
     def quit(self):
         quit()
-
