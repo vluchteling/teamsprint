@@ -3,8 +3,10 @@ import time
 from tkinter import *
 from tkinter.font import Font
 
+from gevent.exceptions import LoopExit
 from steam.client.user import SteamUser
 
+from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
 
 from LoginButton import LoginButton
@@ -18,28 +20,24 @@ class SteamGUI:
     def __init__(self, client):
 
         self.client = client
+        self.username, self.password = self.client.get_credentials()
         self.root = None
         self.button = None
         self.sr04 = None
         self.Button = None
         self.api = SteamWebAPI()
-        #self.stuur_bericht(76561197995118880, "Yo, alles goed?")
+        self.servo = Servo()
 
         # self.client.change_personastate("afwezig")
 
         self.toon_friendlist()
-        self.loginbutton = LoginButton(self, self.client)
+        self.loginbutton = LoginButton(self)
         self.sr04 = Sr04(self.client, self)
         self.sr04.start()
         self.open_gui()
 
-    def stuur_bericht(self, steam_id=None, text=None):
-        if steam_id is None:
-            steam_id = self.user_entry.get()
-        if text is None:
-            text = self.bericht_entry.get()
+    def stuur_bericht(self, steam_id, text):
         print(text)
-
         self.client.get_client().get_user(steam_id).send_message(text)
         neopixel = Neopixel()
         neopixel.speel_berichtanimatie()
@@ -100,9 +98,7 @@ class SteamGUI:
             berichtframe = Frame()
             self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="steamid_64 van vriend")
             self.user_entry = Entry(berichtframe)
-            self.bericht_label= Label(berichtframe, font=groot_font, background="#5a565a", text="bericht text")
-            self.bericht_entry = Entry(berichtframe)
-            self.msg_button = Button(berichtframe, text="versturen", command=self.stuur_bericht,
+            self.msg_button = Button(berichtframe, text="check", command=self.check_online,
                                      background="#5a565a", foreground="white", font=groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
@@ -111,8 +107,6 @@ class SteamGUI:
             berichtframe.pack(side=RIGHT)
             self.user_label.pack()
             self.user_entry.pack()
-            self.bericht_label.pack()
-            self.bericht_entry.pack()
             self.msg_button.pack()
             self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
             self.root.mainloop()
@@ -123,12 +117,10 @@ class SteamGUI:
 
         self.sr04 = Sr04(self.client, self)
         self.sr04.start()
-        servo = Servo()
-        servo.start_spel()
         neopixel = Neopixel()
         neopixel.speel_berichtanimatie()
         Schuifregister()
-        self.Button = LoginButton(self, self.client)
+        self.Button = LoginButton(self)
 
     def stop(self):
         """ Deze functie sluit de applicatie af. """
@@ -139,6 +131,19 @@ class SteamGUI:
             self.sr04.stop()
         except AttributeError:
             pass
+
+    def check_online(self):
+        friend = self.user_entry.get()
+        data = self.api.friendstatus(friend)
+        status = data['response']['players'][0]['personastate']
+        if status == 0:
+            self.servo.start_spel(0)
+            print("offline")
+        else:
+            self.servo.start_spel(1)
+            print("online")
+
+
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
@@ -176,17 +181,24 @@ class SteamGUI:
             self.quicksort(lst, min, pi - 1)
             self.quicksort(lst, pi + 1, max)
 
-    def set_client(self, client):
-        self.client = client
-        if self.client is not None:
-            self.sr04 = Sr04(self.client, self)
-            self.sr04.start()
-            self.display_owned_games(self.client.get_client().steam_id.as_64)
-        else:
+    def log_out(self):
+        self.stuur_bericht(76561197995118880, "Ik ga, later man.")
+        while True:
             try:
-                self.sr04.stop()
-            except AttributeError:
-                pass
+                self.client.log_out()
+                break
+            except LoopExit:
+                continue
+        self.client = None
+        self.sr04.stop()
+        self.display_owned_games(None)
 
-            self.display_owned_games(None)
+
+    def log_in(self):
+        self.client = SteamClientAPI(self.username, self.password)
+        self.client.open_client()
+        self.sr04 = Sr04(self.client, self)
+        self.sr04.start()
+        self.display_owned_games(self.client.get_client().steam_id.as_64)
+        self.stuur_bericht(76561197995118880, "Yo, alles goed?")
 
