@@ -37,9 +37,10 @@ class SteamGUI:
 
     def stuur_bericht(self, steam_id, text):
         print(text)
-        self.client.get_client().get_user(steam_id).send_message(text)
-        neopixel = Neopixel()
-        neopixel.speel_berichtanimatie()
+        if steam_id != "begin":
+            self.client.get_client().get_user(steam_id).send_message(text)
+            neopixel = Neopixel()
+            neopixel.speel_berichtanimatie()
 
     def open_gui(self):
         try:
@@ -59,9 +60,9 @@ class SteamGUI:
             self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
             self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                         text="Huidige favoriet: Geen")
-            self.msg_button = Button(self.berichtframe, text="stel in", command=self.check_online,
+            self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
                                      background="#5a565a", foreground="white", font=self.groot_font)
-            self.clear_button = Button(self.berichtframe, text="stel in", command=self.timerstop,
+            self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
                                      background="#5a565a", foreground="white", font=self.groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
@@ -232,6 +233,7 @@ class SteamGUI:
         self.favoriet_label.forget()
         self.msg_button.forget()
         self.treeview.forget()
+        self.clear_button.forget()
         self.favoriet = None
 
     def log_in(self):
@@ -245,9 +247,12 @@ class SteamGUI:
                                     text="Huidige favoriet: Geen")
         self.msg_button = Button(self.berichtframe, text="stel in", command=self.check_online,
                                  background="#5a565a", foreground="white", font=self.groot_font)
+        self.clear_button = Button(self.berichtframe, text="stel in", command=self.timerstop,
+                                   background="#5a565a", foreground="white", font=self.groot_font)
         self.user_label.pack()
         self.favoriet_label.pack()
         self.msg_button.pack()
+        self.clear_button.pack()
         self.toon_friendlist()
         self.favoriet = "begin"
         if self.favoriet:
