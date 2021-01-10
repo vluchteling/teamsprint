@@ -6,10 +6,11 @@ import gevent
 
 class Sr04:
 
-    def __init__(self, client, gui):
+    def __init__(self, client, gui, vriend):
         self.proc = multiprocessing.Process(target=self.check_status)
         self.client = client
         self.gui = gui
+        self.vriend = vriend
 
     def start(self):
         self.proc.start()
@@ -17,9 +18,15 @@ class Sr04:
     def stop(self):
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
+    def get_vriend(self):
+        return self.vriend
+    def set_vriend(self,vriend):
+        self.vriend = vriend
+        print("ok")
+
+
 
     def check_status(self):
-        # self.client.log_in()
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
 
@@ -46,12 +53,14 @@ class Sr04:
                 counter = 0
                 self.client.change_personastate("aanwezig")
                 if not berichtverstuurd:
-                    #self.gui.stuur_bericht(76561197995118880, "Ik ben weer terug!")
+                    if self.vriend is not None:
+                        self.gui.stuur_bericht(self.vriend, "Ik ben weer terug!")
                     berichtverstuurd = True
             else:
                 if counter == 10:
                     self.client.change_personastate("afwezig")
-                    #self.gui.stuur_bericht(76561197995118880, "Ik ben zo terug.")
+                    if self.vriend is not None:
+                        self.gui.stuur_bericht(self.vriend, "Ik ben zo terug.")
                     berichtverstuurd = False
                 counter += 1
             gevent.sleep(1)

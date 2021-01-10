@@ -30,7 +30,7 @@ class SteamGUI:
         self.api = SteamWebAPI()
 
         self.loginbutton = LoginButton(self)
-        self.sr04 = Sr04(self.client, self)
+        self.sr04 = Sr04(self.client, self, None)
         self.sr04.start()
         self.open_gui()
 
@@ -140,11 +140,19 @@ class SteamGUI:
 
     def check_online(self):
         curItem = self.treeview.focus()
+
         friend_name = self.treeview.item(curItem)['values'][0]
-        self.favoriet = self.treeview.item(curItem)['values'][2]
+        favoriet = self.treeview.item(curItem)['values'][2]
+        self.favoriet = favoriet
+        #self.sr04.set_vriend(self.favoriet)
+        if self.sr04.get_vriend() is None:
+            self.sr04.stop()
+            self.sr04 = Sr04(self.client, self, self.favoriet)
+            self.sr04.start()
+
         self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
         servo = Servo()
-        data= self.api.friendstatus(self.favoriet)
+        data = self.api.friendstatus(self.favoriet)
         status = data['response']['players'][0]['personastate']
         if status != self.status:
             servo.start_spel(status)
@@ -205,7 +213,7 @@ class SteamGUI:
     def log_in(self):
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
-        self.sr04 = Sr04(self.client, self)
+        self.sr04 = Sr04(self.client, self, self.favoriet)
         self.sr04.start()
         self.display_owned_games(self.client.get_client().steam_id.as_64)
         if self.favoriet:
