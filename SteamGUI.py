@@ -245,9 +245,9 @@ class SteamGUI:
         self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
         self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                     text="Huidige favoriet: Geen")
-        self.msg_button = Button(self.berichtframe, text="stel in", command=self.check_online,
+        self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
                                  background="#5a565a", foreground="white", font=self.groot_font)
-        self.clear_button = Button(self.berichtframe, text="stel in", command=self.timerstop,
+        self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
                                    background="#5a565a", foreground="white", font=self.groot_font)
         self.user_label.pack()
         self.favoriet_label.pack()
