@@ -56,7 +56,7 @@ class SteamGUI:
             self.naamframe = Label(font=self.groot_font, background="#5a565a")
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                         background="#5a565a", foreground="white", font=self.groot_font)
-            self.berichtframe = Frame(background="#5a565a")
+            self.berichtframe = Frame(background="#2f2c2f")
             self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
             self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                         text="Huidige favoriet: Geen")
@@ -67,7 +67,7 @@ class SteamGUI:
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
-            self.friendframe = Frame(background="#5a565a")
+            self.friendframe = Frame(background="#2f2c2f")
             self.berichtframe.pack(side=RIGHT)
             self.user_label.pack()
             self.favoriet_label.pack()
@@ -260,5 +260,6 @@ class SteamGUI:
 
     def timerstop(self):
         self.favoriet = None
+        self.favoriet_label["text"] = f"Huidige favoriet: geen"
         self.sr04.stop()
 
