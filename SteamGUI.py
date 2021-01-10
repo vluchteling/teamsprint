@@ -139,25 +139,28 @@ class SteamGUI:
             self.servo.stop()
 
     def check_online(self):
-        curItem = self.treeview.focus()
+        try:
+            curItem = self.treeview.focus()
 
-        friend_name = self.treeview.item(curItem)['values'][0]
-        favoriet = self.treeview.item(curItem)['values'][2]
-        self.favoriet = favoriet
-        #self.sr04.set_vriend(self.favoriet)
-        if self.sr04.get_vriend() is None:
-            self.sr04.stop()
-            self.sr04 = Sr04(self.client, self, self.favoriet)
-            self.sr04.start()
+            friend_name = self.treeview.item(curItem)['values'][0]
+            favoriet = self.treeview.item(curItem)['values'][2]
+            self.favoriet = favoriet
+            #self.sr04.set_vriend(self.favoriet)
+            if self.sr04.get_vriend() is None:
+                self.sr04.stop()
+                self.sr04 = Sr04(self.client, self, self.favoriet)
+                self.sr04.start()
 
-        self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
-        servo = Servo()
-        data = self.api.friendstatus(self.favoriet)
-        status = data['response']['players'][0]['personastate']
-        if status != self.status:
-            servo.start_spel(status)
-            self.status = status
-        threading.Timer(1, self.check_online).start()
+            self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
+            servo = Servo()
+            data = self.api.friendstatus(self.favoriet)
+            status = data['response']['players'][0]['personastate']
+            if status != self.status:
+                servo.start_spel(status)
+                self.status = status
+            threading.Timer(1, self.check_online).start()
+        except RuntimeError:
+            pass
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
