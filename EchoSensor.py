@@ -42,16 +42,16 @@ class Sr04:
                 StopTime = time.time()
             Time = StopTime - StartTime
             afstand = (Time * 34300) / 2
-            if afstand >= 80:
+            if afstand >= 20:
                 counter = 0
                 self.client.change_personastate("aanwezig")
                 if not berichtverstuurd:
-                    #self.gui.stuur_bericht(76561197995118880, "Ik ben weer terug!")
+                    self.gui.stuur_bericht(76561197995118880, "Ik ben weer terug!")
                     berichtverstuurd = True
             else:
                 if counter == 10:
                     self.client.change_personastate("afwezig")
-                    #self.gui.stuur_bericht(76561197995118880, "Ik ben zo terug.")
+                    self.gui.stuur_bericht(76561197995118880, "Ik ben zo terug.")
                     berichtverstuurd = False
                 counter += 1
             gevent.sleep(1)

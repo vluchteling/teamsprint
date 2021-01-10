@@ -1,14 +1,12 @@
 import os
 import time
 from tkinter import *
+from tkinter import ttk
 from tkinter.font import Font
-
 from gevent.exceptions import LoopExit
 from steam.client.user import SteamUser
-
 from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
-
 from LoginButton import LoginButton
 from Servo import Servo
 from Schuifregister import Schuifregister
@@ -28,9 +26,6 @@ class SteamGUI:
         self.api = SteamWebAPI()
         self.servo = Servo()
 
-        # self.client.change_personastate("afwezig")
-
-        self.toon_friendlist()
         self.loginbutton = LoginButton(self)
         self.sr04 = Sr04(self.client, self)
         self.sr04.start()
@@ -41,45 +36,6 @@ class SteamGUI:
         self.client.get_client().get_user(steam_id).send_message(text)
         neopixel = Neopixel()
         neopixel.speel_berichtanimatie()
-
-    def toon_friendlist(self):
-        data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
-
-        try:
-            friendlist = data['friendslist']['friends']
-            print(friendlist)
-            friend = friendlist[0]['steamid']
-            gameslst = self.api.get_steam_games_from_user(friend)
-            appid = gameslst['response']['games'][0]['appid']
-            data2 = self.api.get_procent(Appid=appid)
-            # print(data2)
-
-            percentages = data2['achievementpercentages']['achievements']
-
-            # print(percentages)
-
-            leeglst = []
-            for percentage in percentages:
-                leeglst.append(percentage['percent'])
-            print(self.sorteer_data(leeglst))
-
-            for friend in friendlist:
-                try:
-                    games = self.api.friendstatus(friend['steamid'])
-                    status = games['response']['players'][0]['personastate']
-                    naam = games['response']['players'][0]['personaname']
-                    if status == 0:
-                        print(f"{naam}: offline")
-                    elif status == 1:
-                        print(f"{naam}: online")
-                    elif status == 3:
-                        print(f"{naam}: afwezig")
-                    else:
-                        print(f"{naam}: iets anders")
-                except KeyError:
-                    print(f"deze gebruiker is een zwerver")
-        except KeyError:
-            print("Deze gebruiker is een zwerver.")
 
     def open_gui(self):
         try:
@@ -96,31 +52,73 @@ class SteamGUI:
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                         background="#5a565a", foreground="white", font=groot_font)
             berichtframe = Frame()
-            self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="steamid_64 van vriend")
-            self.user_entry = Entry(berichtframe)
-            self.msg_button = Button(berichtframe, text="check", command=self.check_online,
+            self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="stel favoriet in")
+            self.msg_button = Button(berichtframe, text="stel in", command=self.check_online,
                                      background="#5a565a", foreground="white", font=groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
-
+            self.friendframe = Frame()
             berichtframe.pack(side=RIGHT)
             self.user_label.pack()
-            self.user_entry.pack()
             self.msg_button.pack()
+            self.friendframe.pack(side=LEFT)
             self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
+            self.toon_friendlist()
             self.root.mainloop()
         except:
             self.stop()
 
-    def start_sensoren(self):
+    def toon_friendlist(self):
+        data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
+        online = 0
+        friendlist = []
+        try:
+            friendjson = data['friendslist']['friends']
+            print(friendjson)
+            friend = friendjson[0]['steamid']
+            gameslst = self.api.get_steam_games_from_user(friend)
+            appid = gameslst['response']['games'][0]['appid']
+            data2 = self.api.get_procent(Appid=appid)
 
-        self.sr04 = Sr04(self.client, self)
-        self.sr04.start()
-        neopixel = Neopixel()
-        neopixel.speel_berichtanimatie()
+            percentages = data2['achievementpercentages']['achievements']
+
+            leeglst = []
+            for percentage in percentages:
+                leeglst.append(percentage['percent'])
+            print(self.sorteer_data(leeglst))
+
+            for friend in friendjson:
+                try:
+                    games = self.api.friendstatus(friend['steamid'])
+                    status = games['response']['players'][0]['personastate']
+                    naam = games['response']['players'][0]['personaname']
+                    if not (status == 0 or status == 7):
+                        online += 1
+                    friendlist.append([naam, status, friend['steamid']])
+                except KeyError:
+                    print(f"deze gebruiker is een zwerver")
+        except KeyError:
+            print("Deze gebruiker is een zwerver.")
+        print(f"Aantal vrienden online: {online}")
+        koppen = ('Naam', 'Status')
+        self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings', )
+        scrollbar = Scrollbar(self.friendframe)
+        self.treeview.config(yscrollcommand=scrollbar.set)
+        for col in koppen:
+            self.treeview.heading(col, text=col)
+        friendlist = self.sorteer_data(friendlist)
+
+        for friend in friendlist:
+            self.treeview.insert("", "end",
+                            values=(friend[0], friend[1], friend[2]))
+
+        self.treeview.pack()
+        scrollbar.config(command=self.treeview.yview)
+        #scrollbar.pack()
+
+    def start_sensoren(self):
         Schuifregister()
-        self.Button = LoginButton(self)
 
     def stop(self):
         """ Deze functie sluit de applicatie af. """
@@ -133,7 +131,8 @@ class SteamGUI:
             pass
 
     def check_online(self):
-        friend = self.user_entry.get()
+        curItem = self.treeview.focus()
+        friend = self.treeview.item(curItem)['values'][2]
         data = self.api.friendstatus(friend)
         status = data['response']['players'][0]['personastate']
         if status == 0:
@@ -142,8 +141,6 @@ class SteamGUI:
         else:
             self.servo.start_spel(1)
             print("online")
-
-
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
@@ -193,7 +190,6 @@ class SteamGUI:
         self.sr04.stop()
         self.display_owned_games(None)
 
-
     def log_in(self):
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
@@ -201,4 +197,3 @@ class SteamGUI:
         self.sr04.start()
         self.display_owned_games(self.client.get_client().steam_id.as_64)
         self.stuur_bericht(76561197995118880, "Yo, alles goed?")
-
