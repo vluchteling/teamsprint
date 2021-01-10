@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 from tkinter import *
 from tkinter import ttk
@@ -23,8 +24,10 @@ class SteamGUI:
         self.button = None
         self.sr04 = None
         self.Button = None
+        self.servo = None
+        self.favoriet = None
+        self.status = None
         self.api = SteamWebAPI()
-        self.servo = Servo()
 
         self.loginbutton = LoginButton(self)
         self.sr04 = Sr04(self.client, self)
@@ -53,6 +56,8 @@ class SteamGUI:
                                         background="#5a565a", foreground="white", font=groot_font)
             berichtframe = Frame()
             self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="stel favoriet in")
+            self.favoriet_label = Label(berichtframe, font=groot_font, background="#5a565a",
+                                        text="Huidige favoriet: Geen")
             self.msg_button = Button(berichtframe, text="stel in", command=self.check_online,
                                      background="#5a565a", foreground="white", font=groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
@@ -61,6 +66,7 @@ class SteamGUI:
             self.friendframe = Frame()
             berichtframe.pack(side=RIGHT)
             self.user_label.pack()
+            self.favoriet_label.pack()
             self.msg_button.pack()
             self.friendframe.pack(side=LEFT)
             self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
@@ -111,11 +117,11 @@ class SteamGUI:
 
         for friend in friendlist:
             self.treeview.insert("", "end",
-                            values=(friend[0], friend[1], friend[2]))
+                                 values=(friend[0], friend[1], friend[2]))
 
         self.treeview.pack()
         scrollbar.config(command=self.treeview.yview)
-        #scrollbar.pack()
+        # scrollbar.pack()
 
     def start_sensoren(self):
         Schuifregister()
@@ -129,18 +135,21 @@ class SteamGUI:
             self.sr04.stop()
         except AttributeError:
             pass
+        if self.servo is not None:
+            self.servo.stop()
 
     def check_online(self):
         curItem = self.treeview.focus()
-        friend = self.treeview.item(curItem)['values'][2]
-        data = self.api.friendstatus(friend)
+        friend_name = self.treeview.item(curItem)['values'][0]
+        self.favoriet = self.treeview.item(curItem)['values'][2]
+        self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
+        servo = Servo()
+        data= self.api.friendstatus(self.favoriet)
         status = data['response']['players'][0]['personastate']
-        if status == 0:
-            self.servo.start_spel(0)
-            print("offline")
-        else:
-            self.servo.start_spel(1)
-            print("online")
+        if status != self.status:
+            servo.start_spel(status)
+            self.status = status
+        threading.Timer(1, self.check_online).start()
 
     def display_owned_games(self, steamid):
         """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
@@ -179,7 +188,8 @@ class SteamGUI:
             self.quicksort(lst, pi + 1, max)
 
     def log_out(self):
-        self.stuur_bericht(76561197995118880, "Ik ga, later man.")
+        if self.favoriet:
+            self.stuur_bericht(self.favoriet, "Ik ga, later man.")
         while True:
             try:
                 self.client.log_out()
@@ -188,6 +198,8 @@ class SteamGUI:
                 continue
         self.client = None
         self.sr04.stop()
+        if self.servo is not None:
+            self.servo.stop()
         self.display_owned_games(None)
 
     def log_in(self):
@@ -196,4 +208,5 @@ class SteamGUI:
         self.sr04 = Sr04(self.client, self)
         self.sr04.start()
         self.display_owned_games(self.client.get_client().steam_id.as_64)
-        self.stuur_bericht(76561197995118880, "Yo, alles goed?")
+        if self.favoriet:
+            self.stuur_bericht(self.favoriet, "Yo, alles goed?")

@@ -46,12 +46,12 @@ class Sr04:
                 counter = 0
                 self.client.change_personastate("aanwezig")
                 if not berichtverstuurd:
-                    self.gui.stuur_bericht(76561197995118880, "Ik ben weer terug!")
+                    #self.gui.stuur_bericht(76561197995118880, "Ik ben weer terug!")
                     berichtverstuurd = True
             else:
                 if counter == 10:
                     self.client.change_personastate("afwezig")
-                    self.gui.stuur_bericht(76561197995118880, "Ik ben zo terug.")
+                    #self.gui.stuur_bericht(76561197995118880, "Ik ben zo terug.")
                     berichtverstuurd = False
                 counter += 1
             gevent.sleep(1)

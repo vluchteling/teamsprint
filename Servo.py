@@ -20,15 +20,11 @@ class Servo:
         b = 0.02
         self.pulse(pin_nr, (a + (position * (0.002 / 100))), b)
 
-    def start_spel(self, player):
+    def start_spel(self, status):
         servo = 25
         GPIO.setup(servo, GPIO.OUT)
-        for i in range(0, 50, 1):
-            self.servo_pulse(servo, i)
-
-        GPIO.setup(servo, GPIO.OUT)
-        gevent.sleep(2)
-        if player == 0:
+        gevent.sleep(0.5)
+        if status == 0:
             for i in range(50, 100, 1):
                 self.servo_pulse(servo, i)
         else:
