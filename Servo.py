@@ -1,13 +1,11 @@
 import RPi.GPIO as GPIO
 import time
 
-import gevent
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(0)
-
 
 class Servo:
+    def __init__(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(0)
 
     def pulse(self, pin_nr, high_time, low_time):
         GPIO.output(pin_nr, GPIO.HIGH)
@@ -32,4 +30,3 @@ class Servo:
         else:
             for i in range(0, 50, 1):
                 self.servo_pulse(servo, i)
-

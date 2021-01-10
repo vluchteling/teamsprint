@@ -1,7 +1,5 @@
 import atexit
-import multiprocessing
 import RPi.GPIO as GPIO
-import gevent
 
 
 class LoginButton:
@@ -34,9 +32,7 @@ class LoginButton:
                 GPIO.output(self.led, GPIO.HIGH)
                 self.loggedin = True
                 self.SteamGUI.log_in()
-        #gevent.sleep(1)
+        # gevent.sleep(1)
 
     def lights_out(self):
         GPIO.output(self.led, GPIO.LOW)
-
-

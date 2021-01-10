@@ -20,13 +20,13 @@ class Sr04:
     def stop(self):
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
+
     def get_vriend(self):
         return self.vriend
-    def set_vriend(self,vriend):
+
+    def set_vriend(self, vriend):
         self.vriend = vriend
         print("ok")
-
-
 
     def check_status(self):
         GPIO.setmode(GPIO.BCM)

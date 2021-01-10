@@ -25,7 +25,6 @@ class SteamWebAPI:
             data = json.loads(url.read().decode())
         return data
 
-
     def get_news(self):
         text = f' http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=440&count=3&maxlength=300&format=json'
         with urllib.request.urlopen(text) as url:
@@ -37,6 +36,3 @@ class SteamWebAPI:
         with urllib.request.urlopen(text) as url:
             data = json.loads(url.read().decode())
         return data
-
-
-

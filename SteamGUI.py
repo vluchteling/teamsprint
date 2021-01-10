@@ -1,11 +1,9 @@
 import os
 import threading
-import time
 from tkinter import *
 from tkinter import ttk
 from tkinter.font import Font
 from gevent.exceptions import LoopExit
-from steam.client.user import SteamUser
 from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
 from LoginButton import LoginButton
@@ -20,6 +18,7 @@ class SteamGUI:
 
         self.client = client
         self.username, self.password = self.client.get_credentials()
+
         self.root = None
         self.button = None
         self.sr04 = None
@@ -28,6 +27,18 @@ class SteamGUI:
         self.favoriet = "begin"
         self.status = None
         self.timer = None
+        self.groot_font = None
+        self.titelframe = None
+        self.naamframe = None
+        self.afsluitButton = None
+        self.berichtframe = None
+        self.user_label = None
+        self.favoriet_label = None
+        self.msg_button = None
+        self.clear_button = None
+        self.friendframe = None
+        self.treeview = None
+
         self.api = SteamWebAPI()
 
         self.loginbutton = LoginButton(self)
@@ -57,13 +68,14 @@ class SteamGUI:
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                         background="#5a565a", foreground="white", font=self.groot_font)
             self.berichtframe = Frame(background="#2f2c2f")
-            self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
+            self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
+                                    text="stel favoriet in")
             self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                         text="Huidige favoriet: Geen")
             self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
                                      background="#5a565a", foreground="white", font=self.groot_font)
             self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
-                                     background="#5a565a", foreground="white", font=self.groot_font)
+                                       background="#5a565a", foreground="white", font=self.groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
@@ -156,7 +168,7 @@ class SteamGUI:
 
                 favoriet = self.treeview.item(curItem)['values'][2]
                 self.favoriet = favoriet
-                #self.sr04.set_vriend(self.favoriet)
+                # self.sr04.set_vriend(self.favoriet)
                 if self.sr04.get_vriend() is None:
                     self.sr04.stop()
                     self.sr04 = Sr04(self.client, self, self.favoriet)
@@ -262,4 +274,3 @@ class SteamGUI:
         self.favoriet = None
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
         self.sr04.stop()
-
