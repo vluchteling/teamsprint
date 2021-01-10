@@ -11,6 +11,8 @@ class Sr04:
         self.client = client
         self.gui = gui
         self.vriend = vriend
+        if self.vriend == "begin":
+            self.vriend = None
 
     def start(self):
         self.proc.start()
@@ -57,7 +59,7 @@ class Sr04:
                         self.gui.stuur_bericht(self.vriend, "Ik ben weer terug!")
                     berichtverstuurd = True
             else:
-                if counter == 10:
+                if counter == 5:
                     self.client.change_personastate("afwezig")
                     if self.vriend is not None:
                         self.gui.stuur_bericht(self.vriend, "Ik ben zo terug.")

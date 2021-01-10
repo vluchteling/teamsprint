@@ -25,8 +25,9 @@ class SteamGUI:
         self.sr04 = None
         self.Button = None
         self.servo = None
-        self.favoriet = None
+        self.favoriet = "begin"
         self.status = None
+        self.timer = None
         self.api = SteamWebAPI()
 
         self.loginbutton = LoginButton(self)
@@ -48,26 +49,29 @@ class SteamGUI:
             # De GUI code
             self.root = Tk()
             self.root.attributes("-fullscreen", True)
-            groot_font = Font(size=30)
+            self.groot_font = Font(size=30)
             self.root.configure(bg="#2f2c2f")
-            self.titelframe = Label(font=groot_font, background="#5a565a", text="Titel van het eerste spel:")
-            self.naamframe = Label(font=groot_font, background="#5a565a")
+            self.titelframe = Label(font=self.groot_font, background="#5a565a", text="Titel van het eerste spel:")
+            self.naamframe = Label(font=self.groot_font, background="#5a565a")
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                        background="#5a565a", foreground="white", font=groot_font)
-            berichtframe = Frame()
-            self.user_label = Label(berichtframe, font=groot_font, background="#5a565a", text="stel favoriet in")
-            self.favoriet_label = Label(berichtframe, font=groot_font, background="#5a565a",
+                                        background="#5a565a", foreground="white", font=self.groot_font)
+            self.berichtframe = Frame(background="#5a565a")
+            self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
+            self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                         text="Huidige favoriet: Geen")
-            self.msg_button = Button(berichtframe, text="stel in", command=self.check_online,
-                                     background="#5a565a", foreground="white", font=groot_font)
+            self.msg_button = Button(self.berichtframe, text="stel in", command=self.check_online,
+                                     background="#5a565a", foreground="white", font=self.groot_font)
+            self.clear_button = Button(self.berichtframe, text="stel in", command=self.timerstop,
+                                     background="#5a565a", foreground="white", font=self.groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
-            self.friendframe = Frame()
-            berichtframe.pack(side=RIGHT)
+            self.friendframe = Frame(background="#5a565a")
+            self.berichtframe.pack(side=RIGHT)
             self.user_label.pack()
             self.favoriet_label.pack()
             self.msg_button.pack()
+            self.clear_button.pack()
             self.friendframe.pack(side=LEFT)
             self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
             self.toon_friendlist()
@@ -137,28 +141,37 @@ class SteamGUI:
             pass
         if self.servo is not None:
             self.servo.stop()
+        if self.timer is not None:
+            self.timer.stop()
 
     def check_online(self):
         try:
-            curItem = self.treeview.focus()
+            if self.favoriet is not None:
+                curItem = self.treeview.focus()
+                try:
+                    friend_name = self.treeview.item(curItem)['values'][0]
+                except IndexError:
+                    return
 
-            friend_name = self.treeview.item(curItem)['values'][0]
-            favoriet = self.treeview.item(curItem)['values'][2]
-            self.favoriet = favoriet
-            #self.sr04.set_vriend(self.favoriet)
-            if self.sr04.get_vriend() is None:
-                self.sr04.stop()
-                self.sr04 = Sr04(self.client, self, self.favoriet)
-                self.sr04.start()
+                favoriet = self.treeview.item(curItem)['values'][2]
+                self.favoriet = favoriet
+                #self.sr04.set_vriend(self.favoriet)
+                if self.sr04.get_vriend() is None:
+                    self.sr04.stop()
+                    self.sr04 = Sr04(self.client, self, self.favoriet)
+                    self.sr04.start()
 
-            self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
-            servo = Servo()
-            data = self.api.friendstatus(self.favoriet)
-            status = data['response']['players'][0]['personastate']
-            if status != self.status:
-                servo.start_spel(status)
-                self.status = status
-            threading.Timer(1, self.check_online).start()
+                self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
+                servo = Servo()
+                data = self.api.friendstatus(self.favoriet)
+                status = data['response']['players'][0]['personastate']
+                if status != self.status:
+                    servo.start_spel(status)
+                    self.status = status
+                self.timer = threading.Timer(1, self.check_online).start()
+            else:
+                self.favoriet_label["text"] = f"Huidige favoriet: geen"
+                self.favoriet = "begin"
         except RuntimeError:
             pass
 
@@ -209,9 +222,17 @@ class SteamGUI:
                 continue
         self.client = None
         self.sr04.stop()
+
         if self.servo is not None:
             self.servo.stop()
+        if self.timer is not None:
+            self.timer.destroy()
         self.display_owned_games(None)
+        self.user_label.forget()
+        self.favoriet_label.forget()
+        self.msg_button.forget()
+        self.treeview.forget()
+        self.favoriet = None
 
     def log_in(self):
         self.client = SteamClientAPI(self.username, self.password)
@@ -219,5 +240,20 @@ class SteamGUI:
         self.sr04 = Sr04(self.client, self, self.favoriet)
         self.sr04.start()
         self.display_owned_games(self.client.get_client().steam_id.as_64)
+        self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
+        self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
+                                    text="Huidige favoriet: Geen")
+        self.msg_button = Button(self.berichtframe, text="stel in", command=self.check_online,
+                                 background="#5a565a", foreground="white", font=self.groot_font)
+        self.user_label.pack()
+        self.favoriet_label.pack()
+        self.msg_button.pack()
+        self.toon_friendlist()
+        self.favoriet = "begin"
         if self.favoriet:
             self.stuur_bericht(self.favoriet, "Yo, alles goed?")
+
+    def timerstop(self):
+        self.favoriet = None
+        self.sr04.stop()
+
