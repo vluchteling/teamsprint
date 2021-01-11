@@ -19,7 +19,7 @@ class Schuifregister:
         GPIO.setup(data_pin, GPIO.OUT)
         atexit.register(self.stop)
 
-    def hc595(self,shift_clock_pin, latch_clock_pin, data_pin, value, delay):
+    def hc595(self, shift_clock_pin, latch_clock_pin, data_pin, value, delay):
         if value % 2 == 1:
             GPIO.output(data_pin, 1)
             GPIO.output(shift_clock_pin, 0)
@@ -106,5 +106,6 @@ class Schuifregister:
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
+
     def stop(self):
         self.lichtjes(0)

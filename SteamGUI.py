@@ -220,7 +220,7 @@ class SteamGUI:
                 arr[kleinste], arr[j] = arr[j], arr[kleinste]
 
         arr[kleinste + 1], arr[max] = arr[max], arr[kleinste + 1]
-        return (kleinste + 1)
+        return kleinste + 1
 
     def quicksort(self, lst, min, max):
         if min < max:

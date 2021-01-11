@@ -2,8 +2,6 @@ import os
 from tkinter import *
 from tkinter.font import Font
 from tkinter.ttk import Treeview
-
-
 from SteamWebAPI import SteamWebAPI
 
 
@@ -26,11 +24,9 @@ class DataScherm:
         self.gamesframe.pack()
         friendsdata = self.haal_data_op()
         for friend in friendsdata:
-
             games = friendsdata[friend]['response']['games']
             self.toon_data(games)
             self.maak_data(games)
-
 
         self.afsluitButton.pack()
         self.root.mainloop()
@@ -48,8 +44,6 @@ class DataScherm:
             print(self.api.get_steam_games_from_user(friend)['response']['games'])
             friendgamesdict[friend] = self.api.get_steam_games_from_user(friend)
         return friendgamesdict
-
-
 
     def toon_data(self, data):
         koppen = ('appid', "name", "playtime_forever (min)")
@@ -73,17 +67,11 @@ class DataScherm:
         for game in data:
             counter += 1
             totaaltijd += game['playtime_forever']
-        print(f"Gemiddelde speeltijd per game: {totaaltijd/counter}")
-
-
-
-
+        print(f"Gemiddelde speeltijd per game: {totaaltijd / counter}")
 
     def stop(self):
         self.root.destroy()
 
-
         """ Deze functie sluit de applicatie af. """
         if self.root is not None:
-
             self.root = None
