@@ -11,6 +11,7 @@ class DataScherm:
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
         self.client = client
+        self.api = SteamWebAPI()
 
         # De GUI code
         self.root = Tk()
@@ -23,22 +24,30 @@ class DataScherm:
 
         #self.gameslabel = Label(font=self.groot_font, background="#5a565a")
         self.gamesframe.pack()
-        games = self.haal_data_op()
-        self.toon_data(games)
-        self.maak_data(games)
+        friendsdata = self.haal_data_op()
+        for friend in friendsdata:
+
+            self.toon_data(friend[1])
+            self.maak_data(friend[1])
         self.afsluitButton.pack()
         self.root.mainloop()
 
     def haal_data_op(self):
-        steamid = 76561199119177557
-        api = SteamWebAPI()
-        text = api.get_steam_games_from_user(steamid)
-        legelist= []
+        steamid = self.client.get_client().steam_id.as_64
+        data = self.api.get_friend_list(steamid)
+        friendjson = data['friendslist']['friends']
+        friendlist = []
+        for friend in friendjson:
+            friendid = friend['steamid']
+            friendlist.append(friendid)
+        friendgameslist = []
+        for friend in friendlist:
+            friendgameslist.append([friend, self.api.get_steam_games_from_user(friend)])
+        return friendgameslist
 
-        games = text['response']['games']
-        for game in games:
-            legelist.append(game["name"])
-        return games
+
+        #print(steamid)
+        #return games
 
     def toon_data(self, data):
         koppen = ('appid', "name", "playtime_forever (min)")
@@ -70,9 +79,10 @@ class DataScherm:
 
 
     def stop(self):
+        self.root.destroy()
 
 
         """ Deze functie sluit de applicatie af. """
         if self.root is not None:
-            self.root.destroy()
+
             self.root = None

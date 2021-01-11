@@ -102,7 +102,6 @@ class SteamGUI:
         friendlist = []
         try:
             friendjson = data['friendslist']['friends']
-            print(friendjson)
             friend = friendjson[0]['steamid']
             gameslst = self.api.get_steam_games_from_user(friend)
             appid = gameslst['response']['games'][0]['appid']
@@ -127,7 +126,8 @@ class SteamGUI:
                     print(f"deze gebruiker is een zwerver")
         except KeyError:
             print("Deze gebruiker is een zwerver.")
-        print(f"Aantal vrienden online: {online}")
+        schuifregister = Schuifregister()
+        schuifregister.lichtjes(online)
         koppen = ('Naam', 'Status')
         self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings', )
         scrollbar = Scrollbar(self.friendframe)
