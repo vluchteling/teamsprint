@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.font import Font
 from tkinter.ttk import Treeview
 
+
 from SteamWebAPI import SteamWebAPI
 
 
@@ -22,13 +23,15 @@ class DataScherm:
                                     background="#5a565a", foreground="white", font=self.groot_font)
         self.gamesframe = Frame()
 
-        #self.gameslabel = Label(font=self.groot_font, background="#5a565a")
         self.gamesframe.pack()
         friendsdata = self.haal_data_op()
         for friend in friendsdata:
 
-            self.toon_data(friend[1])
-            self.maak_data(friend[1])
+            games = friendsdata[friend]['response']['games']
+            self.toon_data(games)
+            self.maak_data(games)
+
+
         self.afsluitButton.pack()
         self.root.mainloop()
 
@@ -40,14 +43,13 @@ class DataScherm:
         for friend in friendjson:
             friendid = friend['steamid']
             friendlist.append(friendid)
-        friendgameslist = []
+        friendgamesdict = {}
         for friend in friendlist:
-            friendgameslist.append([friend, self.api.get_steam_games_from_user(friend)])
-        return friendgameslist
+            print(self.api.get_steam_games_from_user(friend)['response']['games'])
+            friendgamesdict[friend] = self.api.get_steam_games_from_user(friend)
+        return friendgamesdict
 
 
-        #print(steamid)
-        #return games
 
     def toon_data(self, data):
         koppen = ('appid', "name", "playtime_forever (min)")
@@ -56,7 +58,6 @@ class DataScherm:
         self.treeview.config(yscrollcommand=scrollbar.set)
         for col in koppen:
             self.treeview.heading(col, text=col)
-        #friendlist = self.sorteer_data(friendlist)
 
         for game in data:
             print(game)
