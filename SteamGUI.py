@@ -11,6 +11,7 @@ from Servo import Servo
 from Schuifregister import Schuifregister
 from EchoSensor import Sr04
 from Neopixel import Neopixel
+from AI import DataScherm
 
 
 class SteamGUI:
@@ -65,6 +66,8 @@ class SteamGUI:
             self.root.configure(bg="#2f2c2f")
             self.titelframe = Label(font=self.groot_font, background="#5a565a", text="Titel van het eerste spel:")
             self.naamframe = Label(font=self.groot_font, background="#5a565a")
+            self.databutton = Button (text="Afsluiten", command=self.open_data,
+                                        background="#5a565a", foreground="white", font=self.groot_font)
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                         background="#5a565a", foreground="white", font=self.groot_font)
             self.berichtframe = Frame(background="#2f2c2f")
@@ -79,6 +82,7 @@ class SteamGUI:
             self.afsluitButton.pack(side=BOTTOM, pady=5)
             self.titelframe.pack(side=TOP, pady=30)
             self.naamframe.pack(side=TOP, pady=5)
+            self.databutton.pack()
             self.friendframe = Frame(background="#2f2c2f")
             self.berichtframe.pack(side=RIGHT)
             self.user_label.pack()
@@ -274,3 +278,10 @@ class SteamGUI:
         self.favoriet = None
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
         self.sr04.stop()
+
+    def open_data(self):
+        self.stop()
+        DataScherm(self.client)
+        self.root = Tk()
+        self.open_gui()
+

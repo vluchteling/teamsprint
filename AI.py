@@ -10,6 +10,7 @@ class DataScherm:
     def __init__(self, client):
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
+        self.client = client
 
         # De GUI code
         self.root = Tk()
@@ -69,6 +70,8 @@ class DataScherm:
 
 
     def stop(self):
+
+
         """ Deze functie sluit de applicatie af. """
         if self.root is not None:
             self.root.destroy()

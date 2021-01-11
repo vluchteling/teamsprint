@@ -36,3 +36,4 @@ class LoginButton:
 
     def lights_out(self):
         GPIO.output(self.led, GPIO.LOW)
+
