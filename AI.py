@@ -6,14 +6,14 @@ from SteamWebAPI import SteamWebAPI
 
 
 class DataScherm:
-    def __init__(self, client):
+    def __init__(self, client, root):
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
         self.client = client
         self.api = SteamWebAPI()
 
         # De GUI code
-        self.root = Tk()
+        self.root = root
         self.root.attributes("-fullscreen", True)
         self.groot_font = Font(size=30)
         self.root.configure(bg="#2f2c2f")
@@ -29,7 +29,6 @@ class DataScherm:
             self.maak_data(games)
 
         self.afsluitButton.pack()
-        self.root.mainloop()
 
     def haal_data_op(self):
         steamid = self.client.get_client().steam_id.as_64
@@ -41,7 +40,6 @@ class DataScherm:
             friendlist.append(friendid)
         friendgamesdict = {}
         for friend in friendlist:
-            print(self.api.get_steam_games_from_user(friend)['response']['games'])
             friendgamesdict[friend] = self.api.get_steam_games_from_user(friend)
         return friendgamesdict
 
@@ -54,7 +52,6 @@ class DataScherm:
             self.treeview.heading(col, text=col)
 
         for game in data:
-            print(game)
             self.treeview.insert("", "end",
                                  values=(game['appid'], game['name'], game['playtime_forever']))
 
@@ -70,11 +67,10 @@ class DataScherm:
         print(f"Gemiddelde speeltijd per game: {totaaltijd / counter}")
 
     def stop(self):
-        self.root.destroy()
+        self.gamesframe.forget()
+        self.afsluitButton.forget()
+        self.treeview.forget()
 
-        """ Deze functie sluit de applicatie af. """
-        if self.root is not None:
-            self.root = None
 
     def achievements(self):
         data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
@@ -89,7 +85,6 @@ class DataScherm:
         leeglst = []
         for percentage in percentages:
             leeglst.append(percentage['percent'])
-        print(self.sorteer_data(leeglst))
 
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)

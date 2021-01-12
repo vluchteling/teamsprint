@@ -1,3 +1,4 @@
+import _tkinter
 import os
 import threading
 from tkinter import *
@@ -111,7 +112,10 @@ class SteamGUI:
 
                 for friend in friendjson:
                     try:
+                        print(friend['steamid'])
                         games = self.api.friendstatus(friend['steamid'])
+                        print(games)
+
                         status = games['response']['players'][0]['personastate']
                         naam = games['response']['players'][0]['personaname']
                         if not (status == 0 or status == 7):
@@ -127,7 +131,10 @@ class SteamGUI:
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
-                self.treeview.forget()
+                try:
+                    self.treeview.forget()
+                except _tkinter.TclError:
+                    return
             self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings', )
             scrollbar = Scrollbar(self.friendframe)
             self.treeview.config(yscrollcommand=scrollbar.set)
@@ -145,7 +152,10 @@ class SteamGUI:
         except RuntimeError:
             pass
         except AttributeError:
+            print("ae")
             self.treeview.forget()
+
+
 
 
     def stop(self):
@@ -260,11 +270,23 @@ class SteamGUI:
         self.sr04.stop()
 
     def open_data(self):
-        self.stop()
-        DataScherm(self.client)
-        self.root = Tk()
-        self.open_gui()
+        self.afsluitButton.forget()
+        self.titelframe.forget()
+        self.naamframe.forget()
+        self.databutton.forget()
+        self.berichtframe.forget()
+        self.user_label.forget()
+        self.favoriet_label.forget()
+        self.msg_button.forget()
+        self.clear_button.forget()
+        self.friendframe.forget()
+        self.treeview.forget()
+        self.schuifregister.lichtjes(0)
+        self.friendtimer.cancel()
+        self.friendtimer = None
+        DataScherm(self.client, self.root)
 
+        self.open_gui()
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
