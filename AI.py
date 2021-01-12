@@ -75,3 +75,42 @@ class DataScherm:
         """ Deze functie sluit de applicatie af. """
         if self.root is not None:
             self.root = None
+
+    def achievements(self):
+        data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
+        friendjson = data['friendslist']['friends']
+        friend = friendjson[0]['steamid']
+        gameslst = self.api.get_steam_games_from_user(friend)
+        appid = gameslst['response']['games'][0]['appid']
+        data2 = self.api.get_procent(Appid=appid)
+
+        percentages = data2['achievementpercentages']['achievements']
+
+        leeglst = []
+        for percentage in percentages:
+            leeglst.append(percentage['percent'])
+        print(self.sorteer_data(leeglst))
+
+    def sorteer_data(self, data):
+        self.quicksort(data, 0, len(data) - 1)
+        """ Deze funtie sorteert de ingevoerde data."""
+        return data
+
+    def partition(self, arr, min, max):
+        kleinste = (min - 1)
+        grootste = arr[max]
+
+        for j in range(min, max):
+
+            if arr[j] < grootste:
+                kleinste = kleinste + 1
+                arr[kleinste], arr[j] = arr[j], arr[kleinste]
+
+        arr[kleinste + 1], arr[max] = arr[max], arr[kleinste + 1]
+        return kleinste + 1
+
+    def quicksort(self, lst, min, max):
+        if min < max:
+            pi = self.partition(lst, min, max)
+            self.quicksort(lst, min, pi - 1)
+            self.quicksort(lst, pi + 1, max)

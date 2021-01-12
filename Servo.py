@@ -21,7 +21,7 @@ class Servo:
     def start_spel(self, status):
         servo = 25
         GPIO.setup(servo, GPIO.OUT)
-        if status == 0:
+        if status == 0 or status == 7:
             for i in range(50, 100, 1):
                 self.servo_pulse(servo, i)
         elif status == 1:
