@@ -45,13 +45,17 @@ class SteamGUI:
         self.treeview = None
         self.online = None
         self.schuifregister = None
+        self.root = Tk()
+        self.root.attributes("-fullscreen", True)
 
         self.api = SteamWebAPI()
 
         self.loginbutton = LoginButton(self)
-        self.sr04 = Sr04(self.client, self, None)
-        self.sr04.start()
+
         self.open_gui()
+        #self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
+        self.start_sensoren()
+        self.start_gui()
 
     def stuur_bericht(self, steam_id, text):
         print(text)
@@ -61,46 +65,80 @@ class SteamGUI:
             neopixel.speel_berichtanimatie()
 
     def open_gui(self):
-        try:
-            if os.environ.get('DISPLAY', '') == '':
-                os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
+        if os.environ.get('DISPLAY', '') == '':
+            os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
-            # De GUI code
-            self.root = Tk()
-            self.root.attributes("-fullscreen", True)
-            self.groot_font = Font(size=30)
-            self.root.configure(bg="#2f2c2f")
-            self.titelframe = Label(font=self.groot_font, background="#5a565a", text="Titel van het eerste spel:")
-            self.naamframe = Label(font=self.groot_font, background="#5a565a")
-            self.databutton = Button(text="Afsluiten", command=self.open_data,
-                                     background="#5a565a", foreground="white", font=self.groot_font)
-            self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                        background="#5a565a", foreground="white", font=self.groot_font)
-            self.berichtframe = Frame(background="#2f2c2f")
-            self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
-                                    text="stel favoriet in")
-            self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
-                                        text="Huidige favoriet: Geen")
-            self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
-                                     background="#5a565a", foreground="white", font=self.groot_font)
-            self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
-                                       background="#5a565a", foreground="white", font=self.groot_font)
-            self.afsluitButton.pack(side=BOTTOM, pady=5)
-            self.titelframe.pack(side=TOP, pady=30)
-            self.naamframe.pack(side=TOP, pady=5)
-            self.databutton.pack()
-            self.friendframe = Frame(background="#2f2c2f")
-            self.berichtframe.pack(side=RIGHT)
-            self.user_label.pack()
-            self.favoriet_label.pack()
-            self.msg_button.pack()
-            self.clear_button.pack()
-            self.friendframe.pack(side=LEFT)
-            self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
-            self.toon_friendlist()
+        # De GUI code
+
+        self.groot_font = Font(size=30)
+        self.root.configure(bg="#2f2c2f")
+        self.titelframe = Label(font=self.groot_font, background="#5a565a", text="SteamPI Client")
+        self.naamframe = Label(font=self.groot_font, background="#5a565a")
+        self.databutton = Button(text="Data", command=self.open_data,
+                                 background="#5a565a", foreground="white", font=self.groot_font)
+        self.afsluitButton = Button(text="Afsluiten", command=self.stop,
+                                    background="#5a565a", foreground="white", font=self.groot_font)
+        self.berichtframe = Frame(background="#2f2c2f")
+        self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
+                                text="stel favoriet in")
+        self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
+                                    text="Huidige favoriet: Geen")
+        self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
+                                 background="#5a565a", foreground="white", font=self.groot_font)
+        self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
+                                   background="#5a565a", foreground="white", font=self.groot_font)
+        self.afsluitButton.pack(side=BOTTOM, pady=5)
+        self.titelframe.pack(side=TOP, pady=30)
+        self.naamframe.pack(side=TOP, pady=5)
+        self.databutton.pack()
+        self.friendframe = Frame(background="#2f2c2f")
+        self.berichtframe.pack(side=RIGHT)
+        self.user_label.pack()
+        self.favoriet_label.pack()
+        self.msg_button.pack()
+        self.clear_button.pack()
+        self.friendframe.pack(side=LEFT)
+
+    def clear_gui(self, afsluitbutton):
+        if afsluitbutton:
+            self.afsluitButton.forget()
+        self.titelframe.forget()
+        self.naamframe.forget()
+        self.databutton.forget()
+        self.berichtframe.forget()
+        self.user_label.forget()
+        self.favoriet_label.forget()
+        self.msg_button.forget()
+        self.clear_button.forget()
+        self.friendframe.forget()
+        self.treeview.forget()
+
+
+    def start_gui(self):
+        try:
             self.root.mainloop()
         except:
+
             self.stop()
+
+    def start_sensoren(self):
+        self.friendtimer = self.toon_friendlist()
+        self.onlinetimer = self.check_online()
+        self.sr04 = Sr04(self.client, self, None)
+        self.sr04.start()
+        self.loginbutton = LoginButton(self)
+
+    def stop_sensoren(self, fullstop):
+        if self.friendtimer is not None:
+            self.friendtimer.cancel()
+        if self.onlinetimer is not None:
+            self.onlinetimer.cancel()
+        if self.schuifregister is not None:
+            self.schuifregister.lichtjes(0)
+        if self.sr04 is not None:
+            self.sr04.stop()
+        if fullstop and self.loginbutton is not None:
+            self.loginbutton.stop()
 
     def toon_friendlist(self):
         try:
@@ -148,31 +186,18 @@ class SteamGUI:
 
             self.treeview.pack()
             scrollbar.config(command=self.treeview.yview)
-            self.friendtimer = threading.Timer(1, self.toon_friendlist).start()
+            return threading.Timer(10, self.toon_friendlist).start()
         except RuntimeError:
             pass
         except AttributeError:
             print("ae")
             self.treeview.forget()
 
-
-
-
     def stop(self):
         """ Deze functie sluit de applicatie af. """
         if self.root is not None:
             self.root.destroy()
-            self.root = None
-        try:
-            self.sr04.stop()
-        except AttributeError:
-            pass
-        if self.servo is not None:
-            self.servo.stop()
-        if self.onlinetimer is not None:
-            self.onlinetimer.cancel()
-        if self.friendtimer is not None:
-            self.friendtimer.cancel()
+        self.stop_sensoren(True)
 
     def check_online(self):
         if self.favoriet is not None:
@@ -184,11 +209,6 @@ class SteamGUI:
 
             favoriet = self.treeview.item(curItem)['values'][2]
             self.favoriet = favoriet
-            if self.sr04.get_vriend() is None:
-                self.sr04.stop()
-                self.sr04 = Sr04(self.client, self, self.favoriet)
-                self.sr04.start()
-
             self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
             servo = Servo()
             data = self.api.friendstatus(self.favoriet)
@@ -196,7 +216,7 @@ class SteamGUI:
             if status != self.status:
                 servo.start_spel(status)
                 self.status = status
-            self.onlinetimer = threading.Timer(1, self.check_online).start()
+            return threading.Timer(1, self.check_online).start()
         else:
             if self.onlinetimer is not None:
                 self.onlinetimer.cancel()
@@ -215,10 +235,11 @@ class SteamGUI:
         except KeyError:
             self.naamframe["text"] = "Deze gebruiker heeft geen games."
 
-
     def log_out(self):
-        if self.favoriet:
+        if self.favoriet != "begin" and self.favoriet is not None:
             self.stuur_bericht(self.favoriet, "Ik ga, later man.")
+
+        self.clear_gui(False)
         while True:
             try:
                 self.client.log_out()
@@ -226,67 +247,32 @@ class SteamGUI:
             except LoopExit:
                 continue
         self.client = None
-        self.sr04.stop()
-
-        if self.servo is not None:
-            self.servo.stop()
-        if self.schuifregister is not None:
-            self.schuifregister.lichtjes(0)
-        if self.onlinetimer is not None:
-            self.onlinetimer.cancel()
-        if self.friendtimer is not None:
-            self.friendtimer.cancel()
-        self.display_owned_games(None)
-        self.user_label.forget()
-        self.favoriet_label.forget()
-        self.msg_button.forget()
-        self.treeview.forget()
-        self.clear_button.forget()
-        self.favoriet = None
+        self.stop_sensoren(False)
+        self.favoriet = "begin"
 
     def log_in(self):
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
-        self.sr04 = Sr04(self.client, self, self.favoriet)
-        self.sr04.start()
-        self.display_owned_games(self.client.get_client().steam_id.as_64)
-        self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a", text="stel favoriet in")
-        self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
-                                    text="Huidige favoriet: Geen")
-        self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
-                                 background="#5a565a", foreground="white", font=self.groot_font)
-        self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
-                                   background="#5a565a", foreground="white", font=self.groot_font)
-        self.user_label.pack()
-        self.favoriet_label.pack()
-        self.msg_button.pack()
-        self.clear_button.pack()
-        self.toon_friendlist()
+        self.open_gui()
+        self.start_sensoren()
         self.favoriet = "begin"
 
     def timerstop(self):
         self.favoriet = None
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
-        self.sr04.stop()
+        if self.onlinetimer is not None:
+            self.onlinetimer.cancel()
+
 
     def open_data(self):
-        self.afsluitButton.forget()
-        self.titelframe.forget()
-        self.naamframe.forget()
-        self.databutton.forget()
-        self.berichtframe.forget()
-        self.user_label.forget()
-        self.favoriet_label.forget()
-        self.msg_button.forget()
-        self.clear_button.forget()
-        self.friendframe.forget()
-        self.treeview.forget()
+        self.clear_gui(True)
         self.schuifregister.lichtjes(0)
         self.friendtimer.cancel()
         self.friendtimer = None
         DataScherm(self.client, self.root)
 
         self.open_gui()
+
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
