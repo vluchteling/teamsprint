@@ -120,7 +120,6 @@ class SteamGUI:
         self.sr04.start()
         if loginbtnstart:
             self.loginbutton = LoginButton(self)
-            self.loginbutton.start()
 
     def stop_sensoren(self, loginbtndelete):
         if self.schuifregister is not None:
@@ -132,7 +131,7 @@ class SteamGUI:
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:
-            self.loginbutton.stop()
+            self.loginbutton = None
 
 
     def toon_friendlist(self):

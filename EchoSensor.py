@@ -2,7 +2,6 @@ import multiprocessing
 import RPi.GPIO as GPIO
 import time
 import gevent
-from Berichtverstuurder import Berichtverstuurder
 
 
 class Sr04:

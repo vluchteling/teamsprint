@@ -7,7 +7,6 @@ import RPi.GPIO as GPIO
 
 class LoginButton:
     def __init__(self, steamgui):
-        self.proc = multiprocessing.Process(target=self.keep_alive)
         self.SteamGUI = steamgui
         self.led = 18
         self.knopuno = 23
@@ -21,17 +20,6 @@ class LoginButton:
         GPIO.output(self.led, GPIO.HIGH)
         atexit.register(self.lights_out)
 
-    def keep_alive(self):
-        while self.keep_running:
-            pass
-
-    def start(self):
-        self.proc.start()
-
-    def stop(self):
-        self.keep_running = False
-        self.lights_out()
-        self.proc.terminate()
 
     def login_checker(self, twentythree):
 
