@@ -1,4 +1,3 @@
-import _tkinter
 import os
 import threading
 from tkinter import *
@@ -8,8 +7,9 @@ from tkinter.font import Font
 from gevent.exceptions import LoopExit
 
 from AI import DataScherm
+from Berichtverstuurder import Berichtverstuurder
 from EchoSensor import Sr04
-from LoginButton import LoginButton
+from Loginbutton2 import LoginButton
 from Neopixel import Neopixel
 from Schuifregister import Schuifregister
 from Servo import Servo
@@ -34,7 +34,6 @@ class SteamGUI:
         self.friendtimer = None
         self.groot_font = None
         self.titelframe = None
-        self.naamframe = None
         self.afsluitButton = None
         self.berichtframe = None
         self.user_label = None
@@ -46,23 +45,21 @@ class SteamGUI:
         self.online = None
         self.schuifregister = None
         self.selecteditem = None
+        self.runfriendlist = True
+        self.loginbutton = None
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
 
         self.api = SteamWebAPI()
 
-        self.open_gui()
-        self.start_sensoren()
+        self.open_gui(True)
+        self.start_sensoren(True)
+        Neopixel().speel_loginanimatie()
         self.start_gui()
 
-    def stuur_bericht(self, steam_id, text):
-        print(text)
-        if steam_id != "begin":
-            self.client.get_client().get_user(steam_id).send_message(text)
-            neopixel = Neopixel()
-            neopixel.speel_berichtanimatie()
 
-    def open_gui(self):
+
+    def open_gui(self, stopbutton):
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
@@ -71,11 +68,9 @@ class SteamGUI:
         self.groot_font = Font(size=30)
         self.root.configure(bg="#2f2c2f")
         self.titelframe = Label(font=self.groot_font, background="#5a565a", text="SteamPI Client")
-        self.naamframe = Label(font=self.groot_font, background="#5a565a")
         self.databutton = Button(text="Data", command=self.open_data,
                                  background="#5a565a", foreground="white", font=self.groot_font)
-        self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
+
         self.berichtframe = Frame(background="#2f2c2f")
         self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                 text="stel favoriet in")
@@ -85,9 +80,11 @@ class SteamGUI:
                                  background="#5a565a", foreground="white", font=self.groot_font)
         self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
                                    background="#5a565a", foreground="white", font=self.groot_font)
-        self.afsluitButton.pack(side=BOTTOM, pady=5)
+        if stopbutton:
+            self.afsluitButton = Button(text="Afsluiten", command=self.stop,
+                                        background="#5a565a", foreground="white", font=self.groot_font)
+            self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
-        self.naamframe.pack(side=TOP, pady=5)
         self.databutton.pack()
         self.friendframe = Frame(background="#2f2c2f")
         self.berichtframe.pack(side=RIGHT)
@@ -101,7 +98,6 @@ class SteamGUI:
         if afsluitbutton:
             self.afsluitButton.forget()
         self.titelframe.forget()
-        self.naamframe.forget()
         self.databutton.forget()
         self.berichtframe.forget()
         self.user_label.forget()
@@ -110,6 +106,7 @@ class SteamGUI:
         self.clear_button.forget()
         self.friendframe.forget()
         self.treeview.forget()
+        self.treeview = None
 
     def start_gui(self):
         try:
@@ -118,24 +115,29 @@ class SteamGUI:
 
             self.stop()
 
-    def start_sensoren(self):
-        self.friendtimer = self.toon_friendlist()
-        self.sr04 = Sr04(self.client, self, None)
+    def start_sensoren(self, loginbtnstart):
+        self.toon_friendlist()
+        self.sr04 = Sr04(self.client, self, self.favoriet)
         self.sr04.start()
-        self.loginbutton = LoginButton(self)
+        if loginbtnstart:
+            self.loginbutton = LoginButton(self)
+            self.loginbutton.start()
 
-    def stop_sensoren(self, fullstop):
-        if self.friendtimer is not None:
-            self.friendtimer.cancel()
-        if self.onlinetimer is not None:
-            self.onlinetimer.cancel()
+    def stop_sensoren(self, loginbtndelete):
         if self.schuifregister is not None:
             self.schuifregister.lichtjes(0)
+        self.favoriet = None
+        self.runfriendlist = False
+        self.treeview = None
+        self.online = False
         if self.sr04 is not None:
             self.sr04.stop()
+        if loginbtndelete:
+            self.loginbutton.stop()
+
 
     def toon_friendlist(self):
-        try:
+        if self.runfriendlist:
             data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
             online = 0
             friendlist = []
@@ -160,15 +162,20 @@ class SteamGUI:
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
-                self.treeview.delete(*self.treeview.get_children())
+                try:
+                    self.treeview.delete(*self.treeview.get_children())
+                except RuntimeError:
+                    return
 
             else:
-                self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings', )
-
-                scrollbar = Scrollbar(self.friendframe)
-                self.treeview.config(yscrollcommand=scrollbar.set)
-                self.treeview.pack()
-                scrollbar.config(command=self.treeview.yview)
+                try:
+                    self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
+                    scrollbar = Scrollbar(self.friendframe)
+                    self.treeview.config(yscrollcommand=scrollbar.set)
+                    self.treeview.pack()
+                    scrollbar.config(command=self.treeview.yview)
+                except RuntimeError:
+                    return
             for col in koppen:
                 self.treeview.heading(col, text=col)
             friendlist = self.sorteer_data(friendlist)
@@ -181,37 +188,37 @@ class SteamGUI:
                         self.treeview.focus(i)
                         self.treeview.selection_set(i)
 
+            threading.Timer(10, self.toon_friendlist).start()
 
-            return threading.Timer(10, self.toon_friendlist).start()
-        except RuntimeError:
-            pass
-        except AttributeError:
-            print("ae")
-            self.treeview.forget()
+        else:
+            return
 
     def stop(self):
+        Neopixel().speel_loguitanimatie()
         """ Deze functie sluit de applicatie af. """
         if self.root is not None:
             self.root.destroy()
         self.stop_sensoren(True)
 
     def check_online(self):
-        if self.favoriet is not None:
-            print("nog een ronde")
-
-            self.selecteditem = self.treeview.focus()
+        if self.favoriet is not None and self.treeview is not None:
+            try:
+                self.selecteditem = self.treeview.focus()
+            except IndexError:
+                return
+            except RuntimeError:
+                return
             try:
                 friend_name = self.treeview.item(self.selecteditem)['values'][0]
-                print(friend_name)
             except IndexError:
-                print(IndexError)
-
-                if self.onlinetimer is not None:
-                    self.onlinetimer.cancel()
                 return
-
             favoriet = self.treeview.item(self.selecteditem)['values'][2]
-            self.favoriet = favoriet
+            if self.favoriet != favoriet:
+                self.sr04.stop()
+                self.sr04 = None
+                self.sr04 = Sr04(self.client, self, favoriet)
+                self.sr04.start()
+                self.favoriet = favoriet
             self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
             servo = Servo()
             data = self.api.friendstatus(self.favoriet)
@@ -219,61 +226,50 @@ class SteamGUI:
             if status != self.status:
                 servo.start_spel(status)
                 self.status = status
-            return threading.Timer(2, self.check_online).start()
-        else:
-            if self.onlinetimer is not None:
-                self.onlinetimer.cancel()
+            threading.Timer(2, self.check_online).start()
+        elif self.favoriet is None and self.treeview is not None:
+
             self.favoriet_label["text"] = f"Huidige favoriet: geen"
             self.favoriet = "begin"
-
-    def display_owned_games(self, steamid):
-        """ Deze functie geeft de naam van het eerste spel uit het bronbestand weer."""
-        if steamid is None:
-            self.naamframe["text"] = "Uitgelogd."
+        else:
             return
 
-        data = SteamWebAPI().get_steam_games_from_user(steamid)
-        try:
-            self.naamframe["text"] = data["response"]["games"][0]["name"]
-        except KeyError:
-            self.naamframe["text"] = "Deze gebruiker heeft geen games."
-
     def log_out(self):
-        if self.favoriet != "begin" and self.favoriet is not None:
-            self.stuur_bericht(self.favoriet, "Ik ga, later man.")
-
+        try:
+            self.client.log_out()
+        except LoopExit:
+            self.loginbutton.lights_on()
+            return
+        Neopixel().speel_loguitanimatie()
+        Berichtverstuurder("Ik ga weer, tot ziens.", self.favoriet, self.client).start()
         self.clear_gui(False)
-        while True:
-            try:
-                self.client.log_out()
-                break
-            except LoopExit:
-                continue
-        self.client = None
         self.stop_sensoren(False)
+        self.client = None
         self.favoriet = "begin"
 
     def log_in(self):
+        Neopixel().speel_loginanimatie()
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
-        self.open_gui()
-        self.start_sensoren()
-        self.favoriet = "begin"
+        self.open_gui(False)
+        self.runfriendlist = True
+        self.start_sensoren(False)
 
     def timerstop(self):
         self.favoriet = None
+        self.sr04.stop()
+        self.sr04 = Sr04(self.client, self, self.favoriet)
+        self.sr04.start()
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
-        if self.onlinetimer is not None:
-            self.onlinetimer.cancel()
 
     def open_data(self):
         self.clear_gui(True)
         self.schuifregister.lichtjes(0)
-        self.friendtimer.cancel()
+        self.favoriet = None
         self.friendtimer = None
         DataScherm(self.client, self.root)
 
-        self.open_gui()
+        self.open_gui(True)
 
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)
@@ -298,3 +294,6 @@ class SteamGUI:
             pi = self.partition(lst, min, max)
             self.quicksort(lst, min, pi - 1)
             self.quicksort(lst, pi + 1, max)
+
+    def get_favoriet(self):
+        return self.favoriet

@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 import time
 
+import gevent
+
 
 class Servo:
     def __init__(self):

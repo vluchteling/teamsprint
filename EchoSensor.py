@@ -2,6 +2,7 @@ import multiprocessing
 import RPi.GPIO as GPIO
 import time
 import gevent
+from Berichtverstuurder import Berichtverstuurder
 
 
 class Sr04:
@@ -21,21 +22,17 @@ class Sr04:
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
 
-    def get_vriend(self):
-        return self.vriend
-
-    def set_vriend(self, vriend):
-        self.vriend = vriend
-        print("ok")
 
     def check_status(self):
+
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
 
         trig = 20
         echo = 21
         counter = 0
-        berichtverstuurd = True
+        terugberichtverstuurd = True
+        wegberichtverstuurd = False
         while True:
             GPIO.setup(trig, GPIO.OUT)
             GPIO.setup(echo, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
@@ -54,15 +51,17 @@ class Sr04:
             if afstand >= 20:
                 counter = 0
                 self.client.change_personastate("aanwezig")
-                if not berichtverstuurd:
+                if not terugberichtverstuurd:
                     if self.vriend is not None:
-                        self.gui.stuur_bericht(self.vriend, "Ik ben weer terug!")
-                    berichtverstuurd = True
+                        Berichtverstuurder("Ik ben weer terug!", self.vriend, self.client).start()
+                        terugberichtverstuurd = True
+                        wegberichtverstuurd = False
             else:
-                if counter == 5:
+                if counter >= 5:
                     self.client.change_personastate("afwezig")
-                    if self.vriend is not None:
-                        self.gui.stuur_bericht(self.vriend, "Ik ben zo terug.")
-                    berichtverstuurd = False
+                    if self.vriend is not None and not wegberichtverstuurd:
+                        Berichtverstuurder("Ik ben zo terug.", self.vriend, self.client).start()
+                        wegberichtverstuurd = True
+                        terugberichtverstuurd = False
                 counter += 1
             gevent.sleep(1)

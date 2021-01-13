@@ -3,6 +3,8 @@ import atexit
 import RPi.GPIO as GPIO
 import time
 
+import gevent
+
 
 class Schuifregister:
     def __init__(self):
