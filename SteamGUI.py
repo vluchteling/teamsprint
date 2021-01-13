@@ -45,15 +45,13 @@ class SteamGUI:
         self.treeview = None
         self.online = None
         self.schuifregister = None
+        self.selecteditem = None
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
 
         self.api = SteamWebAPI()
 
-        self.loginbutton = LoginButton(self)
-
         self.open_gui()
-        #self.display_owned_games(steamid=self.client.get_client().steam_id.as_64)
         self.start_sensoren()
         self.start_gui()
 
@@ -113,7 +111,6 @@ class SteamGUI:
         self.friendframe.forget()
         self.treeview.forget()
 
-
     def start_gui(self):
         try:
             self.root.mainloop()
@@ -123,7 +120,6 @@ class SteamGUI:
 
     def start_sensoren(self):
         self.friendtimer = self.toon_friendlist()
-        self.onlinetimer = self.check_online()
         self.sr04 = Sr04(self.client, self, None)
         self.sr04.start()
         self.loginbutton = LoginButton(self)
@@ -137,8 +133,6 @@ class SteamGUI:
             self.schuifregister.lichtjes(0)
         if self.sr04 is not None:
             self.sr04.stop()
-        if fullstop and self.loginbutton is not None:
-            self.loginbutton.stop()
 
     def toon_friendlist(self):
         try:
@@ -150,10 +144,7 @@ class SteamGUI:
 
                 for friend in friendjson:
                     try:
-                        print(friend['steamid'])
                         games = self.api.friendstatus(friend['steamid'])
-                        print(games)
-
                         status = games['response']['players'][0]['personastate']
                         naam = games['response']['players'][0]['personaname']
                         if not (status == 0 or status == 7):
@@ -169,23 +160,28 @@ class SteamGUI:
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
-                try:
-                    self.treeview.forget()
-                except _tkinter.TclError:
-                    return
-            self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings', )
-            scrollbar = Scrollbar(self.friendframe)
-            self.treeview.config(yscrollcommand=scrollbar.set)
+                self.treeview.delete(*self.treeview.get_children())
+
+            else:
+                self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings', )
+
+                scrollbar = Scrollbar(self.friendframe)
+                self.treeview.config(yscrollcommand=scrollbar.set)
+                self.treeview.pack()
+                scrollbar.config(command=self.treeview.yview)
             for col in koppen:
                 self.treeview.heading(col, text=col)
             friendlist = self.sorteer_data(friendlist)
-
             for friend in friendlist:
                 self.treeview.insert("", "end",
                                      values=(friend[0], friend[1], friend[2]))
+            if self.selecteditem is not None:
+                for i in self.treeview.get_children():
+                    if self.treeview.item(i)['values'][2] == self.favoriet:
+                        self.treeview.focus(i)
+                        self.treeview.selection_set(i)
 
-            self.treeview.pack()
-            scrollbar.config(command=self.treeview.yview)
+
             return threading.Timer(10, self.toon_friendlist).start()
         except RuntimeError:
             pass
@@ -201,13 +197,20 @@ class SteamGUI:
 
     def check_online(self):
         if self.favoriet is not None:
-            curItem = self.treeview.focus()
+            print("nog een ronde")
+
+            self.selecteditem = self.treeview.focus()
             try:
-                friend_name = self.treeview.item(curItem)['values'][0]
+                friend_name = self.treeview.item(self.selecteditem)['values'][0]
+                print(friend_name)
             except IndexError:
+                print(IndexError)
+
+                if self.onlinetimer is not None:
+                    self.onlinetimer.cancel()
                 return
 
-            favoriet = self.treeview.item(curItem)['values'][2]
+            favoriet = self.treeview.item(self.selecteditem)['values'][2]
             self.favoriet = favoriet
             self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
             servo = Servo()
@@ -216,7 +219,7 @@ class SteamGUI:
             if status != self.status:
                 servo.start_spel(status)
                 self.status = status
-            return threading.Timer(1, self.check_online).start()
+            return threading.Timer(2, self.check_online).start()
         else:
             if self.onlinetimer is not None:
                 self.onlinetimer.cancel()
@@ -262,7 +265,6 @@ class SteamGUI:
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
         if self.onlinetimer is not None:
             self.onlinetimer.cancel()
-
 
     def open_data(self):
         self.clear_gui(True)
