@@ -7,7 +7,6 @@ from tkinter.font import Font
 from gevent.exceptions import LoopExit
 
 from AI import DataScherm
-from Berichtverstuurder import Berichtverstuurder
 from EchoSensor import Sr04
 from Loginbutton2 import LoginButton
 from Neopixel import Neopixel
@@ -109,11 +108,11 @@ class SteamGUI:
         self.treeview = None
 
     def start_gui(self):
-        try:
-            self.root.mainloop()
-        except:
 
-            self.stop()
+        self.root.mainloop()
+        """except:
+
+            self.stop()"""
 
     def start_sensoren(self, loginbtnstart):
         self.toon_friendlist()
@@ -194,11 +193,10 @@ class SteamGUI:
             return
 
     def stop(self):
-        Neopixel().speel_loguitanimatie()
         """ Deze functie sluit de applicatie af. """
-        if self.root is not None:
-            self.root.destroy()
+        Neopixel().speel_loguitanimatie()
         self.stop_sensoren(True)
+        quit(0)
 
     def check_online(self):
         if self.favoriet is not None and self.treeview is not None:
@@ -241,7 +239,6 @@ class SteamGUI:
             self.loginbutton.lights_on()
             return
         Neopixel().speel_loguitanimatie()
-        Berichtverstuurder("Ik ga weer, tot ziens.", self.favoriet, self.client).start()
         self.clear_gui(False)
         self.stop_sensoren(False)
         self.client = None
@@ -297,3 +294,10 @@ class SteamGUI:
 
     def get_favoriet(self):
         return self.favoriet
+
+    def stuur_bericht(self, steam_id, text):
+        print(text)
+        if steam_id != "begin" and steam_id is not None:
+            self.client.get_client().get_user(steam_id).send_message(text)
+        neopixel = Neopixel()
+        neopixel.speel_berichtanimatie()

@@ -12,6 +12,7 @@ class LoginButton:
         self.led = 18
         self.knopuno = 23
         self.loggedin = True
+        self.keep_running = True
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
         GPIO.setup(self.led, GPIO.OUT)
@@ -21,13 +22,15 @@ class LoginButton:
         atexit.register(self.lights_out)
 
     def keep_alive(self):
-        while True:
+        while self.keep_running:
             pass
 
     def start(self):
         self.proc.start()
 
     def stop(self):
+        self.keep_running = False
+        self.lights_out()
         self.proc.terminate()
 
     def login_checker(self, twentythree):
@@ -49,6 +52,7 @@ class LoginButton:
         time.sleep(1)
 
     def lights_out(self):
+        self.keep_running = False
         GPIO.output(self.led, GPIO.LOW)
 
     def lights_on(self):

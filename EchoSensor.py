@@ -53,14 +53,14 @@ class Sr04:
                 self.client.change_personastate("aanwezig")
                 if not terugberichtverstuurd:
                     if self.vriend is not None:
-                        Berichtverstuurder("Ik ben weer terug!", self.vriend, self.client).start()
+                        self.gui.stuur_bericht(self.vriend,"Ik ben weer terug!")
                         terugberichtverstuurd = True
                         wegberichtverstuurd = False
             else:
                 if counter >= 5:
                     self.client.change_personastate("afwezig")
                     if self.vriend is not None and not wegberichtverstuurd:
-                        Berichtverstuurder("Ik ben zo terug.", self.vriend, self.client).start()
+                        self.gui.stuur_bericht(self.vriend,"Ik ben zo terug.")
                         wegberichtverstuurd = True
                         terugberichtverstuurd = False
                 counter += 1
