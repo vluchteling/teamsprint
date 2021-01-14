@@ -6,17 +6,16 @@ from SteamWebAPI import SteamWebAPI
 
 
 class DataScherm:
-    def __init__(self, client, root):
+    def __init__(self, client, root, gui):
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
         self.client = client
         self.api = SteamWebAPI()
+        self.gui = gui
 
         # De GUI code
         self.root = root
-        self.root.attributes("-fullscreen", True)
         self.groot_font = Font(size=30)
-        self.root.configure(bg="#2f2c2f")
         self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                     background="#5a565a", foreground="white", font=self.groot_font)
         self.gamesframe = Frame()
@@ -70,6 +69,8 @@ class DataScherm:
         self.gamesframe.forget()
         self.afsluitButton.forget()
         self.treeview.forget()
+        self.gui.open_gui(True)
+        self.gui.start_sensoren(True)
 
 
     def achievements(self):

@@ -59,8 +59,6 @@ class SteamGUI:
         Neopixel().speel_loginanimatie()
         self.start_gui()
 
-
-
     def open_gui(self, stopbutton):
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
@@ -99,6 +97,7 @@ class SteamGUI:
     def clear_gui(self, afsluitbutton):
         if afsluitbutton:
             self.afsluitButton.forget()
+
         self.titelframe.forget()
         self.databutton.forget()
         self.berichtframe.forget()
@@ -125,7 +124,6 @@ class SteamGUI:
         self.sr04 = Sr04(self.client, self.neopixel)
         self.sr04.start()
 
-
         if loginbtnstart:
             self.loginbutton = LoginButton(self)
 
@@ -134,14 +132,13 @@ class SteamGUI:
             self.schuifregister.lichtjes(0)
         self.favoriet = None
         self.runfriendlist = False
-        #self.treeview = None
+        # self.treeview = None
         self.runonline = False
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:
             self.loginbutton.lights_out()
             self.loginbutton = None
-
 
     def toon_friendlist(self):
         if self.runfriendlist:
@@ -169,7 +166,6 @@ class SteamGUI:
             self.schuifregister = Schuifregister()
             self.schuifregister.lichtjes(online)
             if online != self.online:
-
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
@@ -211,7 +207,6 @@ class SteamGUI:
         self.neopixel.speel_loguitanimatie()
         self.stop_sensoren(True)
         self.root.destroy()
-
 
         raise SystemExit
 
@@ -275,12 +270,8 @@ class SteamGUI:
 
     def open_data(self):
         self.clear_gui(True)
-        self.schuifregister.lichtjes(0)
-        self.favoriet = None
-        self.friendtimer = None
-        DataScherm(self.client, self.root)
-
-        self.open_gui(True)
+        self.stop_sensoren(True)
+        DataScherm(self.client, self.root, self)
 
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)
