@@ -1,3 +1,4 @@
+import atexit
 import time
 
 import RPi.GPIO as GPIO
@@ -7,6 +8,7 @@ class Neopixel:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
+        atexit.register(self.lights_out)
 
     def sendsignaal(self, clock_pin, data_pin, byte):
         timeToSleep = 1 / 19000
@@ -148,3 +150,12 @@ class Neopixel:
             time.sleep(delay)
         for x in range(0, n):
             self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+
+    def lights_out(self):
+        off = [0, 0, 0]
+        clock_pin = 19
+        data_pin = 26
+        n = 8
+        for x in range(0, n):
+            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+

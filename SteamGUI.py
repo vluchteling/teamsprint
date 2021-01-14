@@ -3,6 +3,7 @@ import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter.font import Font
+from urllib.error import HTTPError
 
 from gevent.exceptions import LoopExit
 
@@ -138,7 +139,10 @@ class SteamGUI:
 
     def toon_friendlist(self):
         if self.runfriendlist:
-            data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
+            try:
+                data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
+            except HTTPError:
+                return
             online = 0
             friendlist = []
             try:
@@ -214,10 +218,6 @@ class SteamGUI:
                 return
             favoriet = self.treeview.item(self.selecteditem)['values'][2]
             if self.favoriet != favoriet:
-                self.sr04.stop()
-                self.sr04 = None
-                self.sr04 = Sr04(self.client, self.neopixel)
-                self.sr04.start()
                 self.favoriet = favoriet
             self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
             servo = Servo()

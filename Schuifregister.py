@@ -1,9 +1,6 @@
-import atexit
-
-import RPi.GPIO as GPIO
 import time
 
-import gevent
+import RPi.GPIO as GPIO
 
 
 class Schuifregister:
@@ -107,5 +104,3 @@ class Schuifregister:
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
-
-
