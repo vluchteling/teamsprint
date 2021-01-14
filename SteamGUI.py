@@ -236,7 +236,7 @@ class SteamGUI:
             self.timer = threading.Timer(2, self.check_online)
             self.timer.deamon = True
             self.timer.start()
-        elif self.favoriet is None and self.treeview is not None and self.runonline:
+        elif self.favoriet is None and self.treeview is not None and not self.runonline:
 
             self.favoriet_label["text"] = f"Huidige favoriet: geen"
             self.favoriet = "begin"
@@ -271,6 +271,8 @@ class SteamGUI:
     def open_data(self):
         self.clear_gui(True)
         self.stop_sensoren(True)
+        self.neopixel.lights_out()
+        self.favoriet = "begin"
         DataScherm(self.client, self.root, self)
 
     def sorteer_data(self, data):
