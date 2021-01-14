@@ -257,9 +257,6 @@ class SteamGUI:
 
     def timerstop(self):
         self.favoriet = None
-        self.sr04.stop()
-        self.sr04 = Sr04(self.client)
-        self.sr04.start()
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
     def open_data(self):
