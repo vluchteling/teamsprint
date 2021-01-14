@@ -46,6 +46,7 @@ class SteamGUI:
         self.selecteditem = None
         self.runfriendlist = True
         self.loginbutton = None
+        self.neopixel = None
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
 
@@ -116,7 +117,8 @@ class SteamGUI:
 
     def start_sensoren(self, loginbtnstart):
         self.toon_friendlist()
-        self.sr04 = Sr04(self.client, self, self.favoriet)
+        self.neopixel = Neopixel()
+        self.sr04 = Sr04(self.client, self.neopixel)
         self.sr04.start()
         if loginbtnstart:
             self.loginbutton = LoginButton(self)
@@ -189,11 +191,12 @@ class SteamGUI:
             threading.Timer(10, self.toon_friendlist).start()
 
         else:
+            self.schuifregister.lichtjes(0)
             return
 
     def stop(self):
         """ Deze functie sluit de applicatie af. """
-        Neopixel().speel_loguitanimatie()
+        self.neopixel.speel_loguitanimatie()
         self.stop_sensoren(True)
         quit(0)
 
@@ -213,7 +216,7 @@ class SteamGUI:
             if self.favoriet != favoriet:
                 self.sr04.stop()
                 self.sr04 = None
-                self.sr04 = Sr04(self.client, self, favoriet)
+                self.sr04 = Sr04(self.client, self.neopixel)
                 self.sr04.start()
                 self.favoriet = favoriet
             self.favoriet_label["text"] = f"Huidige favoriet: {friend_name}"
@@ -232,19 +235,20 @@ class SteamGUI:
             return
 
     def log_out(self):
-        try:
-            self.client.log_out()
-        except LoopExit:
-            self.loginbutton.lights_on()
-            return
-        Neopixel().speel_loguitanimatie()
+        while True:
+            try:
+                self.client.log_out()
+                break
+            except LoopExit:
+                continue
+        self.neopixel.speel_loguitanimatie()
         self.clear_gui(False)
         self.stop_sensoren(False)
         self.client = None
         self.favoriet = "begin"
 
     def log_in(self):
-        Neopixel().speel_loginanimatie()
+        self.neopixel.speel_loginanimatie()
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
         self.open_gui(False)
@@ -254,7 +258,7 @@ class SteamGUI:
     def timerstop(self):
         self.favoriet = None
         self.sr04.stop()
-        self.sr04 = Sr04(self.client, self, self.favoriet)
+        self.sr04 = Sr04(self.client)
         self.sr04.start()
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
@@ -298,5 +302,5 @@ class SteamGUI:
         print(text)
         if steam_id != "begin" and steam_id is not None:
             self.client.get_client().get_user(steam_id).send_message(text)
-        neopixel = Neopixel()
-        neopixel.speel_berichtanimatie()
+
+        self.neopixel.speel_berichtanimatie()

@@ -1,6 +1,6 @@
 import time
+
 import RPi.GPIO as GPIO
-import gevent
 
 
 class Neopixel:
@@ -60,11 +60,11 @@ class Neopixel:
                 result.append(off)
         return result
 
-    def speel_berichtanimatie(self, delay=0):
+    def speel_pickup_animatie(self, delay=0):
         blue = [8, 0, 0]
         green = [0, 255, 0]
         red = [0, 0, 255]
-        yellow = [0,  255,255]
+        yellow = [0, 255, 255]
         purple = [255, 0, 255]
         off = [0, 0, 0]
 
@@ -80,6 +80,26 @@ class Neopixel:
         """for x in range(n - 1, 1, -1):
             self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
             time.sleep(delay)"""
+        for x in range(0, n):
+            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+
+    def speel_afk_animatie(self, delay=0):
+        blue = [8, 0, 0]
+        green = [0, 255, 0]
+        red = [0, 0, 255]
+        yellow = [0, 255, 255]
+        purple = [255, 0, 255]
+        off = [0, 0, 0]
+
+        clock_pin = 19
+        data_pin = 26
+
+        GPIO.setup(clock_pin, GPIO.OUT)
+        GPIO.setup(data_pin, GPIO.OUT)
+        n = 8
+        for x in range(n, 0, -1):
+            self.apa102(clock_pin, data_pin, self.colors(x, n, yellow, blue))
+            time.sleep(delay)
         for x in range(0, n):
             self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
 
@@ -128,5 +148,3 @@ class Neopixel:
             time.sleep(delay)
         for x in range(0, n):
             self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
-
-

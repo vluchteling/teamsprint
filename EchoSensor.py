@@ -3,16 +3,15 @@ import RPi.GPIO as GPIO
 import time
 import gevent
 
+from Neopixel import Neopixel
+
 
 class Sr04:
 
-    def __init__(self, client, gui, vriend):
+    def __init__(self, client, neopixel):
         self.proc = multiprocessing.Process(target=self.check_status)
         self.client = client
-        self.gui = gui
-        self.vriend = vriend
-        if self.vriend == "begin":
-            self.vriend = None
+        self.neopixel = neopixel
 
     def start(self):
         self.proc.start()
@@ -51,15 +50,14 @@ class Sr04:
                 counter = 0
                 self.client.change_personastate("aanwezig")
                 if not terugberichtverstuurd:
-                    if self.vriend is not None:
-                        self.gui.stuur_bericht(self.vriend,"Ik ben weer terug!")
+                        self.neopixel.speel_pickup_animatie()
                         terugberichtverstuurd = True
                         wegberichtverstuurd = False
             else:
                 if counter >= 5:
                     self.client.change_personastate("afwezig")
-                    if self.vriend is not None and not wegberichtverstuurd:
-                        self.gui.stuur_bericht(self.vriend,"Ik ben zo terug.")
+                    if not wegberichtverstuurd:
+                        self.neopixel.speel_afk_animatie()
                         wegberichtverstuurd = True
                         terugberichtverstuurd = False
                 counter += 1
