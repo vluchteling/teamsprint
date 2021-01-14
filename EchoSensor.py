@@ -1,9 +1,8 @@
 import multiprocessing
-import RPi.GPIO as GPIO
 import time
-import gevent
 
-from Neopixel import Neopixel
+import RPi.GPIO as GPIO
+import gevent
 
 
 class Sr04:
@@ -19,7 +18,6 @@ class Sr04:
     def stop(self):
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
-
 
     def check_status(self):
 
@@ -50,9 +48,9 @@ class Sr04:
                 counter = 0
                 self.client.change_personastate("aanwezig")
                 if not terugberichtverstuurd:
-                        self.neopixel.speel_pickup_animatie()
-                        terugberichtverstuurd = True
-                        wegberichtverstuurd = False
+                    self.neopixel.speel_pickup_animatie()
+                    terugberichtverstuurd = True
+                    wegberichtverstuurd = False
             else:
                 if counter >= 5:
                     self.client.change_personastate("afwezig")
@@ -61,4 +59,4 @@ class Sr04:
                         wegberichtverstuurd = True
                         terugberichtverstuurd = False
                 counter += 1
-            gevent.sleep(1)
+            time.sleep(1)

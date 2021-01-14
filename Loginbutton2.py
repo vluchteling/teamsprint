@@ -41,6 +41,7 @@ class LoginButton:
 
     def lights_out(self):
         self.keep_running = False
+        GPIO.remove_event_detect(self.knopuno)
         GPIO.output(self.led, GPIO.LOW)
 
     def lights_on(self):

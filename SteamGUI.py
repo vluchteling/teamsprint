@@ -46,6 +46,7 @@ class SteamGUI:
         self.schuifregister = None
         self.selecteditem = None
         self.runfriendlist = True
+        self.runonline = True
         self.loginbutton = None
         self.neopixel = None
         self.root = Tk()
@@ -121,6 +122,7 @@ class SteamGUI:
         self.neopixel = Neopixel()
         self.sr04 = Sr04(self.client, self.neopixel)
         self.sr04.start()
+        self.runonline = True
         if loginbtnstart:
             self.loginbutton = LoginButton(self)
 
@@ -129,11 +131,12 @@ class SteamGUI:
             self.schuifregister.lichtjes(0)
         self.favoriet = None
         self.runfriendlist = False
-        self.treeview = None
-        self.online = False
+        #self.treeview = None
+        self.runonline = False
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:
+            self.loginbutton.lights_out()
             self.loginbutton = None
 
 
@@ -192,7 +195,9 @@ class SteamGUI:
                         self.treeview.focus(i)
                         self.treeview.selection_set(i)
 
-            threading.Timer(10, self.toon_friendlist).start()
+            timer = threading.Timer(10, self.toon_friendlist)
+            timer.deamon = True
+            timer.start()
 
         else:
             self.schuifregister.lichtjes(0)
@@ -202,10 +207,14 @@ class SteamGUI:
         """ Deze functie sluit de applicatie af. """
         self.neopixel.speel_loguitanimatie()
         self.stop_sensoren(True)
-        quit(0)
+        self.root.destroy()
+        self.timer.cancel()
+
+        raise SystemExit
 
     def check_online(self):
-        if self.favoriet is not None and self.treeview is not None:
+        if self.favoriet is not None and self.treeview is not None and self.runonline:
+            self.afsluitButton.forget()
             try:
                 self.selecteditem = self.treeview.focus()
             except IndexError:
@@ -226,8 +235,10 @@ class SteamGUI:
             if status != self.status:
                 servo.start_spel(status)
                 self.status = status
-            threading.Timer(2, self.check_online).start()
-        elif self.favoriet is None and self.treeview is not None:
+            self.timer = threading.Timer(2, self.check_online)
+            self.timer.deamon = True
+            self.timer.start()
+        elif self.favoriet is None and self.treeview is not None and self.runonline:
 
             self.favoriet_label["text"] = f"Huidige favoriet: geen"
             self.favoriet = "begin"
@@ -257,6 +268,7 @@ class SteamGUI:
 
     def timerstop(self):
         self.favoriet = None
+        self.afsluitButton.pack(side=BOTTOM)
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
     def open_data(self):
