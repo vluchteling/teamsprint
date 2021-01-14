@@ -118,11 +118,14 @@ class SteamGUI:
             self.stop()"""
 
     def start_sensoren(self, loginbtnstart):
+        self.runfriendlist = True
+        self.runonline = True
         self.toon_friendlist()
         self.neopixel = Neopixel()
         self.sr04 = Sr04(self.client, self.neopixel)
         self.sr04.start()
-        self.runonline = True
+
+
         if loginbtnstart:
             self.loginbutton = LoginButton(self)
 
@@ -163,9 +166,10 @@ class SteamGUI:
                         print(f"deze gebruiker is een zwerver")
             except KeyError:
                 print("Deze gebruiker is een zwerver.")
+            self.schuifregister = Schuifregister()
+            self.schuifregister.lichtjes(online)
             if online != self.online:
-                self.schuifregister = Schuifregister()
-                self.schuifregister.lichtjes(online)
+
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
@@ -200,7 +204,6 @@ class SteamGUI:
             timer.start()
 
         else:
-            self.schuifregister.lichtjes(0)
             return
 
     def stop(self):
@@ -208,7 +211,7 @@ class SteamGUI:
         self.neopixel.speel_loguitanimatie()
         self.stop_sensoren(True)
         self.root.destroy()
-        self.timer.cancel()
+
 
         raise SystemExit
 
@@ -256,14 +259,13 @@ class SteamGUI:
         self.clear_gui(False)
         self.stop_sensoren(False)
         self.client = None
-        self.favoriet = "begin"
 
     def log_in(self):
         self.neopixel.speel_loginanimatie()
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
+        self.favoriet = "begin"
         self.open_gui(False)
-        self.runfriendlist = True
         self.start_sensoren(False)
 
     def timerstop(self):
