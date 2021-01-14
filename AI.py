@@ -12,6 +12,7 @@ class DataScherm:
         self.client = client
         self.api = SteamWebAPI()
         self.gui = gui
+        self.treeview = None
 
         # De GUI code
         self.root = root
@@ -23,9 +24,12 @@ class DataScherm:
         self.gamesframe.pack()
         friendsdata = self.haal_data_op()
         for friend in friendsdata:
-            games = friendsdata[friend]['response']['games']
-            self.toon_data(games)
-            self.maak_data(games)
+            try:
+                games = friendsdata[friend]['response']['games']
+                #self.toon_data(games)
+                self.maak_data(games)
+            except KeyError:
+                continue
 
         self.afsluitButton.pack()
 
@@ -68,7 +72,8 @@ class DataScherm:
     def stop(self):
         self.gamesframe.forget()
         self.afsluitButton.forget()
-        self.treeview.forget()
+        if self.treeview is not None:
+            self.treeview.forget()
         self.gui.open_gui(True)
         self.gui.start_sensoren(True)
 
