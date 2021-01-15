@@ -106,7 +106,8 @@ class SteamGUI:
         self.msg_button.forget()
         self.clear_button.forget()
         self.friendframe.forget()
-        self.treeview.forget()
+        if self.treeview is not None:
+            self.treeview.forget()
         self.treeview = None
 
     def start_gui(self):

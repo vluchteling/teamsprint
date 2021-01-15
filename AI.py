@@ -1,7 +1,6 @@
 import os
 from tkinter import *
 from tkinter.font import Font
-from tkinter.ttk import Treeview
 
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -23,25 +22,28 @@ class DataScherm:
         self.root = root
         self.groot_font = Font(size=30)
 
-        tabelframe = Frame(height=self.root.winfo_screenheight() - 200)
-        buttonframe = Frame(height=199)
+        tabelframe = Frame(width=self.root.winfo_screenwidth() / 2)
+        rechterframe = Frame(width=self.root.winfo_screenwidth() / 2)
+        buttonframe = Frame()
         self.afsluitButton = Button(buttonframe, text="Afsluiten", command=self.stop,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
+                                    background="#5a565a", foreground="white", font=self.groot_font, width=300)
         self.nwframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
                              height=(self.root.winfo_screenheight() - 200 / 2))
-        self.neframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
+        self.neframe = Frame(rechterframe, width=self.root.winfo_screenwidth() / 2,
                              height=(self.root.winfo_screenheight() - 200 / 2))
         self.swframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
                              height=(self.root.winfo_screenheight() - 200 / 2))
-        self.seframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
+        self.seframe = Frame(rechterframe, width=self.root.winfo_screenwidth() / 2,
                              height=(self.root.winfo_screenheight() - 200 / 2))
-        tabelframe.pack(fill=X)
-        buttonframe.pack(fill=X, side=BOTTOM)
+        tabelframe.pack(side=LEFT)
+        rechterframe.pack(side=RIGHT)
+
         self.afsluitButton.pack()
-        self.nwframe.pack(side=LEFT)
-        self.neframe.pack(side=RIGHT)
+        self.nwframe.pack(side=TOP)
+        self.neframe.pack(side=TOP)
         self.swframe.pack(side=BOTTOM)
         self.seframe.pack(side=BOTTOM)
+        buttonframe.pack(side=BOTTOM)
         friendsdata, friendsdict = self.haal_data_op()
 
         gemtijdlist = []
@@ -59,10 +61,7 @@ class DataScherm:
                     counter += 1
                     totaaltijd += game['playtime_forever']
 
-                grote_tijdslijst.append(counter)
-
-
-
+                    grote_tijdslijst.append(game['playtime_forever'])
 
                 gemtijdlist.append([friendsdict[friend], totaaltijd / counter])
                 totaaltijdlist.append([friendsdict[friend], totaaltijd])
@@ -73,7 +72,7 @@ class DataScherm:
                 continue
         self.maak_data(gemtijdlist)
         self.maak_data2(totaaltijdlist)
-        # self.maak_data3(aantalgameslist)
+        self.maak_data3(aantalgameslist)
         self.maak_histogram(grote_tijdslijst)
 
     def haal_data_op(self):
@@ -124,10 +123,10 @@ class DataScherm:
                  'speeltijd': tijdlijst
                  }
         df1 = DataFrame(data1, columns=['usernames', 'speeltijd'])
-        figure1 = plt.Figure(figsize=(5, 4), dpi=100)
+        figure1 = plt.Figure(figsize=(5, 3), dpi=100)
         ax1 = figure1.add_subplot(211)
         self.bar1 = FigureCanvasTkAgg(figure1, self.nwframe)
-        self.bar1.get_tk_widget().pack(expand=True)
+        self.bar1.get_tk_widget().pack()
         df1 = df1[['usernames', 'speeltijd']].groupby('usernames', sort=False).sum()
         df1.plot(kind='bar', legend=False, ax=ax1)
         ax1.set_title('Gemiddelde speeltijd per game (in minuten).')
@@ -143,10 +142,10 @@ class DataScherm:
                  'speeltijd': tijdlijst
                  }
         df1 = DataFrame(data1, columns=['usernames', 'speeltijd'])
-        figure1 = plt.Figure(figsize=(5, 4), dpi=100)
+        figure1 = plt.Figure(figsize=(5, 3), dpi=100)
         ax1 = figure1.add_subplot(211)
         self.bar1 = FigureCanvasTkAgg(figure1, self.neframe)
-        self.bar1.get_tk_widget().pack(expand=True)
+        self.bar1.get_tk_widget().pack()
         df1 = df1[['usernames', 'speeltijd']].groupby('usernames', sort=False).sum()
         df1.plot(kind='bar', legend=False, ax=ax1)
         ax1.set_title('totale speeltijd per user (in minuten).')
@@ -161,10 +160,10 @@ class DataScherm:
                  'totale speeltijd (in min)': tijdlijst
                  }
         df1 = DataFrame(data1, columns=['usernames', 'totale speeltijd (in min)'])
-        figure1 = plt.Figure(figsize=(3, 3.5), dpi=100)
+        figure1 = plt.Figure(figsize=(5, 3), dpi=100)
         ax1 = figure1.add_subplot(111)
-        self.bar1 = FigureCanvasTkAgg(figure1, self.linkerframe)
-        self.bar1.get_tk_widget().pack(expand=True)
+        self.bar1 = FigureCanvasTkAgg(figure1, self.seframe)
+        self.bar1.get_tk_widget().pack()
         df1 = df1[['usernames', 'totale speeltijd (in min)']].groupby('usernames', sort=False).sum()
         df1.plot(kind='bar', legend=False, ax=ax1)
         ax1.set_title('aantal games per user.')
@@ -228,14 +227,14 @@ class DataScherm:
             if laagste is None or tijd < laagste:
                 laagste = tijd
         totale_breedte = hoogste - laagste
-        #interkwartielrange = self.q3(data) - self.q1(data)
+        # interkwartielrange = self.q3(data) - self.q1(data)
         N = len(data)
         klassengrootte = int(totale_breedte / 6 + 1)
-        #klassengrootte = int((2 *( interkwartielrange / N ** (1 / 3)) + 1))
+        # klassengrootte = int((2 *( interkwartielrange / N ** (1 / 3)) + 1))
         print(f"laagste: {laagste}, hoogste: {hoogste}")
         klassenlijst = []
         vorige_x = laagste
-        for x in range(int(laagste), int(hoogste)+klassengrootte, klassengrootte):
+        for x in range(int(laagste), int(hoogste) + klassengrootte, klassengrootte):
             if x != laagste:
                 klassenlijst.append([vorige_x, x])
                 vorige_x = x
@@ -261,18 +260,17 @@ class DataScherm:
                  'frequenties': frequentielijst
                  }
 
-
         df1 = DataFrame(data)
         df1.hist()
         print(tijdendata)
-        figure1 = plt.Figure(figsize=(5, 4), dpi=100)
-        ax1 = figure1.add_subplot(211)
+        figure1 = plt.Figure(figsize=(5, 3), dpi=100)
+        ax1 = figure1.add_subplot(111)
         self.bar1 = FigureCanvasTkAgg(figure1, self.swframe)
-        self.bar1.get_tk_widget().pack(expand=True)
-        #df1 = df1[['frequenties']].groupby('frequenties', sort=False).sum()
+        self.bar1.get_tk_widget().pack()
+        # df1 = df1[['frequenties']].groupby('frequenties', sort=False).sum()
 
         df1.plot(kind='hist', legend=False, ax=ax1)
-        ax1.set_title('speeltijden per game.')
+        ax1.set_title('Histogram van de speeltijden van jou en je vrienden.')
 
     def median(self, lst):
         """ Retourneer de mediaan (float) van de lijst lst. """
