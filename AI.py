@@ -22,14 +22,33 @@ class DataScherm:
         # De GUI code
         self.root = root
         self.groot_font = Font(size=30)
-        self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
-        self.gamesframe = Frame()
 
-        self.gamesframe.pack()
+        tabelframe = Frame(height=self.root.winfo_screenheight() - 200)
+        buttonframe = Frame(height=199)
+        self.afsluitButton = Button(buttonframe, text="Afsluiten", command=self.stop,
+                                    background="#5a565a", foreground="white", font=self.groot_font)
+        self.nwframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
+                             height=(self.root.winfo_screenheight() - 200 / 2))
+        self.neframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
+                             height=(self.root.winfo_screenheight() - 200 / 2))
+        self.swframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
+                             height=(self.root.winfo_screenheight() - 200 / 2))
+        self.seframe = Frame(tabelframe, width=self.root.winfo_screenwidth() / 2,
+                             height=(self.root.winfo_screenheight() - 200 / 2))
+        tabelframe.pack(fill=X)
+        buttonframe.pack(fill=X, side=BOTTOM)
+        self.afsluitButton.pack()
+        self.nwframe.pack(side=LEFT)
+        self.neframe.pack(side=RIGHT)
+        self.swframe.pack(side=BOTTOM)
+        self.seframe.pack(side=BOTTOM)
         friendsdata, friendsdict = self.haal_data_op()
 
-        speeltijdlist = []
+        gemtijdlist = []
+        totaaltijdlist = []
+        aantalgameslist = []
+        grote_tijdslijst = []
+
         for friend in friendsdata:
 
             try:
@@ -40,21 +59,29 @@ class DataScherm:
                     counter += 1
                     totaaltijd += game['playtime_forever']
 
-                speeltijdlist.append([friendsdict[friend], totaaltijd/counter])
+                grote_tijdslijst.append(counter)
+
+
+
+
+                gemtijdlist.append([friendsdict[friend], totaaltijd / counter])
+                totaaltijdlist.append([friendsdict[friend], totaaltijd])
+                aantalgameslist.append([friendsdict[friend], counter])
                 # self.toon_data(games)
 
             except KeyError:
                 continue
-        self.maak_data(speeltijdlist)
-
-        self.afsluitButton.pack(side=BOTTOM)
+        self.maak_data(gemtijdlist)
+        self.maak_data2(totaaltijdlist)
+        # self.maak_data3(aantalgameslist)
+        self.maak_histogram(grote_tijdslijst)
 
     def haal_data_op(self):
         steamid = self.client.get_client().steam_id.as_64
         data = self.api.get_friend_list(steamid)
         friendjson = data['friendslist']['friends']
         friendlist = []
-        frienddict= {}
+        frienddict = {}
         steamid = self.client.get_client().steam_id.as_64
         gebruiker = self.api.friendstatus(steamid)
         username = gebruiker['response']['players'][0]['personaname']
@@ -72,7 +99,8 @@ class DataScherm:
         return friendgamesdict, frienddict
 
     def toon_data(self, data):
-        koppen = ('appid', "name", "playtime_forever (min)")
+        pass
+        """koppen = ('appid', "name", "playtime_forever (min)")
         self.treeview = Treeview(self.gamesframe, columns=koppen, show='headings', )
         scrollbar = Scrollbar(self.gamesframe)
         self.treeview.config(yscrollcommand=scrollbar.set)
@@ -84,31 +112,64 @@ class DataScherm:
                                  values=(game['appid'], game['name'], game['playtime_forever']))
 
         self.treeview.pack()
-        scrollbar.config(command=self.treeview.yview)
+        scrollbar.config(command=self.treeview.yview)"""
 
     def maak_data(self, data):
-        # data = self.sorteer_data(data)
-
         namenlijst = []
         tijdlijst = []
         for friend in data:
             namenlijst.append(friend[0])
             tijdlijst.append(friend[1])
         data1 = {'usernames': namenlijst,
-                 'gemiddelde speeltijd (in min)': tijdlijst
+                 'speeltijd': tijdlijst
                  }
-        df1 = DataFrame(data1, columns=['usernames', 'gemiddelde speeltijd (in min)'])
-        figure1 = plt.Figure(figsize=(6, 5), dpi=75)
-        ax1 = figure1.add_subplot(111)
-        self.bar1 = FigureCanvasTkAgg(figure1, self.root)
-        self.bar1.get_tk_widget().pack(side=LEFT)
-        df1 = df1[['usernames', 'gemiddelde speeltijd (in min)']].groupby('usernames').sum()
-        df1.plot(kind='bar', legend=True, ax=ax1)
-        ax1.set_title('Gemiddelde speeltijd per game.')
+        df1 = DataFrame(data1, columns=['usernames', 'speeltijd'])
+        figure1 = plt.Figure(figsize=(5, 4), dpi=100)
+        ax1 = figure1.add_subplot(211)
+        self.bar1 = FigureCanvasTkAgg(figure1, self.nwframe)
+        self.bar1.get_tk_widget().pack(expand=True)
+        df1 = df1[['usernames', 'speeltijd']].groupby('usernames', sort=False).sum()
+        df1.plot(kind='bar', legend=False, ax=ax1)
+        ax1.set_title('Gemiddelde speeltijd per game (in minuten).')
 
+    def maak_data2(self, data):
+        namenlijst = []
+        tijdlijst = []
+
+        for friend in data:
+            namenlijst.append(friend[0])
+            tijdlijst.append(friend[1])
+        data1 = {'usernames': namenlijst,
+                 'speeltijd': tijdlijst
+                 }
+        df1 = DataFrame(data1, columns=['usernames', 'speeltijd'])
+        figure1 = plt.Figure(figsize=(5, 4), dpi=100)
+        ax1 = figure1.add_subplot(211)
+        self.bar1 = FigureCanvasTkAgg(figure1, self.neframe)
+        self.bar1.get_tk_widget().pack(expand=True)
+        df1 = df1[['usernames', 'speeltijd']].groupby('usernames', sort=False).sum()
+        df1.plot(kind='bar', legend=False, ax=ax1)
+        ax1.set_title('totale speeltijd per user (in minuten).')
+
+    def maak_data3(self, data):
+        namenlijst = []
+        tijdlijst = []
+        for friend in data:
+            namenlijst.append(friend[0])
+            tijdlijst.append(friend[1])
+        data1 = {'usernames': namenlijst,
+                 'totale speeltijd (in min)': tijdlijst
+                 }
+        df1 = DataFrame(data1, columns=['usernames', 'totale speeltijd (in min)'])
+        figure1 = plt.Figure(figsize=(3, 3.5), dpi=100)
+        ax1 = figure1.add_subplot(111)
+        self.bar1 = FigureCanvasTkAgg(figure1, self.linkerframe)
+        self.bar1.get_tk_widget().pack(expand=True)
+        df1 = df1[['usernames', 'totale speeltijd (in min)']].groupby('usernames', sort=False).sum()
+        df1.plot(kind='bar', legend=False, ax=ax1)
+        ax1.set_title('aantal games per user.')
 
     def stop(self):
-        self.gamesframe.forget()
         self.afsluitButton.forget()
         if self.treeview is not None:
             self.treeview.forget()
@@ -153,3 +214,113 @@ class DataScherm:
             pi = self.partition(lst, min, max)
             self.quicksort(lst, min, pi - 1)
             self.quicksort(lst, pi + 1, max)
+
+    def maak_histogram(self, data):
+        print(data)
+        tijdendata = data
+        hoogste = 0
+        laagste = None
+        counter = 0
+        for tijd in data:
+            counter += 1
+            if tijd > hoogste:
+                hoogste = tijd
+            if laagste is None or tijd < laagste:
+                laagste = tijd
+        totale_breedte = hoogste - laagste
+        #interkwartielrange = self.q3(data) - self.q1(data)
+        N = len(data)
+        klassengrootte = int(totale_breedte / 6 + 1)
+        #klassengrootte = int((2 *( interkwartielrange / N ** (1 / 3)) + 1))
+        print(f"laagste: {laagste}, hoogste: {hoogste}")
+        klassenlijst = []
+        vorige_x = laagste
+        for x in range(int(laagste), int(hoogste)+klassengrootte, klassengrootte):
+            if x != laagste:
+                klassenlijst.append([vorige_x, x])
+                vorige_x = x
+            else:
+                vorige_x = x
+        frequentielijst = []
+        counter = 0
+        print(data)
+        for klasse in klassenlijst:
+            frequentielijst.append(0)
+        for klasse in klassenlijst:
+            for punt in data:
+                if klasse[0] <= punt < klasse[1]:
+                    frequentielijst[counter] += 1
+            counter += 1
+        print(frequentielijst)
+        nieuwe_klassenlijst = []
+        for klasse in klassenlijst:
+            nieuwe_klassenlijst.append(f"{klasse[0]}-{klasse[1]}")
+            counter = 0
+
+        data1 = {'klassen': nieuwe_klassenlijst,
+                 'frequenties': frequentielijst
+                 }
+
+
+        df1 = DataFrame(data)
+        df1.hist()
+        print(tijdendata)
+        figure1 = plt.Figure(figsize=(5, 4), dpi=100)
+        ax1 = figure1.add_subplot(211)
+        self.bar1 = FigureCanvasTkAgg(figure1, self.swframe)
+        self.bar1.get_tk_widget().pack(expand=True)
+        #df1 = df1[['frequenties']].groupby('frequenties', sort=False).sum()
+
+        df1.plot(kind='hist', legend=False, ax=ax1)
+        ax1.set_title('speeltijden per game.')
+
+    def median(self, lst):
+        """ Retourneer de mediaan (float) van de lijst lst. """
+        lst = sorted(lst)
+        if len(lst) % 2 == 1:
+            middelste = len(lst) / 2
+            mediaan = float(lst[int(middelste)])
+        else:
+            pos1 = int((len(lst) - 1) // 2)
+            pos2 = pos1 + 1
+            middelste1 = lst[pos1]
+            middelste2 = lst[pos2]
+            mediaan = float(self.mean([middelste1, middelste2]))
+
+        return mediaan
+
+    def mean(self, lst):
+        """ Retourneer het gemiddelde (float) van de lijst lst. """
+        totaal = 0
+        aantal = 0
+        for getal in lst:
+            totaal += getal
+            aantal += 1
+        return totaal / aantal
+
+    def q1(self, lst):
+        """
+        Retourneer het eerste kwartiel Q1 (float) van de lijst lst.
+        Tip: maak gebruik van median()
+        """
+        lst = sorted(lst)
+        med = self.median(lst)
+        sublijst = []
+        for x in range(0, len(lst)):
+            if lst[x] < med:
+                sublijst.append(lst[x])
+            if lst[x] == med and lst[x + 1] == lst[x]:
+                sublijst.append(lst[x])
+        return self.median(sublijst)
+
+    def q3(self, lst):
+        """ Retourneer het derde kwartiel Q3 (float) van de lijst lst. """
+        lst = sorted(lst)
+        med = self.median(lst)
+        sublijst = []
+        for x in range(len(lst) - 1, 0, -1):
+            if lst[x] > med:
+                sublijst.append(lst[x])
+            if lst[x] == med and lst[x - 1] == lst[x]:
+                sublijst.append(lst[x])
+        return self.median(sublijst)
