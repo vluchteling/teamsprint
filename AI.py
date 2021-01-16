@@ -33,7 +33,6 @@ class DataScherm:
         totaaltijdlist = []
         aantalgameslist = []
         grote_tijdslijst = []
-
         for friend in friendsdata:
 
             try:
@@ -98,7 +97,6 @@ class DataScherm:
     def maak_tot_speeltijd_data(self, data):
         namenlijst = []
         tijdlijst = []
-
         for friend in data:
             namenlijst.append(friend[0])
             tijdlijst.append(friend[1])
