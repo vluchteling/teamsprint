@@ -137,7 +137,7 @@ class SteamGUI:
         self.runonline = False
         if self.sr04 is not None:
             self.sr04.stop()
-        if loginbtndelete:
+        if loginbtndelete and self.loginbutton is not None:
             self.loginbutton.lights_out()
             self.loginbutton = None
 
