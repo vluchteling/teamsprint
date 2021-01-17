@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter.font import Font
-from urllib.error import HTTPError
 
 from SteamWebAPI import SteamWebAPI
 
@@ -13,16 +12,14 @@ class Statistiek:
         self.klein_font = Font(size=20)
         self.groot_font = Font(size=30)
         self.dataframe = Frame()
-        #self.datalabel = Label(font=self.klein_font, background="#5a565a", text="")
-        h = Scrollbar(root)
+        scrollbar = Scrollbar(root)
         self.text = Text(root, font=self.klein_font, wrap=WORD,
-                 yscrollcommand=h.set, background="#2f2c2f", bd=0)
+                         yscrollcommand=scrollbar.set, background="#2f2c2f", bd=0)
         self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                     background="#5a565a", foreground="white", font=self.groot_font)
         self.afsluitButton.pack(side=BOTTOM, pady=5)
-        #self.datalabel.pack(side=TOP, expand=1)
         self.text.pack(side=TOP, expand=1, fill=BOTH)
-        h.config(command=self.text.yview)
+        scrollbar.config(command=self.text.yview)
         self.webapi = SteamWebAPI()
         self.start_statistiek()
 
@@ -52,21 +49,36 @@ class Statistiek:
         text += "\n"
 
         useridlist = [self.client.get_client().steam_id.as_64]
+        usernamedict = {}
         if friendjson is not None:
             for friend in friendjson:
+                data = (self.webapi.friendstatus(friend['steamid']))
+                friendname = data["response"]["players"][0]["personaname"]
                 friendid = int(friend['steamid'])
                 useridlist.append(friendid)
+                usernamedict[friendid] = friendname
 
-        # print(useridlist)
-        gamesdata = None
         gamenamedict = {}
         gametimedict = {}
-        gamelist = []
         gamesjson = None
+        hoogste_game_aantal = 0
+        hoogste_game_user = "geen"
+        hoogste_speeltijd = 0
+        hoogste_speeltijd_user = "geen"
+        hoogste_speeltijd_appid = 0
         for user in useridlist:
             gamesdata = self.webapi.get_steam_games_from_user(user)
             try:
                 gamesjson = gamesdata["response"]["games"]
+                if gamesdata["response"]["game_count"] > hoogste_game_aantal:
+                    hoogste_game_aantal = gamesdata["response"]["game_count"]
+                    hoogste_game_user = usernamedict[user]
+                for game in gamesjson:
+                    if game["playtime_forever"] > hoogste_speeltijd:
+                        hoogste_speeltijd = game["playtime_forever"]
+                        hoogste_speeltijd_user = usernamedict[user]
+                        hoogste_speeltijd_appid = game["appid"]
+
             except KeyError:
                 pass
             for game in gamesjson:
@@ -95,7 +107,7 @@ class Statistiek:
 
         toplijst = self.sorteer_data(toplijst)
         floplijst = self.sorteer_data(toplijst)
-        print(floplijst)
+
         text += "De top 10 meest gespeelde spellen zijn:\n"
         counter = 0
         for x in range(len(toplijst) - 1, 0, -1):
@@ -109,12 +121,11 @@ class Statistiek:
             if counter < 10:
                 text += f"{floplijst[x][1]}, {int(floplijst[x][0])} minuten gespeeld\n"
                 counter += 1
-
-        # text += f"Jij en je vrienden hebben gemiddeld: {percentagemiddeld}% van jullie achievements gehaald.\n"
-        meestgespeeld = 0
-        meestgespeeldnaam = "geen"
-        minstgespeeld = 0
-        minstgespeeldnaam = "geen"
+        text += "\n\n"
+        text += f"Je rijkste vriend is {hoogste_game_user}, deze heeft {hoogste_game_aantal} games.\n"
+        text += f"Je meest levenloze vriend is {hoogste_speeltijd_user}, deze heeft " \
+                f"{gamenamedict[hoogste_speeltijd_appid]} {hoogste_speeltijd} minuten gespeeld! " \
+                f"(Dat is {int(hoogste_speeltijd / 60 / 24)} dagen!) "
 
         self.text.insert(INSERT, text)
         self.text.configure(state=DISABLED)
