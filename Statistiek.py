@@ -31,6 +31,8 @@ class Statistiek:
 
     def start_statistiek(self):
         username = self.client.get_client().user.name
+        if username is None:
+            username = "onbekend"
 
         text = f"Hallo, {username}.\n"
         data = self.webapi.get_friend_list(self.client.get_client().steam_id.as_64)

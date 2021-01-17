@@ -149,7 +149,9 @@ class SteamGUI:
                 self.loginbutton = None
 
     def toon_friendlist(self):
+
         if self.runfriendlist:
+
             try:
                 data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
             except HTTPError:
@@ -197,6 +199,7 @@ class SteamGUI:
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
+
                 try:
                     self.treeview.delete(*self.treeview.get_children())
                 except RuntimeError:
@@ -204,12 +207,13 @@ class SteamGUI:
 
             else:
                 try:
-                    if self.treeview is None:
-                        self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
-                        scrollbar = Scrollbar(self.friendframe)
-                        self.treeview.config(yscrollcommand=scrollbar.set)
-                        self.treeview.pack(expand=1, fill=BOTH)
-                        scrollbar.config(command=self.treeview.yview)
+
+                    self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
+                    scrollbar = Scrollbar(self.friendframe)
+                    self.treeview.config(yscrollcommand=scrollbar.set)
+                    self.treeview.pack(expand=1, fill=BOTH)
+                    scrollbar.config(command=self.treeview.yview)
+
                 except RuntimeError:
                     return
             for col in koppen:
@@ -255,6 +259,8 @@ class SteamGUI:
                 friend_name = self.treeview.item(self.selecteditem)['values'][0]
             except IndexError:
                 return
+            except TclError:
+                return
             favoriet = self.treeview.item(self.selecteditem)['values'][2]
             if self.favoriet != favoriet:
                 self.favoriet = favoriet
@@ -297,6 +303,7 @@ class SteamGUI:
 
     def timerstop(self):
         self.favoriet = "begin"
+        self.treeview.forget()
         self.clear_gui(True)
         self.open_gui(True)
         self.toon_friendlist()
