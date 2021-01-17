@@ -13,9 +13,9 @@ from Loginbutton2 import LoginButton
 from Neopixel import Neopixel
 from Schuifregister import Schuifregister
 from Servo import Servo
+from Statistiek import Statistiek
 from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
-from Statistiek import Statistiek
 
 
 class SteamGUI:
@@ -72,7 +72,7 @@ class SteamGUI:
         self.databutton = Button(text="Data", command=self.open_data,
                                  background="#5a565a", foreground="white", font=self.groot_font)
         self.statistiekbutton = Button(text="Statistiek", command=self.open_statistiek,
-                                 background="#5a565a", foreground="white", font=self.groot_font)
+                                       background="#5a565a", foreground="white", font=self.groot_font)
 
         self.berichtframe = Frame(background="#2f2c2f")
         self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
@@ -92,12 +92,12 @@ class SteamGUI:
         self.statistiekbutton.pack(side=LEFT)
 
         self.friendframe = Frame(background="#2f2c2f")
-        self.berichtframe.pack(side=RIGHT)
+        self.berichtframe.pack()
         self.user_label.pack()
         self.favoriet_label.pack()
         self.msg_button.pack()
         self.clear_button.pack()
-        self.friendframe.pack(side=LEFT)
+        self.friendframe.pack(expand=1)
 
     def clear_gui(self, afsluitbutton):
         if afsluitbutton:
@@ -166,6 +166,26 @@ class SteamGUI:
                         naam = games['response']['players'][0]['personaname']
                         if not (status == 0 or status == 7):
                             online += 1
+                        if status == 0:
+                            status = "Offline"
+                        elif status == 1:
+                            status = "Online"
+                        elif status == 2:
+                            status = "Bezig"
+                        elif status == 3:
+                            status = "Afwezig"
+                        elif status == 4:
+                            status = "Slapend"
+                        elif status == 5:
+                            status = "Ruilzoekende"
+                        elif status == 6:
+                            status = "Spelzoekende"
+                        elif status == 7:
+                            status = "Fake offline"
+                        elif status == 8:
+                            status = "max"
+                        else:
+                            status = "onbekend"
                         friendlist.append([naam, status, friend['steamid']])
                     except KeyError:
                         print(f"deze gebruiker is een zwerver")
@@ -184,11 +204,12 @@ class SteamGUI:
 
             else:
                 try:
-                    self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
-                    scrollbar = Scrollbar(self.friendframe)
-                    self.treeview.config(yscrollcommand=scrollbar.set)
-                    self.treeview.pack(expand=1, fill=BOTH)
-                    scrollbar.config(command=self.treeview.yview)
+                    if self.treeview is None:
+                        self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
+                        scrollbar = Scrollbar(self.friendframe)
+                        self.treeview.config(yscrollcommand=scrollbar.set)
+                        self.treeview.pack(expand=1, fill=BOTH)
+                        scrollbar.config(command=self.treeview.yview)
                 except RuntimeError:
                     return
             for col in koppen:
@@ -199,9 +220,12 @@ class SteamGUI:
                                      values=(friend[0], friend[1], friend[2]))
             if self.selecteditem is not None:
                 for i in self.treeview.get_children():
-                    if self.treeview.item(i)['values'][2] == self.favoriet:
-                        self.treeview.focus(i)
-                        self.treeview.selection_set(i)
+                    try:
+                        if self.treeview.item(i)['values'][2] == self.favoriet:
+                            self.treeview.focus(i)
+                            self.treeview.selection_set(i)
+                    except TclError:
+                        pass
 
             timer = threading.Timer(10, self.toon_friendlist)
             timer.deamon = True
