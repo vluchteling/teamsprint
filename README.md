@@ -4,9 +4,13 @@
 Deze repository bevat de bestanden die gebruikt worden voor het project steam sprint 1 van de Hogeschool Utrecht. </br>
 
 Het doel  lolvan het project steam is om een grafische weergave te creëren die inzicht geeft in het gaming gedrag van jouw vrienden op steam, ondersteund door een netwerk waarbij 	gebruik wordt gemaakt van een Raspberry Pi.
-Je kunt de Python-bestanden (.py) op je eigen computer krijgen door ze te downloaden of door de raw text op te slaan als .py bestand. 
-Allereerst moet het programma ‘SteamAPI.py’ worden gestart. 
-Dit programma haalt de spelgegevens op van Steam, en slaat ze op in een JSON file. Als dit programma klaar is kan het volgende programma genaamd ‘SteamGUI.py’ worden gestart. Dit programma toont de GUI, en het eerst spel uit de JSON file.
+Om de code op een raspberry pi 4 te kunnen runnen moet eerst het command ‘git clone http://www.github.com/vluchteling/teamsprint’ worden gerund in de commandprop van de pi. Dit zorgt ervoor dat de code op de pi wordt gedownload. 
+Hierna moeten verschillende modules worden gerund in het commandprop om de code te kunnen runnen:
+1.	sudo pip3 install pandas
+2.	sudo apt-get install libatlas-base-dev
+3.	pip3 install steam[client]
+4.	pip3 install gevent
+Wanneer deze modules zijn geïnstalleerd kan de code worden gerund. Dit kan worden gedaan door in de commandprop ‘cd ~/teamsprint’ en daarna ‘python3 beginscherm.py’ in te voeren. Hierna zal er een inlogscherm verschijnen waarin de gebruikersnaam en wachtwoord in kunnen worden gevoerd.
 Bij onduidelijkheden zijn wij te bereiken via het email adres: a-vl@outlook.com.</br>
  
 <b>Bronnen:</b></br>
