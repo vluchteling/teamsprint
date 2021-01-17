@@ -285,9 +285,6 @@ class SteamGUI:
         self.neopixel.lights_out()
         self.favoriet = "begin"
         DataScherm(self.client, self.root, self)
-        self.open_gui(True)
-        self.start_sensoren(True)
-        self.neopixel.speel_loginanimatie()
 
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)
@@ -329,6 +326,3 @@ class SteamGUI:
         self.neopixel.lights_out()
         self.favoriet = "begin"
         Statistiek(self.client, self.root, self)
-        self.open_gui(True)
-        self.start_sensoren(True)
-        self.neopixel.speel_loginanimatie()

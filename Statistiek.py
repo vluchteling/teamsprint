@@ -29,6 +29,8 @@ class Statistiek:
     def stop(self):
         self.afsluitButton.forget()
         self.text.forget()
+        self.gui.open_gui(True)
+        self.gui.start_sensoren(True)
 
     def start_statistiek(self):
         username = self.client.get_client().user.name
