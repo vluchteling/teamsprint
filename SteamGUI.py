@@ -15,6 +15,7 @@ from Schuifregister import Schuifregister
 from Servo import Servo
 from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
+from Statistiek import Statistiek
 
 
 class SteamGUI:
@@ -70,6 +71,8 @@ class SteamGUI:
         self.titelframe = Label(font=self.groot_font, background="#5a565a", text="SteamPI Client")
         self.databutton = Button(text="Data", command=self.open_data,
                                  background="#5a565a", foreground="white", font=self.groot_font)
+        self.statistiekbutton = Button(text="Statistiek", command=self.open_statistiek,
+                                 background="#5a565a", foreground="white", font=self.groot_font)
 
         self.berichtframe = Frame(background="#2f2c2f")
         self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
@@ -85,7 +88,9 @@ class SteamGUI:
                                         background="#5a565a", foreground="white", font=self.groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.titelframe.pack(side=TOP, pady=30)
-        self.databutton.pack()
+        self.databutton.pack(side=RIGHT)
+        self.statistiekbutton.pack(side=LEFT)
+
         self.friendframe = Frame(background="#2f2c2f")
         self.berichtframe.pack(side=RIGHT)
         self.user_label.pack()
@@ -100,6 +105,7 @@ class SteamGUI:
 
         self.titelframe.forget()
         self.databutton.forget()
+        self.statistiekbutton.forget()
         self.berichtframe.forget()
         self.user_label.forget()
         self.favoriet_label.forget()
@@ -138,8 +144,9 @@ class SteamGUI:
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:
-            self.loginbutton.lights_out()
-            self.loginbutton = None
+            if self.loginbutton is not None:
+                self.loginbutton.lights_out()
+                self.loginbutton = None
 
     def toon_friendlist(self):
         if self.runfriendlist:
@@ -309,3 +316,10 @@ class SteamGUI:
             self.client.get_client().get_user(steam_id).send_message(text)
 
         self.neopixel.speel_berichtanimatie()
+
+    def open_statistiek(self):
+        self.clear_gui(True)
+        self.stop_sensoren(True)
+        self.neopixel.lights_out()
+        self.favoriet = "begin"
+        Statistiek(self.client, self.root, self)
