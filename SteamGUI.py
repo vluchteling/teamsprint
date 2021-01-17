@@ -245,7 +245,7 @@ class SteamGUI:
             self.timer.deamon = True
             self.timer.start()
         elif self.favoriet is None and self.treeview is not None and not self.runonline:
-
+            self.runonline = True
             self.favoriet_label["text"] = f"Huidige favoriet: geen"
             self.favoriet = "begin"
         else:
@@ -274,6 +274,9 @@ class SteamGUI:
     def timerstop(self):
         self.favoriet = None
         self.afsluitButton.pack(side=BOTTOM)
+        self.afsluitButton = Button(text="Afsluiten", command=self.stop,
+                                    background="#5a565a", foreground="white", font=self.groot_font)
+        self.runonline = False
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
     def open_data(self):
