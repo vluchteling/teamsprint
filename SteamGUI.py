@@ -187,7 +187,7 @@ class SteamGUI:
                     self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
                     scrollbar = Scrollbar(self.friendframe)
                     self.treeview.config(yscrollcommand=scrollbar.set)
-                    self.treeview.pack()
+                    self.treeview.pack(expand=1, fill=BOTH)
                     scrollbar.config(command=self.treeview.yview)
                 except RuntimeError:
                     return
@@ -272,11 +272,11 @@ class SteamGUI:
         self.start_sensoren(False)
 
     def timerstop(self):
-        self.favoriet = None
-        self.afsluitButton.pack(side=BOTTOM)
-        self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
-        self.runonline = False
+        self.favoriet = "begin"
+        self.clear_gui(True)
+        self.open_gui(True)
+        self.toon_friendlist()
+        self.runonline = True
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
     def open_data(self):
@@ -285,6 +285,9 @@ class SteamGUI:
         self.neopixel.lights_out()
         self.favoriet = "begin"
         DataScherm(self.client, self.root, self)
+        self.open_gui(True)
+        self.start_sensoren(True)
+        self.neopixel.speel_loginanimatie()
 
     def sorteer_data(self, data):
         self.quicksort(data, 0, len(data) - 1)
@@ -326,3 +329,6 @@ class SteamGUI:
         self.neopixel.lights_out()
         self.favoriet = "begin"
         Statistiek(self.client, self.root, self)
+        self.open_gui(True)
+        self.start_sensoren(True)
+        self.neopixel.speel_loginanimatie()
