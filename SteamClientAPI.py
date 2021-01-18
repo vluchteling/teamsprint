@@ -24,7 +24,7 @@ class SteamClientAPI:
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
         try:
             result = self.client.login(username=self.username, password=self.password, auth_code=self.email_key)
-            print(result)
+
 
             if result == EResult.OK:
                 if guirequired:
@@ -32,10 +32,12 @@ class SteamClientAPI:
 
                 return "ok"
 
-            if result == EResult.InvalidPassword:
+            if result == EResult.InvalidPassword or result == EResult.InvalidName:
                 return "password"
             if result == EResult.InvalidLoginAuthCode:
                 self.open_keyscherm(extra_text="foute code!")
+            if result == EResult.ServiceUnavailable:
+                return "unavailable"
 
             if result == EResult.AccountLogonDenied:
                 if root is not None:

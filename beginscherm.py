@@ -57,11 +57,15 @@ class Beginscherm:
                     self.root.destroy()
                 self.root = None
                 self.open_GUI(client)
-            if result == "password":
-                self.user_label["text"] = "Wachtwoord verkeerd!\nusername:"
+            elif result == "password":
+                self.user_label["text"] = "Verkeerde gegevens!\nUsername:"
+            elif result == "unavailable":
+                self.user_label["text"] = "Steam offline, probeer later opnieuw.\nUsername:"
+            else:
+                self.user_label["text"] = "Overige fout, neem contact op met de ontwikkelaar.\nUsername:"
 
         else:
-            self.user_label["text"] = "lege velden!\nusername:"
+            self.user_label["text"] = "lege velden!\nUsername:"
 
     def open_GUI(self, client):
         SteamGUI(client)

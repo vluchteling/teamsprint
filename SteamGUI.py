@@ -51,7 +51,8 @@ class SteamGUI:
         self.runonline = True
         self.loginbutton = None
         self.neopixel = None
-        self.timer = None
+        self.onlinetimer = None
+        self.friendlist_timer = None
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
 
@@ -59,7 +60,6 @@ class SteamGUI:
 
         self.open_gui(True)
         self.start_sensoren(True)
-        Neopixel().speel_loginanimatie()
         self.start_gui()
 
     def open_gui(self, stopbutton):
@@ -138,6 +138,7 @@ class SteamGUI:
         self.runonline = True
         self.toon_friendlist()
         self.neopixel = Neopixel()
+        self.neopixel.speel_loginanimatie()
         self.sr04 = Sr04(self.client, self.neopixel)
         self.sr04.start()
 
@@ -145,14 +146,16 @@ class SteamGUI:
             self.loginbutton = LoginButton(self)
 
     def stop_sensoren(self, loginbtndelete):
+        self.neopixel.speel_loguitanimatie()
         if self.schuifregister is not None:
             self.schuifregister.lichtjes(0)
         self.favoriet = None
         self.runfriendlist = False
-        # self.treeview = None
         self.runonline = False
-        if self.timer is not None:
-            self.timer.join()
+        if self.onlinetimer is not None:
+            self.onlinetimer.join()
+        if self.friendlist_timer is not None:
+            self.friendlist_timer.join()
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:
@@ -243,16 +246,15 @@ class SteamGUI:
                     except TclError:
                         pass
 
-            timer = threading.Timer(10, self.toon_friendlist)
-            timer.deamon = True
-            timer.start()
+            self.friendlist_timer = threading.Timer(10, self.toon_friendlist)
+            self.friendlist_timer.deamon = True
+            self.friendlist_timer.start()
 
         else:
             return
 
     def stop(self):
         """ Deze functie sluit de applicatie af. """
-        self.neopixel.speel_loguitanimatie()
         self.stop_sensoren(True)
         self.root.destroy()
 
@@ -283,9 +285,9 @@ class SteamGUI:
             if status != self.status:
                 servo.start_spel(status)
                 self.status = status
-            self.timer = threading.Timer(2, self.check_online)
-            self.timer.deamon = True
-            self.timer.start()
+            self.onlinetimer = threading.Timer(2, self.check_online)
+            self.onlinetimer.deamon = True
+            self.onlinetimer.start()
         elif self.favoriet is None and self.treeview is not None and not self.runonline:
             self.runonline = True
             self.favoriet_label["text"] = f"Huidige favoriet: geen"
@@ -300,7 +302,6 @@ class SteamGUI:
                 break
             except LoopExit:
                 continue
-        self.neopixel.speel_loguitanimatie()
         self.clear_gui(False)
         self.stop_sensoren(False)
         self.client = None
@@ -316,9 +317,16 @@ class SteamGUI:
 
     def timerstop(self):
         self.favoriet = "begin"
-        self.treeview.forget()
+        self.runfriendlist = False
+        if self.treeview is not None:
+            self.treeview.forget()
         self.clear_gui(True)
         self.open_gui(True)
+        if self.onlinetimer is not None:
+            self.onlinetimer.join()
+        if self.friendlist_timer is not None:
+            self.friendlist_timer.join()
+        self.runfriendlist = True
         self.toon_friendlist()
         self.runonline = True
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
@@ -365,6 +373,7 @@ class SteamGUI:
         self.neopixel.speel_berichtanimatie()
 
     def open_statistiek(self):
+
         self.clear_gui(True)
         self.stop_sensoren(True)
         self.neopixel.lights_out()

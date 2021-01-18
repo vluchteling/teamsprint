@@ -34,7 +34,7 @@ class Statistiek:
         if username is None:
             username = "onbekend"
 
-        text = f"Hallo, {username}.\n"
+        text = f"Hallo, {username}.\n\n"
         data = self.webapi.get_friend_list(self.client.get_client().steam_id.as_64)
         counter = 0
         friendjson = None
