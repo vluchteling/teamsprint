@@ -236,15 +236,10 @@ class SteamGUI:
                 except RuntimeError:
                     return
             self.collijst = []
-            counter = 0
             for col in koppen:
                 self.collijst.append(col)
-                if counter == 0:
-                    self.treeview.heading(col, text=col,
+                self.treeview.heading(col, text=col,
                                           command=self.treeview_sort_column)
-                    counter += 1
-                else:
-                    self.treeview.heading(col, text=col)
             friendlist = self.sorteer_data(friendlist)
 
             if self.treeview is not None:
@@ -346,8 +341,6 @@ class SteamGUI:
         self.open_gui(True)
         if self.onlinetimer is not None:
             self.onlinetimer.join()
-        if self.friendlist_timer is not None:
-            self.friendlist_timer.join(0)
         self.runfriendlist = True
         self.toon_friendlist()
         self.runonline = True
