@@ -206,9 +206,9 @@ class SteamGUI:
                             status = "onbekend"
                         friendlist.append([naam, status, friend['steamid']])
                     except KeyError:
-                        print(f"deze gebruiker is een zwerver")
+                        pass
             except KeyError:
-                print("Deze gebruiker is een zwerver.")
+                pass
             self.schuifregister = Schuifregister()
             self.schuifregister.lichtjes(online)
             if online != self.online:
@@ -269,7 +269,6 @@ class SteamGUI:
 
             try:
                 self.selecteditem = self.treeview.focus()
-                print(f"item:{self.selecteditem}")
                 if self.selecteditem == "":
                     return
             except IndexError:
@@ -375,12 +374,6 @@ class SteamGUI:
     def get_favoriet(self):
         return self.favoriet
 
-    def stuur_bericht(self, steam_id, text):
-        print(text)
-        if steam_id != "begin" and steam_id is not None:
-            self.client.get_client().get_user(steam_id).send_message(text)
-
-        self.neopixel.speel_berichtanimatie()
 
     def open_statistiek(self):
 
