@@ -266,13 +266,17 @@ class SteamGUI:
 
     def check_online(self):
         if self.favoriet is not None and self.treeview is not None and self.runonline:
-            self.afsluitButton.forget()
+
             try:
                 self.selecteditem = self.treeview.focus()
+                print(f"item:{self.selecteditem}")
+                if self.selecteditem == "":
+                    return
             except IndexError:
                 return
             except RuntimeError:
                 return
+            self.afsluitButton.forget()
             try:
                 friend_name = self.treeview.item(self.selecteditem)['values'][0]
             except IndexError:
@@ -320,6 +324,8 @@ class SteamGUI:
         self.start_sensoren(False)
 
     def timerstop(self):
+        if self.selecteditem is None or self.selecteditem == "":
+            return
         self.favoriet = "begin"
         self.runfriendlist = False
         if self.treeview is not None:
