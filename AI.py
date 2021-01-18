@@ -27,7 +27,7 @@ class DataScherm:
         self.rechterframe.pack(side=RIGHT, expand=1, fill=X)
         self.hoofdframe.pack(side=TOP, expand=1, fill=X)
         self.afsluitButton.pack()
-        self.buttonframe.pack(side=BOTTOM, expand=True, fill=X)
+        self.buttonframe.pack(side=BOTTOM, expand=True)
         friendsdata, friendsdict = self.haal_data_op()
         gemtijdlist = []
         totaaltijdlist = []

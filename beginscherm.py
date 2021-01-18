@@ -1,6 +1,9 @@
 import os
 from tkinter import *
 from tkinter.font import Font
+
+from PIL import ImageTk
+
 from SteamClientAPI import SteamClientAPI
 from SteamGUI import SteamGUI
 
@@ -14,7 +17,11 @@ class Beginscherm:
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
         self.groot_font = Font(size=30)
-        self.root.configure(bg="#2f2c2f")
+        bg = ImageTk.PhotoImage(file='pexels-photo-2763927.jpg')
+        background_label = Label(image=bg)
+        background_label.image = bg
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+        self.loginframe = Frame(height=125, bd=0)
         self.user_label = Label(font=self.groot_font, background="#5a565a", text="username:")
         self.user_entry = Entry(width=35)
         self.password_label = Label(font=self.groot_font, background="#5a565a", text="password")
@@ -24,6 +31,7 @@ class Beginscherm:
                                background="#5a565a", foreground="white", font=self.groot_font)
         self.bevestigButton = Button(text="Bevestig", command=self.start_client,
                                      background="#5a565a", foreground="white", font=self.groot_font)
+        self.loginframe.pack(side=TOP)
         afsluitButton.pack(side=BOTTOM, pady=5)
         self.user_label.pack(side=TOP, pady=30)
         self.user_entry.pack(side=TOP, pady=30)

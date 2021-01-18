@@ -5,6 +5,7 @@ from tkinter import ttk
 from tkinter.font import Font
 from urllib.error import HTTPError
 
+from PIL import ImageTk
 from gevent.exceptions import LoopExit
 
 from AI import DataScherm
@@ -67,7 +68,11 @@ class SteamGUI:
         # De GUI code
 
         self.groot_font = Font(size=30)
-        self.root.configure(bg="#2f2c2f")
+        bg = ImageTk.PhotoImage(file='pexels-photo-2763927.jpg')
+        background_label = Label(image=bg)
+        background_label.image = bg
+        background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
         self.titelframe = Label(font=self.groot_font, background="#5a565a", text="SteamPI Client")
         self.databutton = Button(text="Data", command=self.open_data,
                                  background="#5a565a", foreground="white", font=self.groot_font)
@@ -79,25 +84,28 @@ class SteamGUI:
                                 text="stel favoriet in")
         self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
                                     text="Huidige favoriet: Geen")
-        self.msg_button = Button(self.berichtframe, text="Stel in", command=self.check_online,
+        self.servobuttonframe = Frame(self.berichtframe)
+        self.msg_button = Button(self.servobuttonframe, text="Stel in", command=self.check_online,
                                  background="#5a565a", foreground="white", font=self.groot_font)
-        self.clear_button = Button(self.berichtframe, text="Stop", command=self.timerstop,
+        self.clear_button = Button(self.servobuttonframe, text="Stop", command=self.timerstop,
                                    background="#5a565a", foreground="white", font=self.groot_font)
         if stopbutton:
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
                                         background="#5a565a", foreground="white", font=self.groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
-        self.titelframe.pack(side=TOP, pady=30)
-        self.databutton.pack(side=RIGHT)
-        self.statistiekbutton.pack(side=LEFT)
+        self.titelframe.pack(side=TOP, pady=30, padx=30)
 
-        self.friendframe = Frame(background="#2f2c2f")
-        self.berichtframe.pack()
+        self.servobuttonframe.pack(side=BOTTOM)
+
+        self.friendframe = Frame(self.berichtframe, background="#2f2c2f")
+        self.berichtframe.pack(pady=30, padx=30)
         self.user_label.pack()
         self.favoriet_label.pack()
-        self.msg_button.pack()
-        self.clear_button.pack()
-        self.friendframe.pack(expand=1)
+        self.msg_button.pack(side=LEFT, padx=5)
+        self.clear_button.pack(side=RIGHT, padx=5)
+        self.friendframe.pack()
+        self.databutton.pack(side=RIGHT)
+        self.statistiekbutton.pack(side=LEFT)
 
     def clear_gui(self, afsluitbutton):
         if afsluitbutton:
@@ -112,6 +120,7 @@ class SteamGUI:
         self.msg_button.forget()
         self.clear_button.forget()
         self.friendframe.forget()
+        self.servobuttonframe.forget()
         if self.treeview is not None:
             self.treeview.forget()
         self.treeview = None
@@ -298,7 +307,8 @@ class SteamGUI:
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
         self.favoriet = "begin"
-        self.open_gui(False)
+        self.afsluitButton.forget()
+        self.open_gui(True)
         self.start_sensoren(False)
 
     def timerstop(self):
