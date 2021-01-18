@@ -235,21 +235,24 @@ class SteamGUI:
             for col in koppen:
                 self.treeview.heading(col, text=col)
             friendlist = self.sorteer_data(friendlist)
-            for friend in friendlist:
-                self.treeview.insert("", "end",
-                                     values=(friend[0], friend[1], friend[2]))
-            if self.selecteditem is not None:
-                for i in self.treeview.get_children():
-                    try:
-                        if self.treeview.item(i)['values'][2] == self.favoriet:
-                            self.treeview.focus(i)
-                            self.treeview.selection_set(i)
-                    except TclError:
-                        pass
+            if self.treeview is not None:
+                for friend in friendlist:
+                    self.treeview.insert("", "end",
+                                         values=(friend[0], friend[1], friend[2]))
+                if self.selecteditem is not None:
+                    for i in self.treeview.get_children():
+                        try:
+                            if self.treeview.item(i)['values'][2] == self.favoriet:
+                                self.treeview.focus(i)
+                                self.treeview.selection_set(i)
+                        except TclError:
+                            pass
 
-            self.friendlist_timer = threading.Timer(10, self.toon_friendlist)
-            self.friendlist_timer.deamon = True
-            self.friendlist_timer.start()
+                self.friendlist_timer = threading.Timer(10, self.toon_friendlist)
+                self.friendlist_timer.deamon = True
+                self.friendlist_timer.start()
+            else:
+                return
 
         else:
             return
