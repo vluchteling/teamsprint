@@ -347,7 +347,7 @@ class SteamGUI:
         if self.onlinetimer is not None:
             self.onlinetimer.join()
         if self.friendlist_timer is not None:
-            self.friendlist_timer.join()
+            self.friendlist_timer.join(0)
         self.runfriendlist = True
         self.toon_friendlist()
         self.runonline = True
