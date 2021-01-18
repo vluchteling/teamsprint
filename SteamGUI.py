@@ -3,7 +3,6 @@ import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter.font import Font
-from tkinter.ttk import Style
 from urllib.error import HTTPError
 
 from PIL import ImageTk
@@ -236,7 +235,8 @@ class SteamGUI:
                 except RuntimeError:
                     return
             for col in koppen:
-                self.treeview.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.treeview, _col, False))
+                self.treeview.heading(col, text=col,
+                                      command=lambda _col=col: self.treeview_sort_column(self.treeview, _col, False))
             friendlist = self.sorteer_data(friendlist)
 
             if self.treeview is not None:
@@ -378,7 +378,7 @@ class SteamGUI:
     def get_favoriet(self):
         return self.favoriet
 
-    def treeview_sort_column(self,tv, col, reverse):
+    def treeview_sort_column(self, tv, col, reverse):
         l = [(tv.set(k, col), k) for k in tv.get_children('')]
         l.sort(reverse=reverse)
 
@@ -388,7 +388,6 @@ class SteamGUI:
 
         # reverse sort next time
         tv.heading(col, command=lambda _col=col: self.treeview_sort_column(tv, _col, not reverse))
-
 
     def open_statistiek(self):
 
