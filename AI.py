@@ -1,9 +1,11 @@
 import os
 from tkinter import *
 from tkinter.font import Font
+
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pandas import DataFrame
+
 from SteamWebAPI import SteamWebAPI
 
 
@@ -14,6 +16,7 @@ class DataScherm:
         self.client = client
         self.api = SteamWebAPI()
         self.gui = gui
+        bgcolor = "#4B0082"
         # De GUI code
         self.root = root
         self.groot_font = Font(size=30)
@@ -22,7 +25,7 @@ class DataScherm:
         self.rechterframe = Frame(self.hoofdframe)
         self.buttonframe = Frame(width=self.root.winfo_screenwidth(), height=20, background="#2f2c2f")
         self.afsluitButton = Button(self.buttonframe, text="Afsluiten", command=self.stop,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
+                                    background=bgcolor, foreground="white", font=self.groot_font)
         self.linkerframe.pack(side=LEFT, expand=1, fill=BOTH)
         self.rechterframe.pack(side=RIGHT, expand=1, fill=X)
         self.hoofdframe.pack(side=TOP, expand=1, fill=X)

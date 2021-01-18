@@ -158,4 +158,3 @@ class Neopixel:
         n = 8
         for x in range(0, n):
             self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
-

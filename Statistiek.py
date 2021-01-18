@@ -13,10 +13,11 @@ class Statistiek:
         self.groot_font = Font(size=30)
         self.dataframe = Frame()
         scrollbar = Scrollbar(root)
+        bgcolor = "#4B0082"
         self.text = Text(root, font=self.klein_font, wrap=WORD,
-                         yscrollcommand=scrollbar.set, background="#2f2c2f", bd=0)
+                         yscrollcommand=scrollbar.set, background="#411D4A", foreground="white", bd=0)
         self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                    background="#5a565a", foreground="white", font=self.groot_font)
+                                    background=bgcolor, foreground="white", font=self.groot_font)
         self.afsluitButton.pack(side=BOTTOM, pady=5)
         self.text.pack(side=TOP, expand=1, fill=BOTH)
         scrollbar.config(command=self.text.yview)

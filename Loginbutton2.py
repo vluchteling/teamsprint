@@ -1,5 +1,4 @@
 import atexit
-import multiprocessing
 import time
 
 import RPi.GPIO as GPIO
@@ -20,20 +19,16 @@ class LoginButton:
         GPIO.output(self.led, GPIO.HIGH)
         atexit.register(self.lights_out)
 
-
     def login_checker(self, twentythree):
 
         if not GPIO.input(self.knopuno):
 
             if self.loggedin:
-
-                print("u wordt uitgelogd.")
                 GPIO.output(self.led, GPIO.LOW)
                 self.loggedin = False
                 self.SteamGUI.log_out()
 
             else:
-                print("u wordt ingelogd.")
                 GPIO.output(self.led, GPIO.HIGH)
                 self.loggedin = True
                 self.SteamGUI.log_in()

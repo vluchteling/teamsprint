@@ -1,5 +1,5 @@
-import urllib.request
 import json
+import urllib.request
 
 
 class SteamWebAPI:

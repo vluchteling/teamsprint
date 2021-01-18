@@ -73,37 +73,38 @@ class SteamGUI:
         background_label = Label(image=bg)
         background_label.image = bg
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
+        bgcolor = "#4B0082"
 
-        self.titelframe = Label(font=self.groot_font, background="#5a565a", text="SteamPI Client")
+        self.titelframe = Label(font=self.groot_font, background=bgcolor, foreground="white", text="SteamPI Client")
         self.databutton = Button(text="Data", command=self.open_data,
-                                 background="#5a565a", foreground="white", font=self.groot_font)
+                                 background=bgcolor, foreground="white", font=self.groot_font)
         self.statistiekbutton = Button(text="Statistiek", command=self.open_statistiek,
-                                       background="#5a565a", foreground="white", font=self.groot_font)
+                                       background=bgcolor, foreground="white", font=self.groot_font)
 
-        self.berichtframe = Frame(background="#2f2c2f")
-        self.user_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
-                                text="stel favoriet in")
-        self.favoriet_label = Label(self.berichtframe, font=self.groot_font, background="#5a565a",
+        self.berichtframe = Frame(background=bgcolor)
+        self.user_label = Label(self.berichtframe, font=self.groot_font, foreground="white", background=bgcolor,
+                                text="Volg de status van een vriend.")
+        self.favoriet_label = Label(self.berichtframe, foreground="white", font=self.groot_font, background=bgcolor,
                                     text="Huidige favoriet: Geen")
-        self.servobuttonframe = Frame(self.berichtframe)
+        self.servobuttonframe = Frame(self.berichtframe, background=bgcolor)
         self.msg_button = Button(self.servobuttonframe, text="Stel in", command=self.check_online,
-                                 background="#5a565a", foreground="white", font=self.groot_font)
+                                 background=bgcolor, foreground="white", font=self.groot_font)
         self.clear_button = Button(self.servobuttonframe, text="Stop", command=self.timerstop,
-                                   background="#5a565a", foreground="white", font=self.groot_font)
+                                   background=bgcolor, foreground="white", font=self.groot_font)
         if stopbutton:
             self.afsluitButton = Button(text="Afsluiten", command=self.stop,
-                                        background="#5a565a", foreground="white", font=self.groot_font)
+                                        background=bgcolor, foreground="white", font=self.groot_font)
             self.afsluitButton.pack(side=BOTTOM, pady=5)
-        self.titelframe.pack(side=TOP, pady=30, padx=30)
+        self.titelframe.pack(side=TOP, pady=60, padx=30)
 
-        self.servobuttonframe.pack(side=BOTTOM)
+        self.servobuttonframe.pack(side=BOTTOM, expand=1, fill=X, pady=5)
 
-        self.friendframe = Frame(self.berichtframe, background="#2f2c2f")
+        self.friendframe = Frame(self.berichtframe, background=bgcolor)
         self.berichtframe.pack(pady=30, padx=30)
         self.user_label.pack()
         self.favoriet_label.pack()
-        self.msg_button.pack(side=LEFT, padx=5)
-        self.clear_button.pack(side=RIGHT, padx=5)
+        self.msg_button.pack(side=LEFT)
+        self.clear_button.pack(side=RIGHT)
         self.friendframe.pack()
         self.databutton.pack(side=RIGHT)
         self.statistiekbutton.pack(side=LEFT)
@@ -155,7 +156,7 @@ class SteamGUI:
         if self.onlinetimer is not None:
             self.onlinetimer.join()
         if self.friendlist_timer is not None:
-            self.friendlist_timer.join()
+            self.friendlist_timer.join(0)
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:

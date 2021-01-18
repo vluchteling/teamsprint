@@ -1,7 +1,8 @@
 from __future__ import print_function
 
-from steam.client import SteamClient
 from tkinter import *
+
+from steam.client import SteamClient
 from steam.enums import EResult
 
 
@@ -24,7 +25,6 @@ class SteamClientAPI:
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
         try:
             result = self.client.login(username=self.username, password=self.password, auth_code=self.email_key)
-
 
             if result == EResult.OK:
                 if guirequired:

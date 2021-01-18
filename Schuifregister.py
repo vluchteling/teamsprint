@@ -106,5 +106,6 @@ class Schuifregister:
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 1, delay)
+
     def stop(self):
         self.lichtjes(0)
