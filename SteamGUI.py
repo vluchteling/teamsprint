@@ -3,6 +3,7 @@ import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter.font import Font
+from tkinter.ttk import Style
 from urllib.error import HTTPError
 
 from PIL import ImageTk
@@ -147,7 +148,8 @@ class SteamGUI:
             self.loginbutton = LoginButton(self)
 
     def stop_sensoren(self, loginbtndelete):
-        self.neopixel.speel_loguitanimatie()
+        if self.neopixel is not None:
+            self.neopixel.speel_loguitanimatie()
         if self.schuifregister is not None:
             self.schuifregister.lichtjes(0)
         self.favoriet = None
@@ -222,6 +224,7 @@ class SteamGUI:
                     return
 
             else:
+
                 try:
 
                     self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
@@ -233,8 +236,9 @@ class SteamGUI:
                 except RuntimeError:
                     return
             for col in koppen:
-                self.treeview.heading(col, text=col)
+                self.treeview.heading(col, text=col, command=lambda _col=col: self.treeview_sort_column(self.treeview, _col, False))
             friendlist = self.sorteer_data(friendlist)
+
             if self.treeview is not None:
                 for friend in friendlist:
                     self.treeview.insert("", "end",
@@ -373,6 +377,17 @@ class SteamGUI:
 
     def get_favoriet(self):
         return self.favoriet
+
+    def treeview_sort_column(self,tv, col, reverse):
+        l = [(tv.set(k, col), k) for k in tv.get_children('')]
+        l.sort(reverse=reverse)
+
+        # rearrange items in sorted positions
+        for index, (val, k) in enumerate(l):
+            tv.move(k, '', index)
+
+        # reverse sort next time
+        tv.heading(col, command=lambda _col=col: self.treeview_sort_column(tv, _col, not reverse))
 
 
     def open_statistiek(self):
