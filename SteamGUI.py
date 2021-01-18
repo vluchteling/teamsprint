@@ -51,6 +51,7 @@ class SteamGUI:
         self.runonline = True
         self.loginbutton = None
         self.neopixel = None
+        self.timer = None
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
 
