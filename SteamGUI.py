@@ -53,6 +53,7 @@ class SteamGUI:
         self.neopixel = None
         self.onlinetimer = None
         self.friendlist_timer = None
+        self.needs2bsorted = False
         self.root = Tk()
         self.root.attributes("-fullscreen", True)
 
@@ -234,9 +235,16 @@ class SteamGUI:
 
                 except RuntimeError:
                     return
+            self.collijst = []
+            counter = 0
             for col in koppen:
-                self.treeview.heading(col, text=col,
-                                      command=lambda _col=col: self.treeview_sort_column(self.treeview, _col, False))
+                self.collijst.append(col)
+                if counter == 0:
+                    self.treeview.heading(col, text=col,
+                                          command=self.treeview_sort_column)
+                    counter += 1
+                else:
+                    self.treeview.heading(col, text=col)
             friendlist = self.sorteer_data(friendlist)
 
             if self.treeview is not None:
@@ -251,11 +259,12 @@ class SteamGUI:
                                 self.treeview.selection_set(i)
                         except TclError:
                             pass
-
+                self.sort_column_noclick()
                 self.friendlist_timer = threading.Timer(10, self.toon_friendlist)
                 self.friendlist_timer.deamon = True
                 self.friendlist_timer.start()
             else:
+
                 return
 
         else:
@@ -352,6 +361,7 @@ class SteamGUI:
         DataScherm(self.client, self.root, self)
 
     def sorteer_data(self, data):
+
         self.quicksort(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
         return data
@@ -378,16 +388,34 @@ class SteamGUI:
     def get_favoriet(self):
         return self.favoriet
 
-    def treeview_sort_column(self, tv, col, reverse):
-        l = [(tv.set(k, col), k) for k in tv.get_children('')]
-        l.sort(reverse=reverse)
+    def treeview_sort_column(self):
+
+        koppenlijst = []
+
+        for kop in self.treeview.get_children(''):
+            koppenlijst.append(kop)
+        copylijst = koppenlijst.copy()
+        copylijst.reverse()
 
         # rearrange items in sorted positions
-        for index, (val, k) in enumerate(l):
-            tv.move(k, '', index)
+        for kop in koppenlijst:
+            self.treeview.move(kop, '', copylijst.index(kop))
+        self.needs2bsorted = not self.needs2bsorted
 
-        # reverse sort next time
-        tv.heading(col, command=lambda _col=col: self.treeview_sort_column(tv, _col, not reverse))
+    def sort_column_noclick(self):
+
+        koppenlijst = []
+
+        for kop in self.treeview.get_children(''):
+            koppenlijst.append(kop)
+        copylijst = koppenlijst.copy()
+        if self.needs2bsorted:
+            copylijst.reverse()
+
+        for kop in koppenlijst:
+            self.treeview.move(kop, '', copylijst.index(kop))
+
+    # reverse sort next time
 
     def open_statistiek(self):
 
