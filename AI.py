@@ -221,10 +221,11 @@ class DataScherm:
         dataframe = DataFrame(data)
         dataframe.hist()
         plot = plt.Figure(figsize=(5, 3.5))
+
         subplot = plot.add_subplot(111)
         self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
-        dataframe.plot(kind='hist', legend=False, ax=subplot)
-        subplot.set_title('Histogram van de speeltijden van jou en je vrienden.')
+        dataframe.plot(kind='hist', legend=False, ax=subplot, xlabel="Speeltijd in minuten.")
+        subplot.set_title('Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten)')
         self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
     def median(self, lst):

@@ -150,6 +150,8 @@ class SteamGUI:
         self.runfriendlist = False
         # self.treeview = None
         self.runonline = False
+        if self.timer is not None:
+            self.timer.join()
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:

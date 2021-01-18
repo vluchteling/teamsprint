@@ -21,16 +21,16 @@ class Beginscherm:
         background_label = Label(image=bg)
         background_label.image = bg
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
-        self.loginframe = Frame(height=125, bd=0)
-        self.user_label = Label(font=self.groot_font, background="#5a565a", text="username:")
+        self.loginframe = Frame(height=110, bd=0, bg="#8B008B")
+        self.user_label = Label(font=self.groot_font,foreground="white", background="#4B0082", text="Gebruikersnaam:")
         self.user_entry = Entry(width=35)
-        self.password_label = Label(font=self.groot_font, background="#5a565a", text="password")
+        self.password_label = Label(font=self.groot_font,foreground="white", background="#4B0082", text="Wachtwoord:")
         self.password_entry = Entry(width=35)
         self.password_entry.configure(show="*")
         afsluitButton = Button(text="Afsluiten", command=self.quit,
-                               background="#5a565a", foreground="white", font=self.groot_font)
+                               background="#4B0082", foreground="white", font=self.groot_font)
         self.bevestigButton = Button(text="Bevestig", command=self.start_client,
-                                     background="#5a565a", foreground="white", font=self.groot_font)
+                                     background="#4B0082", foreground="white", font=self.groot_font)
         self.loginframe.pack(side=TOP)
         afsluitButton.pack(side=BOTTOM, pady=5)
         self.user_label.pack(side=TOP, pady=30)
