@@ -311,12 +311,10 @@ class SteamGUI:
             return
 
     def log_out(self):
-        while True:
-            try:
-                self.client.log_out()
-                break
-            except LoopExit:
-                continue
+        try:
+            self.client.log_out()
+        except LoopExit:
+            pass
         self.clear_gui(False)
         self.stop_sensoren(False)
         self.client = None
@@ -378,19 +376,13 @@ class SteamGUI:
             self.quicksort(lst, min, pi - 1)
             self.quicksort(lst, pi + 1, max)
 
-    def get_favoriet(self):
-        return self.favoriet
 
     def treeview_sort_column(self):
-
         koppenlijst = []
-
         for kop in self.treeview.get_children(''):
             koppenlijst.append(kop)
         copylijst = koppenlijst.copy()
         copylijst.reverse()
-
-        # rearrange items in sorted positions
         for kop in koppenlijst:
             self.treeview.move(kop, '', copylijst.index(kop))
         self.needs2bsorted = not self.needs2bsorted
@@ -407,8 +399,6 @@ class SteamGUI:
 
         for kop in koppenlijst:
             self.treeview.move(kop, '', copylijst.index(kop))
-
-    # reverse sort next time
 
     def open_statistiek(self):
 
