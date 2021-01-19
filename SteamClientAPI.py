@@ -25,12 +25,7 @@ class SteamClientAPI:
         self.client = SteamClient()
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
         try:
-            if emailkey is not None:
-                result = self.client.login(username=self.username, password=self.password, auth_code=emailkey)
-            if twofakey is not None:
-                result = self.client.login(username=self.username, password=self.password, two_factor_code=twofakey)
-            else:
-                result = self.client.login(username=self.username, password=self.password)
+            result = self.client.login(username=self.username, password=self.password, auth_code=emailkey, two_factor_code=twofakey)
 
             if result == EResult.OK:
                 if guirequired:
@@ -111,7 +106,7 @@ class SteamClientAPI:
         self.root.eval('tk::PlaceWindow . center')
         self.root.mainloop()
 
-    def open_keyscherm(self, extra_text=""):
+    def open_keyscherm2(self, extra_text=""):
         self.root = Tk()
         self.Label = Label(text=f"{extra_text}\nVoer hier de code in: ")
         self.Entry = Entry()
@@ -126,14 +121,12 @@ class SteamClientAPI:
         self.root.mainloop()
 
     def confirm_key(self):
-        emailkey = self.Entry.get()
-        self.open_client(guirequired=True, beginscherm=self.beginscherm, emailkey=emailkey)
+        self.open_client(guirequired=True, beginscherm=self.beginscherm, emailkey=self.Entry.get())
         self.root.destroy()
 
     def confirm_key2(self):
-        twofakey = self.Entry.get()
         self.root.destroy()
-        self.open_client(guirequired=True, beginscherm=self.beginscherm, twofakey=twofakey)
+        self.open_client(guirequired=True, beginscherm=self.beginscherm, twofakey=self.Entry.get())
 
     def message(self):
         pass
