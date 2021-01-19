@@ -15,7 +15,7 @@ Hierna moeten verschillende modules worden gerund in het commandprop om de code 
 Wanneer deze modules zijn geïnstalleerd kan de code worden gerund. Dit kan worden gedaan door in de commandprop ‘cd ~/teamsprint’ en daarna ‘python3 beginscherm.py’ in te voeren. Hierna zal er een inlogscherm verschijnen waarin de gebruikersnaam en wachtwoord in kunnen worden gevoerd.
 Bij onduidelijkheden zijn wij te bereiken via het email adres: a-vl@outlook.com.</br>
 
-<b> STEAM 2FA keys zijn niet supported, alleen email codes.</b>
+<b> Steam 2FA keys zijn niet supported, alleen email codes.</b>
  
 <b>Bronnen:</b></br>
 Google: https://www.google.nl/ </br>
