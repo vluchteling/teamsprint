@@ -8,7 +8,7 @@ from urllib.error import HTTPError
 from PIL import ImageTk
 from gevent.exceptions import LoopExit
 
-from AI import DataScherm
+from Grafieken import DataScherm
 from EchoSensor import Sr04
 from Loginbutton import LoginButton
 from Neopixel import Neopixel
