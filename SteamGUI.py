@@ -223,8 +223,10 @@ class SteamGUI:
                 self.treeview.delete(*self.treeview.get_children())
 
             else:
-
-                self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
+                try:
+                    self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
+                except RuntimeError:
+                    return
                 scrollbar = Scrollbar(self.friendframe)
                 self.treeview.config(yscrollcommand=scrollbar.set)
                 self.treeview.pack(expand=1, fill=BOTH)
