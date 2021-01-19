@@ -314,6 +314,10 @@ class SteamGUI:
             pass
         self.clear_gui(False)
         self.stop_sensoren(False)
+        if self.friendlist_timer is not None:
+            self.friendlist_timer.join(5)
+        if self.onlinetimer is not None:
+            self.onlinetimer.join(5)
         self.client = None
 
     def log_in(self):
