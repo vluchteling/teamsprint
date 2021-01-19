@@ -195,13 +195,13 @@ class DataScherm:
 
         if len(frequentiedict.keys()) <= 20:
 
-
             # hierna is het niet meer leesbaar
             dataframe = DataFrame.from_dict(frequentiedict, orient='index')
             plot = plt.Figure(figsize=(5, 3.5))
             subplot = plot.add_subplot(211)
             self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
-            dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie", grid=True)
+            dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie",
+                           grid=True)
             subplot.set_title(
                 'Staafdiagram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
             self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)

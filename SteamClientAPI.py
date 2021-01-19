@@ -35,7 +35,7 @@ class SteamClientAPI:
 
             if result == EResult.InvalidPassword or result == EResult.InvalidName:
                 return "password"
-            if result == EResult.InvalidLoginAuthCode :
+            if result == EResult.InvalidLoginAuthCode:
                 self.open_keyscherm(extra_text="foute code!")
             if result == EResult.ServiceUnavailable:
                 return "unavailable"
