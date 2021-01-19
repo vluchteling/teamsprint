@@ -15,7 +15,7 @@ class Servo:
         time.sleep(low_time)
 
     def servo_pulse(self, pin_nr, position):
-        #de berekkening dat de servo werkt#
+        #de berekening dat de servo werkt#
         a = 0.0005
         b = 0.02
         self.pulse(pin_nr, (a + (position * (0.002 / 100))), b)
