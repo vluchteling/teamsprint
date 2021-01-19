@@ -44,7 +44,7 @@ class Quicksort:
 
         # Create an auxiliary stack
         size = h - l + 1
-        stack = [0] * (size)
+        stack = [0] * size
 
         # initialize top of stack
         top = -1

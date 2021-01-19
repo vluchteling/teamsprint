@@ -94,7 +94,8 @@ class Statistiek:
             if gametimedict[game] > hoogste_tijd:
                 meest_gespeeld_appid = game
                 hoogste_tijd = gametimedict[game]
-        text += f"Het meest gespeelde spel is {gamenamedict[meest_gespeeld_appid]}. Dit is {int(hoogste_tijd / 60 / 24)} dagen gespeeld!\n"
+        text += f"Het meest gespeelde spel is {gamenamedict[meest_gespeeld_appid]}. " \
+                f"Dit is {int(hoogste_tijd / 60 / 24)} dagen gespeeld!\n"
         values = gametimedict.values()
         tijdenlist = []
         for item in values:
