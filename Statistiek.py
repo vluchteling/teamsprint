@@ -87,9 +87,12 @@ class Statistiek:
 
             except KeyError:
                 pass
-            for game in gamesjson:
-                gametimedict[game["appid"]] = gametimedict.get(game["appid"], 0) + game["playtime_forever"]
-                gamenamedict[game["appid"]] = game["name"]
+            if gamesjson is not None:
+                for game in gamesjson:
+                    gametimedict[game["appid"]] = gametimedict.get(game["appid"], 0) + game["playtime_forever"]
+                    gamenamedict[game["appid"]] = game["name"]
+            else:
+                pass
         meest_gespeeld_appid = None
         hoogste_tijd = 0
         for game in gametimedict:
