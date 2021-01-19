@@ -127,10 +127,10 @@ class Statistiek:
         if counter < 10:
             text += "Correctie: dit zijn de top 25% meest gespeelde spellen"
         text += "\n"
-        text += "De top 10 minst gespeelde spellen zijn (niet gespeelde spellen uitgesloten):\n"
+        text += "De top 10 minst gespeelde spellen zijn:\n"
         counter = 0
         for x in range(0, len(floplijst) - 1):
-            if counter < 10 and floplijst[x][0] > 0:
+            if counter < 10:
                 text += f"{floplijst[x][1]}, {int(floplijst[x][0])} minuten gespeeld\n"
                 counter += 1
         if counter == 0:
