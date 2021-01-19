@@ -19,13 +19,18 @@ class SteamClientAPI:
         self.Label = None
         self.beginscherm = None
 
-    def open_client(self, root=None, guirequired=False, beginscherm=None):
+    def open_client(self, root=None, guirequired=False, beginscherm=None, emailkey=None, twofakey=None):
         self.beginscherm = beginscherm
 
         self.client = SteamClient()
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
         try:
-            result = self.client.login(username=self.username, password=self.password, auth_code=self.email_key)
+            if emailkey is not None:
+                result = self.client.login(username=self.username, password=self.password, auth_code=emailkey)
+            if twofakey is not None:
+                result = self.client.login(username=self.username, password=self.password, two_factor_code=twofakey)
+            else:
+                result = self.client.login(username=self.username, password=self.password)
 
             if result == EResult.OK:
                 if guirequired:
@@ -35,12 +40,16 @@ class SteamClientAPI:
 
             if result == EResult.InvalidPassword or result == EResult.InvalidName:
                 return "password"
-            if result == EResult.InvalidLoginAuthCode:
+            if result == EResult.InvalidLoginAuthCode :
                 self.open_keyscherm(extra_text="foute code!")
             if result == EResult.ServiceUnavailable:
                 return "unavailable"
 
             if result == EResult.AccountLogonDenied:
+                if root is not None:
+                    root.destroy()
+                self.open_keyscherm()
+            if result == EResult.AccountLoginDeniedNeedTwoFactor:
                 if root is not None:
                     root.destroy()
                 self.open_keyscherm()
@@ -102,10 +111,29 @@ class SteamClientAPI:
         self.root.eval('tk::PlaceWindow . center')
         self.root.mainloop()
 
+    def open_keyscherm(self, extra_text=""):
+        self.root = Tk()
+        self.Label = Label(text=f"{extra_text}\nVoer hier de code in: ")
+        self.Entry = Entry()
+        bevestigButton = Button(text="Bevestig", command=self.confirm_key2)
+        stopButton = Button(text="Sluit", command=self.quit)
+        self.Label.pack()
+        self.Entry.pack()
+        bevestigButton.pack(fill=X)
+
+        stopButton.pack(fill=X)
+        self.root.eval('tk::PlaceWindow . center')
+        self.root.mainloop()
+
     def confirm_key(self):
-        self.email_key = self.Entry.get()
+        emailkey = self.Entry.get()
+        self.open_client(guirequired=True, beginscherm=self.beginscherm, emailkey=emailkey)
         self.root.destroy()
-        self.open_client(guirequired=True, beginscherm=self.beginscherm)
+
+    def confirm_key2(self):
+        twofakey = self.Entry.get()
+        self.root.destroy()
+        self.open_client(guirequired=True, beginscherm=self.beginscherm, twofakey=twofakey)
 
     def message(self):
         pass
