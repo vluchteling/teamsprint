@@ -17,6 +17,7 @@ class SteamClientAPI:
         self.email_key = None
         self.Entry = None
         self.Label = None
+        self.beginscherm = None
 
     def open_client(self, root=None, guirequired=False, beginscherm=None):
         self.beginscherm = beginscherm
@@ -110,4 +111,4 @@ class SteamClientAPI:
         pass
 
     def quit(self):
-        quit()
+        raise SystemExit

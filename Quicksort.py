@@ -27,7 +27,7 @@ class Quicksort:
         data[kleinste + 1], data[max] = data[max], data[kleinste + 1]
         return kleinste + 1
 
-    def partitionIterative(self, arr, l, h):
+    def verplaatsIterative(self, arr, l, h):
         i = (l - 1)
         x = arr[h]
 
@@ -38,7 +38,7 @@ class Quicksort:
                 arr[i], arr[j] = arr[j], arr[i]
 
         arr[i + 1], arr[h] = arr[h], arr[i + 1]
-        return (i + 1)
+        return i + 1
 
     def quickSortIterative(self, arr, l, h):
 
@@ -66,7 +66,7 @@ class Quicksort:
 
             # Set pivot element at its correct position in
             # sorted array
-            p = self.partitionIterative(arr, l, h)
+            p = self.verplaatsIterative(arr, l, h)
 
             # If there are elements on left side of pivot,
             # then push left side to stack

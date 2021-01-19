@@ -16,48 +16,37 @@ class DataScherm:
         self.client = client
         self.api = SteamWebAPI()
         self.gui = gui
-        bgcolor = "#4B0082"
-        # De GUI code
         self.root = root
-        self.groot_font = Font(size=30)
+
+        self.hoofdframe = None
+        self.linkerframe = None
+        self.rechterframe = None
+        self.buttonframe = None
+        self.afsluitButton = None
+        self.bar_gem_speeltijd = None
+        self.bar_tot_speeltijd = None
+        self.bar_aantal_games = None
+        self.hist = None
+
+        self.open_gui()
+        self.haal_speeltijd_data_op()
+
+    def open_gui(self):
+        bgcolor = "#4B0082"
+        groot_font = Font(size=30)
         self.hoofdframe = Frame()
         self.linkerframe = Frame(self.hoofdframe)
         self.rechterframe = Frame(self.hoofdframe)
         self.buttonframe = Frame(width=self.root.winfo_screenwidth(), height=20, background="#2f2c2f")
         self.afsluitButton = Button(self.buttonframe, text="Afsluiten", command=self.stop,
-                                    background=bgcolor, foreground="white", font=self.groot_font)
+                                    background=bgcolor, foreground="white", font=groot_font)
         self.linkerframe.pack(side=LEFT, expand=1, fill=BOTH)
         self.rechterframe.pack(side=RIGHT, expand=1, fill=X)
         self.hoofdframe.pack(side=TOP, expand=1, fill=X)
         self.afsluitButton.pack()
         self.buttonframe.pack(side=BOTTOM, expand=True)
-        friendsdata, friendsdict = self.haal_data_op()
-        gemtijdlist = []
-        totaaltijdlist = []
-        aantalgameslist = []
-        grote_tijdslijst = []
-        for friend in friendsdata:
 
-            try:
-                games = friendsdata[friend]['response']['games']
-                counter = 0
-                totaaltijd = 0
-                for game in games:
-                    counter += 1
-                    totaaltijd += game['playtime_forever']
-                    grote_tijdslijst.append(game['playtime_forever'])
-                gemtijdlist.append([friendsdict[friend], totaaltijd / counter])
-                totaaltijdlist.append([friendsdict[friend], totaaltijd])
-                aantalgameslist.append([friendsdict[friend], counter])
-
-            except KeyError:
-                continue
-        self.maak_gem_speeltijd_data(gemtijdlist)
-        self.maak_tot_speeltijd_data(totaaltijdlist)
-        self.maak_data_aantal_games(aantalgameslist)
-        self.maak_histogram(grote_tijdslijst)
-
-    def haal_data_op(self):
+    def haal_friendlist_data_op(self):
         steamid = self.client.get_client().steam_id.as_64
         data = self.api.get_friend_list(steamid)
         friendjson = data['friendslist']['friends']
@@ -79,7 +68,34 @@ class DataScherm:
             friendgamesdict[friend] = self.api.get_steam_games_from_user(friend)
         return friendgamesdict, frienddict
 
-    def maak_gem_speeltijd_data(self, data):
+    def haal_speeltijd_data_op(self):
+        friendsdata, friendsdict = self.haal_friendlist_data_op()
+        gemtijdlist = []
+        totaaltijdlist = []
+        aantalgameslist = []
+        grote_tijdslijst = []
+        for friend in friendsdata:
+
+            try:
+                games = friendsdata[friend]['response']['games']
+                counter = 0
+                totaaltijd = 0
+                for game in games:
+                    counter += 1
+                    totaaltijd += game['playtime_forever']
+                    grote_tijdslijst.append(game['playtime_forever'])
+                gemtijdlist.append([friendsdict[friend], totaaltijd / counter])
+                totaaltijdlist.append([friendsdict[friend], totaaltijd])
+                aantalgameslist.append([friendsdict[friend], counter])
+
+            except KeyError:
+                continue
+        self.maak_gem_speeltijd_grafiek(gemtijdlist)
+        self.maak_tot_speeltijd_grafiek(totaaltijdlist)
+        self.maak_aantal_games_grafiek(aantalgameslist)
+        self.maak_histogram(grote_tijdslijst)
+
+    def maak_gem_speeltijd_grafiek(self, data):
         namenlijst = []
         tijdlijst = []
         for friend in data:
@@ -97,7 +113,7 @@ class DataScherm:
         subplot.set_title('Gemiddelde speeltijd per game (in minuten).')
         self.bar_gem_speeltijd.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
-    def maak_tot_speeltijd_data(self, data):
+    def maak_tot_speeltijd_grafiek(self, data):
         namenlijst = []
         tijdlijst = []
         for friend in data:
@@ -115,7 +131,7 @@ class DataScherm:
         subplot.set_title('totale speeltijd per user (in minuten).')
         self.bar_tot_speeltijd.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
-    def maak_data_aantal_games(self, data):
+    def maak_aantal_games_grafiek(self, data):
         namenlijst = []
         tijdlijst = []
         for friend in data:
@@ -158,10 +174,10 @@ class DataScherm:
             if laagste is None or tijd < laagste:
                 laagste = tijd
         totale_breedte = hoogste - laagste
-        klassengrootte = int(totale_breedte / 6 + 1)
+        klassengrootte = (int(totale_breedte)/6)+1
         klassenlijst = []
         vorige_x = laagste
-        for x in range(int(laagste), int(hoogste) + klassengrootte, klassengrootte):
+        for x in range(int(laagste), int(hoogste) + int(klassengrootte), int(klassengrootte)):
             if x != laagste:
                 klassenlijst.append([vorige_x, x])
                 vorige_x = x

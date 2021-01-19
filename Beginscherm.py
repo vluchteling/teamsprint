@@ -22,9 +22,9 @@ class Beginscherm:
         background_label.image = bg
         background_label.place(x=0, y=0, relwidth=1, relheight=1)
         self.loginframe = Frame(height=110, bd=0, bg="#8B008B")
-        self.user_label = Label(font=self.groot_font,foreground="white", background="#4B0082", text="Gebruikersnaam:")
+        self.user_label = Label(font=self.groot_font, foreground="white", background="#4B0082", text="Gebruikersnaam:")
         self.user_entry = Entry(width=35)
-        self.password_label = Label(font=self.groot_font,foreground="white", background="#4B0082", text="Wachtwoord:")
+        self.password_label = Label(font=self.groot_font, foreground="white", background="#4B0082", text="Wachtwoord:")
         self.password_entry = Entry(width=35)
         self.password_entry.configure(show="*")
         afsluitButton = Button(text="Afsluiten", command=self.quit,

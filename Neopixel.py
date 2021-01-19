@@ -9,6 +9,15 @@ class Neopixel:
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
         atexit.register(self.lights_out)
+        self.blue = [8, 0, 0]
+        self.green = [0, 255, 0]
+        self.red = [0, 0, 255]
+        self.yellow = [0, 255, 255]
+        self.purple = [255, 0, 255]
+        self.off = [0, 0, 0]
+        self.clock_pin = 19
+        self.data_pin = 26
+        self.aantal_lampjes = 8
 
     def sendsignaal(self, clock_pin, data_pin, byte):
         timeToSleep = 1 / 19000
@@ -28,7 +37,6 @@ class Neopixel:
             time.sleep(timeToSleep)
 
     def apa102_send_bytes(self, clock_pin, data_pin, bytes):
-
         for p in bytes:
             self.sendsignaal(clock_pin, data_pin, p)
 
@@ -63,98 +71,51 @@ class Neopixel:
         return result
 
     def speel_pickup_animatie(self, delay=0):
-        blue = [8, 0, 0]
-        green = [0, 255, 0]
-        red = [0, 0, 255]
-        yellow = [0, 255, 255]
-        purple = [255, 0, 255]
-        off = [0, 0, 0]
 
-        clock_pin = 19
-        data_pin = 26
-
-        GPIO.setup(clock_pin, GPIO.OUT)
-        GPIO.setup(data_pin, GPIO.OUT)
-        n = 8
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, yellow, blue))
+        GPIO.setup(self.clock_pin, GPIO.OUT)
+        GPIO.setup(self.data_pin, GPIO.OUT)
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.yellow, self.blue))
             time.sleep(delay)
-        """for x in range(n - 1, 1, -1):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, green, purple))
-            time.sleep(delay)"""
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def speel_afk_animatie(self, delay=0):
-        blue = [8, 0, 0]
-        green = [0, 255, 0]
-        red = [0, 0, 255]
-        yellow = [0, 255, 255]
-        purple = [255, 0, 255]
-        off = [0, 0, 0]
 
-        clock_pin = 19
-        data_pin = 26
-
-        GPIO.setup(clock_pin, GPIO.OUT)
-        GPIO.setup(data_pin, GPIO.OUT)
-        n = 8
-        for x in range(n, 0, -1):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, yellow, blue))
+        GPIO.setup(self.clock_pin, GPIO.OUT)
+        GPIO.setup(self.data_pin, GPIO.OUT)
+        for x in range(self.aantal_lampjes, 0, -1):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.yellow, self.blue))
             time.sleep(delay)
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def speel_loguitanimatie(self, delay=0):
-        blue = [8, 0, 0]
-        green = [0, 255, 0]
-        red = [0, 0, 255]
-        yellow = [0, 255, 255]
-        purple = [255, 0, 255]
-        off = [0, 0, 0]
 
-        clock_pin = 19
-        data_pin = 26
-
-        GPIO.setup(clock_pin, GPIO.OUT)
-        GPIO.setup(data_pin, GPIO.OUT)
-        n = 8
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, green, blue))
+        GPIO.setup(self.clock_pin, GPIO.OUT)
+        GPIO.setup(self.data_pin, GPIO.OUT)
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.green, self.blue))
             time.sleep(delay)
-        for x in range(n - 1, 0, -1):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, green, blue))
+        for x in range(self.aantal_lampjes, 0, -1):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.green, self.blue))
             time.sleep(delay)
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def speel_loginanimatie(self, delay=0):
-        blue = [8, 0, 0]
-        green = [0, 255, 0]
-        red = [0, 0, 255]
-        yellow = [0, 255, 255]
-        purple = [255, 0, 255]
-        off = [0, 0, 0]
 
-        clock_pin = 19
-        data_pin = 26
-
-        GPIO.setup(clock_pin, GPIO.OUT)
-        GPIO.setup(data_pin, GPIO.OUT)
-        n = 8
-        for x in range(n - 1, 0, -1):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, purple, yellow))
+        GPIO.setup(self.clock_pin, GPIO.OUT)
+        GPIO.setup(self.data_pin, GPIO.OUT)
+        for x in range(self.aantal_lampjes, 0, -1):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.purple, self.yellow))
             time.sleep(delay)
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, purple, yellow))
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.purple, self.yellow))
             time.sleep(delay)
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def lights_out(self):
-        off = [0, 0, 0]
-        clock_pin = 19
-        data_pin = 26
-        n = 8
-        for x in range(0, n):
-            self.apa102(clock_pin, data_pin, self.colors(x, n, off, off))
+        for x in range(0, self.aantal_lampjes):
+            self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))

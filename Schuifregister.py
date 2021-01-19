@@ -8,15 +8,6 @@ class Schuifregister:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)
-
-        shift_clock_pin = 5
-        latch_clock_pin = 6
-        data_pin = 13
-        delay = 0.1
-
-        GPIO.setup(shift_clock_pin, GPIO.OUT)
-        GPIO.setup(latch_clock_pin, GPIO.OUT)
-        GPIO.setup(data_pin, GPIO.OUT)
         atexit.register(self.stop)
 
     def hc595(self, shift_clock_pin, latch_clock_pin, data_pin, value, delay):
@@ -37,10 +28,13 @@ class Schuifregister:
 
     def lichtjes(self, aantal):
         cijfer = aantal
+        delay = 0.1
         shift_clock_pin = 5
         latch_clock_pin = 6
         data_pin = 13
-        delay = 0.1
+        GPIO.setup(shift_clock_pin, GPIO.OUT)
+        GPIO.setup(latch_clock_pin, GPIO.OUT)
+        GPIO.setup(data_pin, GPIO.OUT)
 
         # Resets the all the leds
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)

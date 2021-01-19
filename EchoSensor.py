@@ -2,7 +2,6 @@ import multiprocessing
 import time
 
 import RPi.GPIO as GPIO
-import gevent
 
 
 class Sr04:
@@ -34,7 +33,7 @@ class Sr04:
                 GPIO.setup(trig, GPIO.OUT)
                 GPIO.setup(echo, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
                 GPIO.output(trig, True)
-                gevent.sleep(0.00001)
+                time.sleep(0.00001)
                 GPIO.output(trig, False)
 
                 StartTime = time.time()

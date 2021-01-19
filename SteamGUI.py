@@ -10,14 +10,14 @@ from gevent.exceptions import LoopExit
 
 from AI import DataScherm
 from EchoSensor import Sr04
-from Loginbutton2 import LoginButton
+from Loginbutton import LoginButton
 from Neopixel import Neopixel
+from Quicksort import Quicksort
 from Schuifregister import Schuifregister
 from Servo import Servo
 from Statistiek import Statistiek
 from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
-from Quicksort import Quicksort
 
 
 class SteamGUI:
@@ -54,21 +54,23 @@ class SteamGUI:
         self.neopixel = None
         self.onlinetimer = None
         self.friendlist_timer = None
+        self.databutton = None
+        self.statistiekbutton = None
+        self.servobuttonframe = None
+        self.collijst = None
         self.needs2bsorted = False
-        self.root = Tk()
-        self.root.attributes("-fullscreen", True)
-
         self.api = SteamWebAPI()
 
+        self.root = Tk()
+        self.root.attributes("-fullscreen", True)
         self.open_gui(True)
         self.start_sensoren(True)
         self.start_gui()
 
     def open_gui(self, stopbutton):
+
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
-
-        # De GUI code
 
         self.groot_font = Font(size=30)
         bg = ImageTk.PhotoImage(file='pexels-photo-2763927.jpg')
@@ -127,14 +129,11 @@ class SteamGUI:
         self.servobuttonframe.forget()
         if self.treeview is not None:
             self.treeview.forget()
-        self.treeview = None
+            self.treeview = None
 
     def start_gui(self):
 
         self.root.mainloop()
-        """except:
-
-            self.stop()"""
 
     def start_sensoren(self, loginbtnstart):
         self.runfriendlist = True
@@ -157,9 +156,11 @@ class SteamGUI:
         self.runfriendlist = False
         self.runonline = False
         if self.onlinetimer is not None:
-            self.onlinetimer.join()
+            self.onlinetimer.join(5)
+            if self.schuifregister is not None:
+                self.schuifregister.lichtjes(0)
         if self.friendlist_timer is not None:
-            self.friendlist_timer.join(0)
+            self.friendlist_timer.join(5)
         if self.sr04 is not None:
             self.sr04.stop()
         if loginbtndelete:
@@ -219,28 +220,24 @@ class SteamGUI:
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
 
-                try:
-                    self.treeview.delete(*self.treeview.get_children())
-                except RuntimeError:
-                    return
+                self.treeview.delete(*self.treeview.get_children())
 
             else:
 
-                try:
+                self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
+                scrollbar = Scrollbar(self.friendframe)
+                self.treeview.config(yscrollcommand=scrollbar.set)
+                self.treeview.pack(expand=1, fill=BOTH)
+                scrollbar.config(command=self.treeview.yview)
 
-                    self.treeview = ttk.Treeview(self.friendframe, columns=koppen, show='headings')
-                    scrollbar = Scrollbar(self.friendframe)
-                    self.treeview.config(yscrollcommand=scrollbar.set)
-                    self.treeview.pack(expand=1, fill=BOTH)
-                    scrollbar.config(command=self.treeview.yview)
-
-                except RuntimeError:
-                    return
             self.collijst = []
             for col in koppen:
                 self.collijst.append(col)
-                self.treeview.heading(col, text=col,
+                if self.treeview is not None:
+                    self.treeview.heading(col, text=col,
                                           command=self.treeview_sort_column)
+                else:
+                    return
             self.sorteer_data(friendlist)
 
             if self.treeview is not None:
@@ -268,9 +265,8 @@ class SteamGUI:
 
     def stop(self):
         """ Deze functie sluit de applicatie af. """
-        self.stop_sensoren(True)
         self.root.destroy()
-
+        self.stop_sensoren(True)
         raise SystemExit
 
     def check_online(self):
@@ -282,12 +278,12 @@ class SteamGUI:
                     return
             except IndexError:
                 return
-            except RuntimeError:
-                return
             self.afsluitButton.forget()
             try:
                 friend_name = self.treeview.item(self.selecteditem)['values'][0]
             except IndexError:
+                return
+            except AttributeError:
                 return
             except TclError:
                 return
@@ -339,15 +335,15 @@ class SteamGUI:
         self.clear_gui(True)
         self.open_gui(True)
         if self.onlinetimer is not None:
-            self.onlinetimer.join()
+            self.onlinetimer.join(5)
         self.runfriendlist = True
         self.toon_friendlist()
         self.runonline = True
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
     def open_data(self):
-        self.clear_gui(True)
         self.stop_sensoren(True)
+        self.clear_gui(True)
         self.neopixel.lights_out()
         self.favoriet = "begin"
         DataScherm(self.client, self.root, self)
@@ -356,9 +352,6 @@ class SteamGUI:
         quicksort = Quicksort(data)
         quicksort.quicksortRecusrive(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
-
-
-
 
     def treeview_sort_column(self):
         koppenlijst = []
@@ -384,9 +377,8 @@ class SteamGUI:
             self.treeview.move(kop, '', copylijst.index(kop))
 
     def open_statistiek(self):
-
-        self.clear_gui(True)
         self.stop_sensoren(True)
+        self.clear_gui(True)
         self.neopixel.lights_out()
         self.favoriet = "begin"
         Statistiek(self.client, self.root, self)
