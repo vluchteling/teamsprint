@@ -17,6 +17,7 @@ from Servo import Servo
 from Statistiek import Statistiek
 from SteamClientAPI import SteamClientAPI
 from SteamWebAPI import SteamWebAPI
+from Quicksort import Quicksort
 
 
 class SteamGUI:
@@ -240,7 +241,7 @@ class SteamGUI:
                 self.collijst.append(col)
                 self.treeview.heading(col, text=col,
                                           command=self.treeview_sort_column)
-            friendlist = self.sorteer_data(friendlist)
+            self.sorteer_data(friendlist)
 
             if self.treeview is not None:
                 for friend in friendlist:
@@ -352,29 +353,11 @@ class SteamGUI:
         DataScherm(self.client, self.root, self)
 
     def sorteer_data(self, data):
-
-        self.quicksort(data, 0, len(data) - 1)
+        quicksort = Quicksort(data)
+        quicksort.quicksortRecusrive(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
-        return data
 
-    def partition(self, arr, min, max):
-        kleinste = (min - 1)
-        grootste = arr[max]
 
-        for j in range(min, max):
-
-            if arr[j] < grootste:
-                kleinste = kleinste + 1
-                arr[kleinste], arr[j] = arr[j], arr[kleinste]
-
-        arr[kleinste + 1], arr[max] = arr[max], arr[kleinste + 1]
-        return kleinste + 1
-
-    def quicksort(self, lst, min, max):
-        if min < max:
-            pi = self.partition(lst, min, max)
-            self.quicksort(lst, min, pi - 1)
-            self.quicksort(lst, pi + 1, max)
 
 
     def treeview_sort_column(self):

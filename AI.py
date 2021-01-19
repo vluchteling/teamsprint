@@ -146,42 +146,6 @@ class DataScherm:
         self.gui.open_gui(True)
         self.gui.start_sensoren(True)
 
-    def achievements(self):
-        data = self.api.get_friend_list(steamid=self.client.get_client().steam_id.as_64)
-        friendjson = data['friendslist']['friends']
-        friend = friendjson[0]['steamid']
-        gameslst = self.api.get_steam_games_from_user(friend)
-        appid = gameslst['response']['games'][0]['appid']
-        data2 = self.api.get_procent(Appid=appid)
-        percentages = data2['achievementpercentages']['achievements']
-        leeglst = []
-        for percentage in percentages:
-            leeglst.append(percentage['percent'])
-
-    def sorteer_data(self, data):
-        self.quicksort(data, 0, len(data) - 1)
-        """ Deze funtie sorteert de ingevoerde data."""
-        return data
-
-    def partition(self, arr, min, max):
-        kleinste = (min - 1)
-        grootste = arr[max]
-
-        for j in range(min, max):
-
-            if arr[j] < grootste:
-                kleinste = kleinste + 1
-                arr[kleinste], arr[j] = arr[j], arr[kleinste]
-
-        arr[kleinste + 1], arr[max] = arr[max], arr[kleinste + 1]
-        return kleinste + 1
-
-    def quicksort(self, lst, min, max):
-        if min < max:
-            pi = self.partition(lst, min, max)
-            self.quicksort(lst, min, pi - 1)
-            self.quicksort(lst, pi + 1, max)
-
     def maak_histogram(self, data):
         tijdendata = data
         hoogste = 0
@@ -230,54 +194,3 @@ class DataScherm:
         dataframe.plot(kind='hist', legend=False, ax=subplot, xlabel="Speeltijd in minuten.")
         subplot.set_title('Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten)')
         self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
-
-    def median(self, lst):
-        """ Retourneer de mediaan (float) van de lijst lst. """
-        lst = sorted(lst)
-        if len(lst) % 2 == 1:
-            middelste = len(lst) / 2
-            mediaan = float(lst[int(middelste)])
-        else:
-            pos1 = int((len(lst) - 1) // 2)
-            pos2 = pos1 + 1
-            middelste1 = lst[pos1]
-            middelste2 = lst[pos2]
-            mediaan = float(self.mean([middelste1, middelste2]))
-
-        return mediaan
-
-    def mean(self, lst):
-        """ Retourneer het gemiddelde (float) van de lijst lst. """
-        totaal = 0
-        aantal = 0
-        for getal in lst:
-            totaal += getal
-            aantal += 1
-        return totaal / aantal
-
-    def q1(self, lst):
-        """
-        Retourneer het eerste kwartiel Q1 (float) van de lijst lst.
-        Tip: maak gebruik van median()
-        """
-        lst = sorted(lst)
-        med = self.median(lst)
-        sublijst = []
-        for x in range(0, len(lst)):
-            if lst[x] < med:
-                sublijst.append(lst[x])
-            if lst[x] == med and lst[x + 1] == lst[x]:
-                sublijst.append(lst[x])
-        return self.median(sublijst)
-
-    def q3(self, lst):
-        """ Retourneer het derde kwartiel Q3 (float) van de lijst lst. """
-        lst = sorted(lst)
-        med = self.median(lst)
-        sublijst = []
-        for x in range(len(lst) - 1, 0, -1):
-            if lst[x] > med:
-                sublijst.append(lst[x])
-            if lst[x] == med and lst[x - 1] == lst[x]:
-                sublijst.append(lst[x])
-        return self.median(sublijst)

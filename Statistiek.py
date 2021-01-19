@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.font import Font
 
+from Quicksort import Quicksort
 from SteamWebAPI import SteamWebAPI
 
 
@@ -108,22 +109,26 @@ class Statistiek:
             elif gametimedict[game] > derde_kwartiel:
                 toplijst.append([gametimedict[game], gamenamedict[game]])
 
-        toplijst = self.sorteer_data(toplijst)
-        floplijst = self.sorteer_data(toplijst)
+        self.sorteer_data(toplijst)
+        self.sorteer_data(floplijst)
 
-        text += "De top 10 meest gespeelde spellen zijn:\n"
+        text += "De top 10 meest gespeelde spellen zijn: \n(Als het er minder dan 10 zijn is het de top 25%.)\n"
         counter = 0
         for x in range(len(toplijst) - 1, 0, -1):
             if counter < 10:
                 text += f"{toplijst[x][1]}, {int(toplijst[x][0] / 60 / 24)} dagen gespeeld\n"
                 counter += 1
+        if counter < 10:
+            text += "Correctie: dit zijn de top 25% meest gespeelde spellen"
         text += "\n"
         text += "De top 10 minst gespeelde spellen zijn (niet gespeelde spellen uitgesloten):\n"
         counter = 0
         for x in range(0, len(floplijst) - 1):
-            if counter < 10:
+            if counter < 10 and int(floplijst[x][0]) > 0:
                 text += f"{floplijst[x][1]}, {int(floplijst[x][0])} minuten gespeeld\n"
                 counter += 1
+        if counter < 10:
+            text += "Correctie: dit zijn de onderste 25% minst gespeelde spellen."
         text += "\n\n"
         text += f"Je rijkste vriend is {hoogste_game_user}, deze heeft {hoogste_game_aantal} games.\n"
         text += f"Je meest levenloze vriend is {hoogste_speeltijd_user}, deze heeft " \
@@ -152,71 +157,14 @@ class Statistiek:
             self.quicksort(lst, min, pi - 1)
             self.quicksort(lst, pi + 1, max)
 
-    def partitionIterative(self, arr, l, h):
-        i = (l - 1)
-        x = arr[h]
-
-        for j in range(l, h):
-            if arr[j] <= x:
-                # increment index of smaller element
-                i = i + 1
-                arr[i], arr[j] = arr[j], arr[i]
-
-        arr[i + 1], arr[h] = arr[h], arr[i + 1]
-        return (i + 1)
-
-    def quickSortIterative(self, arr, l, h):
-
-        # Create an auxiliary stack
-        size = h - l + 1
-        stack = [0] * (size)
-
-        # initialize top of stack
-        top = -1
-
-        # push initial values of l and h to stack
-        top = top + 1
-        stack[top] = l
-        top = top + 1
-        stack[top] = h
-
-        # Keep popping from stack while is not empty
-        while top >= 0:
-
-            # Pop h and l
-            h = stack[top]
-            top = top - 1
-            l = stack[top]
-            top = top - 1
-
-            # Set pivot element at its correct position in
-            # sorted array
-            p = self.partitionIterative(arr, l, h)
-
-            # If there are elements on left side of pivot,
-            # then push left side to stack
-            if p - 1 > l:
-                top = top + 1
-                stack[top] = l
-                top = top + 1
-                stack[top] = p - 1
-
-            # If there are elements on right side of pivot,
-            # then push right side to stack
-            if p + 1 < h:
-                top = top + 1
-                stack[top] = p + 1
-                top = top + 1
-                stack[top] = h
-
     def sorteer_data(self, data):
-        self.quickSortIterative(data, 0, len(data) - 1)
+        quicksort = Quicksort(data)
+        quicksort.quickSortIterative(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
-        return data
 
     def median(self, lst):
         """ Retourneer de mediaan (float) van de lijst lst. """
-        lst = self.sorteer_data(lst)
+        self.sorteer_data(lst)
         if len(lst) % 2 == 1:
             middelste = len(lst) / 2
             mediaan = float(lst[int(middelste)])
@@ -243,7 +191,7 @@ class Statistiek:
         Retourneer het eerste kwartiel Q1 (float) van de lijst lst.
         Tip: maak gebruik van median()
         """
-        lst = self.sorteer_data(lst)
+        self.sorteer_data(lst)
         med = self.median(lst)
         sublijst = []
         for x in range(0, len(lst)):
@@ -255,7 +203,7 @@ class Statistiek:
 
     def q3(self, lst):
         """ Retourneer het derde kwartiel Q3 (float) van de lijst lst. """
-        lst = self.sorteer_data(lst)
+        self.sorteer_data(lst)
         med = self.median(lst)
         sublijst = []
         for x in range(len(lst) - 1, 0, -1):
