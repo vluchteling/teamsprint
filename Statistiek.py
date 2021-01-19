@@ -133,9 +133,9 @@ class Statistiek:
             if counter < 10 and floplijst[x][0] > 0:
                 text += f"{floplijst[x][1]}, {int(floplijst[x][0])} minuten gespeeld\n"
                 counter += 1
-        if counter < 0:
+        if counter == 0:
             text += "Er zitten geen games met meer dan 0 speelminuten in de onderste 25%."
-        if counter < 10:
+        elif counter < 10:
             text += "Correctie: dit zijn de onderste 25% minst gespeelde spellen."
         text += "\n\n"
         if hoogste_game_user == username:
