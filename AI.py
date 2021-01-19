@@ -112,7 +112,7 @@ class DataScherm:
         subplot = plot.add_subplot(211)
         self.bar_gem_speeltijd = FigureCanvasTkAgg(plot, self.linkerframe)
         dataframe = dataframe[['usernames', 'speeltijd']].groupby('usernames', sort=False).sum()
-        dataframe.plot(kind='bar', legend=False, ax=subplot)
+        dataframe.plot(kind='bar', legend=False, ax=subplot, grid=True)
         subplot.set_title('Gemiddelde speeltijd per game (in minuten).')
         self.bar_gem_speeltijd.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
@@ -130,7 +130,7 @@ class DataScherm:
         subplot = plot.add_subplot(211)
         self.bar_tot_speeltijd = FigureCanvasTkAgg(plot, self.rechterframe)
         dataframe = dataframe[['usernames', 'speeltijd']].groupby('usernames', sort=False).sum()
-        dataframe.plot(kind='bar', legend=False, ax=subplot)
+        dataframe.plot(kind='bar', legend=False, ax=subplot, grid=True)
         subplot.set_title('totale speeltijd per user (in minuten).')
         self.bar_tot_speeltijd.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
@@ -148,7 +148,7 @@ class DataScherm:
         subplot = plot.add_subplot(211)
         self.bar_aantal_games = FigureCanvasTkAgg(plot, self.rechterframe)
         dataframe = dataframe[['usernames', 'aantal games']].groupby('usernames', sort=False).sum()
-        dataframe.plot(kind='bar', legend=False, ax=subplot)
+        dataframe.plot(kind='bar', legend=False, ax=subplot, grid=True)
         subplot.set_title('aantal games per user.')
         self.bar_aantal_games.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
@@ -176,9 +176,7 @@ class DataScherm:
                 laagste = tijd
 
         interkwartielrange = self.rekenmachine.q3(data) - self.rekenmachine.q1(data)
-
         klassengrootte = (2 * interkwartielrange) / len(data) ** (1 / 3)
-
         klassenlijst = []
         vorige_x = laagste
         for x in range(int(laagste), int(hoogste) + int(klassengrootte), int(klassengrootte)):
@@ -189,30 +187,50 @@ class DataScherm:
                 vorige_x = x
 
         frequentiedict = {}
+
         for klasse in klassenlijst:
             for punt in data:
                 if klasse[0] <= punt < klasse[1]:
                     frequentiedict[f"{klasse[0]}-{klasse[1]}"] = frequentiedict.get(f"{klasse[0]}-{klasse[1]}", 0) + 1
 
-        if len(frequentiedict.keys()) <= 20:  # hierna is het niet meer leesbaar
+        if len(frequentiedict.keys()) <= 20:
 
+
+            # hierna is het niet meer leesbaar
             dataframe = DataFrame.from_dict(frequentiedict, orient='index')
             plot = plt.Figure(figsize=(5, 3.5))
             subplot = plot.add_subplot(211)
             self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
-            dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie")
+            dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie", grid=True)
             subplot.set_title(
                 'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
             self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
         else:
-            dataframe = DataFrame(data)
-            dataframe.hist()
-            plot = plt.Figure(figsize=(5, 3.5))
+            klassenbreedte = hoogste - laagste
+            klassengrootte = int(klassenbreedte / 20) + 1
+            klassenlijst = []
+            vorige_x = laagste
+            for x in range(int(laagste), int(hoogste) + int(klassengrootte), int(klassengrootte)):
+                if x != laagste:
+                    klassenlijst.append([vorige_x, x])
+                    vorige_x = x
+                else:
+                    vorige_x = x
 
-            subplot = plot.add_subplot(111)
+            frequentiedict = {}
+
+            for klasse in klassenlijst:
+                for punt in data:
+                    if klasse[0] <= punt < klasse[1]:
+                        frequentiedict[f"{klasse[0]}-{klasse[1]}"] = frequentiedict.get(f"{klasse[0]}-{klasse[1]}",
+                                                                                        0) + 1
+            dataframe = DataFrame.from_dict(frequentiedict, orient='index')
+            plot = plt.Figure(figsize=(5, 3.5))
+            subplot = plot.add_subplot(211)
             self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
-            dataframe.plot(kind='hist', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", )
+            dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie",
+                           grid=True)
             subplot.set_title(
                 'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
             self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)

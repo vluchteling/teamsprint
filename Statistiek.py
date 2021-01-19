@@ -145,28 +145,7 @@ class Statistiek:
         self.text.insert(INSERT, text)
         self.text.configure(state=DISABLED)
 
-    def partition(self, arr, min, max):
-        kleinste = (min - 1)
-        grootste = arr[max]
-
-        for j in range(min, max):
-
-            if arr[j] < grootste:
-                kleinste = kleinste + 1
-                arr[kleinste], arr[j] = arr[j], arr[kleinste]
-
-        arr[kleinste + 1], arr[max] = arr[max], arr[kleinste + 1]
-        return kleinste + 1
-
-    def quicksort(self, lst, min, max):
-        if min < max:
-            pi = self.partition(lst, min, max)
-            self.quicksort(lst, min, pi - 1)
-            self.quicksort(lst, pi + 1, max)
-
     def sorteer_data(self, data):
         quicksort = Quicksort(data)
         quicksort.quickSortIterative(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
-
-
