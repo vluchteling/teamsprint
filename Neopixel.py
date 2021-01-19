@@ -3,7 +3,7 @@ import time
 
 import RPi.GPIO as GPIO
 
-
+# zorgt er voor dat je het kan verbinden #
 class Neopixel:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -81,6 +81,7 @@ class Neopixel:
             self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def speel_afk_animatie(self, delay=0):
+        #speelt afwezig animatie #
 
         GPIO.setup(self.clock_pin, GPIO.OUT)
         GPIO.setup(self.data_pin, GPIO.OUT)
@@ -91,6 +92,7 @@ class Neopixel:
             self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def speel_loguitanimatie(self, delay=0):
+         #speelt log uit animatie #
 
         GPIO.setup(self.clock_pin, GPIO.OUT)
         GPIO.setup(self.data_pin, GPIO.OUT)
@@ -104,6 +106,8 @@ class Neopixel:
             self.apa102(self.clock_pin, self.data_pin, self.colors(x, self.aantal_lampjes, self.off, self.off))
 
     def speel_loginanimatie(self, delay=0):
+         #speelt log in animatie #
+
 
         GPIO.setup(self.clock_pin, GPIO.OUT)
         GPIO.setup(self.data_pin, GPIO.OUT)
