@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from pandas import DataFrame
 
+from Rekenmachine import Rekenmachine
 from SteamWebAPI import SteamWebAPI
 
 
@@ -17,6 +18,7 @@ class DataScherm:
         self.api = SteamWebAPI()
         self.gui = gui
         self.root = root
+        self.rekenmachine = Rekenmachine()
 
         self.hoofdframe = None
         self.linkerframe = None
@@ -163,18 +165,16 @@ class DataScherm:
         self.gui.start_sensoren(True)
 
     def maak_histogram(self, data):
-        tijdendata = data
         hoogste = 0
         laagste = None
-        counter = 0
         for tijd in data:
-            counter += 1
             if tijd > hoogste:
                 hoogste = tijd
             if laagste is None or tijd < laagste:
                 laagste = tijd
-        totale_breedte = hoogste - laagste
-        klassengrootte = (int(totale_breedte)/6)+1
+
+        interkwartielrange = self.rekenmachine.q3(data) - self.rekenmachine.q1(data)
+        klassengrootte = (2 * interkwartielrange) / len(data) ** (1 / 3)
         klassenlijst = []
         vorige_x = laagste
         for x in range(int(laagste), int(hoogste) + int(klassengrootte), int(klassengrootte)):
@@ -183,30 +183,17 @@ class DataScherm:
                 vorige_x = x
             else:
                 vorige_x = x
-        frequentielijst = []
-        counter = 0
-        for klasse in klassenlijst:
-            frequentielijst.append(0)
+        frequentiedict = {}
         for klasse in klassenlijst:
             for punt in data:
                 if klasse[0] <= punt < klasse[1]:
-                    frequentielijst[counter] += 1
-            counter += 1
-        nieuwe_klassenlijst = []
-        for klasse in klassenlijst:
-            nieuwe_klassenlijst.append(f"{klasse[0]}-{klasse[1]}")
-            counter = 0
+                    frequentiedict[f"{klasse[0]}-{klasse[1]}"] = frequentiedict.get(f"{klasse[0]}-{klasse[1]}", 0) + 1
 
-        data1 = {'klassen': nieuwe_klassenlijst,
-                 'frequenties': frequentielijst
-                 }
-
-        dataframe = DataFrame(data)
-        dataframe.hist()
+        dataframe = DataFrame.from_dict(frequentiedict, orient='index')
         plot = plt.Figure(figsize=(5, 3.5))
-
-        subplot = plot.add_subplot(111)
+        subplot = plot.add_subplot(211)
         self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
-        dataframe.plot(kind='hist', legend=False, ax=subplot, xlabel="Speeltijd in minuten.")
-        subplot.set_title('Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten)')
+        dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie")
+        subplot.set_title(
+            'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, nul uitgesloten voor leesbaarheid.)')
         self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
