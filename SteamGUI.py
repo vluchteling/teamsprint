@@ -227,8 +227,10 @@ class SteamGUI:
                 self.online = online
             koppen = ('Naam', 'Status')
             if self.treeview is not None:
-
-                self.treeview.delete(*self.treeview.get_children())
+                try:
+                    self.treeview.delete(*self.treeview.get_children())
+                except TclError:
+                    return
 
             else:
                 try:
