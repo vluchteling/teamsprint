@@ -3,7 +3,7 @@ import time
 
 import RPi.GPIO as GPIO
 
-
+# Zorgt er voor dat je hem kan verbinden 
 class Schuifregister:
     def __init__(self):
         GPIO.setmode(GPIO.BCM)
@@ -29,14 +29,14 @@ class Schuifregister:
     def lichtjes(self, aantal):
         cijfer = aantal
         delay = 0.1
-        shift_clock_pin = 5
-        latch_clock_pin = 6
-        data_pin = 13
+        shift_clock_pin = 5 # doet de deur open
+        latch_clock_pin = 6 # aan doen
+        data_pin = 13 # informatie
         GPIO.setup(shift_clock_pin, GPIO.OUT)
         GPIO.setup(latch_clock_pin, GPIO.OUT)
         GPIO.setup(data_pin, GPIO.OUT)
 
-        # Resets the all the leds
+        # Resets all de leds
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
@@ -45,7 +45,8 @@ class Schuifregister:
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
         self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
-
+        
+        # aantal lichtjes
         if cijfer == 0:
             self.hc595(shift_clock_pin, latch_clock_pin, data_pin, 0, delay)
 
