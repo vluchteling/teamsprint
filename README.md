@@ -10,7 +10,7 @@ Hierna moeten verschillende modules worden gerund in het commandprop om de code 
 1.  sudo apt-get install python3-pil python3-pil.imagetk
 2.	sudo apt install git-all
 3.	sudo apt-get install libatlas-base-dev
-4.	pip3 install steam[client] gevent matplotlib pandas 
+4.	pip3 install steam[client] matplotlib pandas 
 
 Wanneer deze modules zijn geïnstalleerd kan de code worden gerund. Dit kan worden gedaan door in de commandprop ‘cd ~/teamsprint’ en daarna ‘python3 beginscherm.py’ in te voeren. Hierna zal er een inlogscherm verschijnen waarin de gebruikersnaam en wachtwoord in kunnen worden gevoerd.
 Bij onduidelijkheden zijn wij te bereiken via het email adres: a-vl@outlook.com.</br>
@@ -24,8 +24,8 @@ pycham: https://www.jetbrains.com/pycharm/</br>
 github: https://github.com/tijmenjoppe/AnalyticalSkills-student/tree/master/project/data</br>
  
 <b>Auteurs SG28 team B:</b></br>
-1789397: F. Schaaf, BIM (username)</br>
+1789397: F. Schaaf, BIM </br>
 1780887: M. Kuijf, SD (Maartenk1)</br>
 1789777: A.N. van Schaick Zillesen, AI (Alexandervsz)</br>
-1776703: E. J. Kayadibi, TI (username)</br>
-1783113: A. Yusofi, CSC (username)</br>
+1776703: E. J. Kayadibi, TI</br>
+1783113: A. Yusofi, CSC</br>
