@@ -133,6 +133,10 @@ class Statistiek:
         if counter < 10:
             text += "Correctie: dit zijn de onderste 25% minst gespeelde spellen."
         text += "\n\n"
+        if hoogste_game_user == username:
+            hoogste_game_user = "jijzelf"
+        if hoogste_speeltijd_user == username:
+            hoogste_speeltijd_user = "jijzelf"
         text += f"Je rijkste vriend is {hoogste_game_user}, deze heeft {hoogste_game_aantal} games.\n"
         text += f"Je meest levenloze vriend is {hoogste_speeltijd_user}, deze heeft " \
                 f"{gamenamedict[hoogste_speeltijd_appid]} {hoogste_speeltijd} minuten gespeeld! " \
