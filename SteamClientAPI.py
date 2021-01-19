@@ -9,6 +9,7 @@ from steam.enums import EResult
 class SteamClientAPI:
 
     def __init__(self, username, password):
+        """ init fucntie van de class"""
         self.username = username
         self.password = password
         self.client = None
@@ -20,6 +21,7 @@ class SteamClientAPI:
         self.beginscherm = None
 
     def open_client(self, root=None, guirequired=False, beginscherm=None):
+        """Deze functie wordt aangeroepen om bij de client in te loggen werkt alleen icm beginscherm."""
         self.beginscherm = beginscherm
 
         self.client = SteamClient()
@@ -59,39 +61,39 @@ class SteamClientAPI:
 
         @self.client.on('error')
         def error(result):
+            """ print eventuele errors"""
 
             print("Logon result:", repr(result))
 
         @self.client.on("channel_secured")
         def send_login():
+            """ Kijkt of er opnieuw ingelogd kan worden."""
             if self.client.relogin_available:
                 self.client.relogin()
 
-    def log_in(self):
-        print("-" * 20)
-        print("Logged on as:", self.client.user.name)
-        print("Community profile:", self.client.steam_id.community_url)
-        print("Last logon:", self.client.user.last_logon)
-        print("Last logoff:", self.client.user.last_logoff)
-        print("Press ^C to exit")
 
     def change_personastate(self, status):
+        """ Verandert de status van de actieve steam client"""
         if status == "afwezig":
             self.client.change_status(persona_state=3)
         if status == "aanwezig":
             self.client.change_status(persona_state=1)
 
     def log_out(self):
+        """ Log de actieve steam client uit."""
         if self.client.connected:
             self.client.logout()
 
     def get_client(self):
+        """ returnt het client object"""
         return self.client
 
     def get_credentials(self):
+        """ returnt de inloggegevens"""
         return self.username, self.password
 
     def open_keyscherm(self, extra_text=""):
+        """ Opent het scherm om de email code op te vragen."""
         self.root = Tk()
         self.Label = Label(text=f"{extra_text}\nVoer hier de code in: ")
         self.Entry = Entry()
@@ -106,12 +108,12 @@ class SteamClientAPI:
         self.root.mainloop()
 
     def confirm_key(self):
+        """ logt de gebruiker in als er op de knop is gedrukt"""
         self.email_key = self.Entry.get()
         self.root.destroy()
         self.open_client(guirequired=True, beginscherm=self.beginscherm)
 
-    def message(self):
-        pass
 
     def quit(self):
+        """ Sluit het programma af als er op de aflsuitknop is gedrukt."""
         raise SystemExit

@@ -12,6 +12,7 @@ from SteamWebAPI import SteamWebAPI
 
 class DataScherm:
     def __init__(self, client, root, gui):
+        """ de init functie van het object"""
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
         self.client = client
@@ -34,6 +35,7 @@ class DataScherm:
         self.haal_speeltijd_data_op()
 
     def open_gui(self):
+        """ Deze functie laadt de gui objecten."""
         bgcolor = "#4B0082"
         groot_font = Font(size=30)
         self.hoofdframe = Frame()
@@ -49,6 +51,8 @@ class DataScherm:
         self.buttonframe.pack(side=BOTTOM, expand=True)
 
     def haal_friendlist_data_op(self):
+        """ Deze functie mhaalt de friendlist van de gebruiker op, en maak een lijst met id nummers van de vrienden
+        en een dict om ze terug te kunnen koppelen aan de naam"""
         steamid = self.client.get_client().steam_id.as_64
         data = self.api.get_friend_list(steamid)
         friendjson = data['friendslist']['friends']
@@ -71,6 +75,8 @@ class DataScherm:
         return friendgamesdict, frienddict
 
     def haal_speeltijd_data_op(self):
+        """ Deze functie haalt de speeltijden op van de gebruiker en de vrienden, en berekent de totaaltijden,
+        en geeft de opdracht om de grafieken te maken."""
         friendsdata, friendsdict = self.haal_friendlist_data_op()
         gemtijdlist = []
         totaaltijdlist = []
@@ -99,6 +105,7 @@ class DataScherm:
         self.maak_histogram(grote_tijdslijst)
 
     def maak_gem_speeltijd_grafiek(self, data):
+        """ Deze functie maakt de gemiddelde speeltijd grafiek"""
         namenlijst = []
         tijdlijst = []
         for friend in data:
@@ -117,6 +124,7 @@ class DataScherm:
         self.bar_gem_speeltijd.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
     def maak_tot_speeltijd_grafiek(self, data):
+        """ Deze functie maakt de totale speeltijd grafiek. """
         namenlijst = []
         tijdlijst = []
         for friend in data:
@@ -135,6 +143,7 @@ class DataScherm:
         self.bar_tot_speeltijd.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
     def maak_aantal_games_grafiek(self, data):
+        """ Deze fucntie maakt de aantal games grafiek."""
         namenlijst = []
         tijdlijst = []
         for friend in data:
@@ -153,6 +162,7 @@ class DataScherm:
         self.bar_aantal_games.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
     def stop(self):
+        """ Deze functie stopt het grafiekenscherm. """
         self.linkerframe.forget()
         self.rechterframe.forget()
         self.hoofdframe.forget()
@@ -166,7 +176,8 @@ class DataScherm:
         self.gui.start_sensoren(True)
 
     def maak_histogram(self, data):
-
+        """ Deze functie maakt met behulp van het Freedman-Diaconis algoritme een soort histogram aan,
+        als er te veel klassen wordt een simpeler algoritme gebruikt."""
         hoogste = 0
         laagste = None
         for tijd in data:

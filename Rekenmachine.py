@@ -29,7 +29,6 @@ class Rekenmachine:
     def q1(self, lst):
         """
         Retourneer het eerste kwartiel Q1 (float) van de lijst lst.
-        Tip: maak gebruik van median()
         """
         self.sorteer_data(lst)
         med = self.median(lst)
@@ -54,6 +53,7 @@ class Rekenmachine:
         return self.median(sublijst)
 
     def sorteer_data(self, data):
+        """ Deze functie sorteert de ingevoerde data."""
         quicksort = Quicksort(data)
         quicksort.quickSortIterative(data, 0, len(data) - 1)
-        """ Deze funtie sorteert de ingevoerde data."""
+

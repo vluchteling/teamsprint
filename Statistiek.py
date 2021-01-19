@@ -8,6 +8,7 @@ from SteamWebAPI import SteamWebAPI
 
 class Statistiek:
     def __init__(self, client, root, gui):
+        """ Init fucntie van de klasse"""
         self.client = client
         self.root = root
         self.gui = gui
@@ -28,12 +29,14 @@ class Statistiek:
         self.start_statistiek()
 
     def stop(self):
+        """ Deze functie sluit het scherm af"""
         self.afsluitButton.forget()
         self.text.forget()
         self.gui.open_gui(True)
         self.gui.start_sensoren(True)
 
     def start_statistiek(self):
+        """ Deze functie vult de tekst aan en berekent de statistieken."""
         username = self.client.get_client().user.name
         if username is None:
             username = "onbekend"
@@ -151,6 +154,7 @@ class Statistiek:
         self.text.configure(state=DISABLED)
 
     def sorteer_data(self, data):
+        """ Deze funtie sorteert de ingevoerde data."""
         quicksort = Quicksort(data)
         quicksort.quicksortRecusrive(data, 0, len(data) - 1)
-        """ Deze funtie sorteert de ingevoerde data."""
+

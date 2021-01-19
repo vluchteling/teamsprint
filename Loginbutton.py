@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 
 class LoginButton:
     def __init__(self, steamgui):
+        """ init functie van de class"""
         self.SteamGUI = steamgui
         self.led = 18
         self.knopuno = 23
@@ -20,6 +21,7 @@ class LoginButton:
         atexit.register(self.lights_out)
 
     def login_checker(self, twentythree):
+        """ Deze functie geeft een callback aan SteamGUI als er op de knop wordt gedrukt"""
 
         if not GPIO.input(self.knopuno):
 
@@ -35,10 +37,8 @@ class LoginButton:
         time.sleep(1)
 
     def lights_out(self):
+        """ Deze functie zet het lampje uit"""
         self.keep_running = False
         GPIO.remove_event_detect(self.knopuno)
         GPIO.output(self.led, GPIO.LOW)
 
-    def lights_on(self):
-        self.loggedin = True
-        GPIO.output(self.led, GPIO.HIGH)

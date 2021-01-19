@@ -10,6 +10,7 @@ from SteamGUI import SteamGUI
 
 class Beginscherm:
     def __init__(self):
+        """ init van de class"""
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
 
@@ -45,6 +46,7 @@ class Beginscherm:
         self.root.destroy()
 
     def start_client(self):
+        """ Deze functie start de client op, nadat de gebruiker gegevens heeft ingevoerd."""
         if self.password_entry.get().strip() != "" and self.user_entry.get().strip() != "":
             username = self.user_entry.get().lower()
             password = self.password_entry.get()
@@ -68,6 +70,7 @@ class Beginscherm:
             self.user_label["text"] = "lege velden!\nUsername:"
 
     def open_GUI(self, client):
+        """Opent het hoofdscherm nadat de client goed is"""
         SteamGUI(client)
 
 

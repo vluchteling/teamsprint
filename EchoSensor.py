@@ -7,18 +7,23 @@ import RPi.GPIO as GPIO
 class Sr04:
 
     def __init__(self, client, neopixel):
+        """ init functie van de class"""
         self.proc = multiprocessing.Process(target=self.check_status)
         self.client = client
         self.neopixel = neopixel
 
     def start(self):
+        """ Deze functie start het multiproces"""
         self.proc.start()
 
     def stop(self):
+        """ Deze fucntie stopt het multiproces"""
         # Terminate the process
         self.proc.terminate()  # sends a SIGTERM
 
     def check_status(self):
+        """ Deze functie checkt of er een object binnen 20cm van de sensor is,
+        en zet dat vervolgens de status op afwezig."""
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setwarnings(0)

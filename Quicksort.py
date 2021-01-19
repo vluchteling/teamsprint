@@ -1,20 +1,26 @@
 class Quicksort:
     def __init__(self, data):
+        """ Init functie van de class"""
         self.data = data
 
     def start_recursive(self):
+        """ Deze functie wordt aangeroepen om het recursive quicksort algoritme te gebruiken"""
         self.quicksortRecusrive(self.data, 0, len(self.data) - 1)
 
     def start_iterative(self):
+        """ Deze functie wordt aangeroepen om het iteratieve quicksort algoritme te gebruiken (grote data)"""
         self.quickSortIterative(self.data, 0, len(self.data) - 1)
 
     def quicksortRecusrive(self, lst, min, max):
+        """ deze functie bepaalt het middenpunt, en als het element kleiner is dan het middelpunt wordt
+         het naar links verplaatst"""
         if min < max:
-            pi = self.verplaatsRecusive(lst, min, max)
-            self.quicksortRecusrive(lst, min, pi - 1)
-            self.quicksortRecusrive(lst, pi + 1, max)
+            middelpunt = self.verplaatsRecusive(lst, min, max)
+            self.quicksortRecusrive(lst, min, middelpunt - 1)
+            self.quicksortRecusrive(lst, middelpunt + 1, max)
 
     def verplaatsRecusive(self, data, min, max):
+        """ Deze functie verplaatst het element en bepaalt een nieuw middenpunt"""
         kleinste = (min - 1)
         middelpunt = data[max]
 
@@ -28,12 +34,12 @@ class Quicksort:
         return kleinste + 1
 
     def verplaatsIterative(self, arr, l, h):
+        """ Deze functie verplaatst het element en bepaalt een nieuw middenpunt"""
         i = (l - 1)
         x = arr[h]
 
         for j in range(l, h):
             if arr[j] <= x:
-                # increment index of smaller element
                 i = i + 1
                 arr[i], arr[j] = arr[j], arr[i]
 
@@ -41,6 +47,8 @@ class Quicksort:
         return i + 1
 
     def quickSortIterative(self, arr, l, h):
+        """ deze functie bepaalt het middenpunt, en als het element kleiner is dan het middelpunt wordt
+                 het naar links verplaatst, anders naar rechts."""
 
         # Create an auxiliary stack
         size = h - l + 1

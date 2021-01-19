@@ -22,6 +22,7 @@ from SteamWebAPI import SteamWebAPI
 
 class SteamGUI:
     def __init__(self, client):
+        """ Init functie van de class"""
 
         self.client = client
         self.username, self.password = self.client.get_credentials()
@@ -68,6 +69,7 @@ class SteamGUI:
         self.start_gui()
 
     def open_gui(self, stopbutton):
+        """ Deze functie laadt de gui objecten in."""
 
         if os.environ.get('DISPLAY', '') == '':
             os.environ.__setitem__('DISPLAY', ':0.0')  # Fix voor raspberrypi
@@ -114,6 +116,7 @@ class SteamGUI:
         self.statistiekbutton.pack(side=LEFT)
 
     def clear_gui(self, afsluitbutton):
+        """ Deze functie maakt het scherm leeg. """
         if afsluitbutton:
             self.afsluitButton.forget()
 
@@ -132,10 +135,12 @@ class SteamGUI:
             self.treeview = None
 
     def start_gui(self):
+        """ Deze functie start de mainloop"""
 
         self.root.mainloop()
 
     def start_sensoren(self, loginbtnstart):
+        """ Deze functie start de sensoren op, en vertraagt het programma"""
         self.runfriendlist = True
         self.runonline = True
         self.toon_friendlist()
@@ -148,6 +153,7 @@ class SteamGUI:
             self.loginbutton = LoginButton(self)
 
     def stop_sensoren(self, loginbtndelete):
+        """ Deze functie sluit alle sensoren af. """
         if self.neopixel is not None:
             self.neopixel.speel_loguitanimatie()
         if self.schuifregister is not None:
@@ -169,6 +175,8 @@ class SteamGUI:
                 self.loginbutton = None
 
     def toon_friendlist(self):
+        """ Deze functie laadt de vriendlijst uit steam,
+         stopt hem in een treeview en herheelt dit iedere 10 seconden."""
 
         if self.runfriendlist:
 
@@ -272,6 +280,7 @@ class SteamGUI:
         raise SystemExit
 
     def check_online(self):
+        """ Deze functie volgt de geselecteerde gebruiker van de treeview, update iedere 2 seconden."""
         if self.favoriet is not None and self.treeview is not None and self.runonline:
 
             try:
@@ -310,6 +319,7 @@ class SteamGUI:
             return
 
     def log_out(self):
+        """ Callback functie voor de button, logt de gebruiker uit en sluit alle sensoren af."""
         try:
             self.client.log_out()
         except LoopExit:
@@ -323,6 +333,7 @@ class SteamGUI:
         self.client = None
 
     def log_in(self):
+        """ Callback functie voor de button, logt de gebruiker in en start de gui + sensoren op"""
         self.neopixel.speel_loginanimatie()
         self.client = SteamClientAPI(self.username, self.password)
         self.client.open_client()
@@ -332,6 +343,7 @@ class SteamGUI:
         self.start_sensoren(False)
 
     def timerstop(self):
+        """ Deze fucntie stopt de check_gebruiker functie als er op de knop is gedrukt"""
         if self.selecteditem is None or self.selecteditem == "":
             return
         self.favoriet = "begin"
@@ -348,6 +360,7 @@ class SteamGUI:
         self.favoriet_label["text"] = f"Huidige favoriet: geen"
 
     def open_data(self):
+        """ Deze functie opent het datascherm"""
         self.stop_sensoren(True)
         self.clear_gui(True)
         self.neopixel.lights_out()
@@ -355,11 +368,13 @@ class SteamGUI:
         DataScherm(self.client, self.root, self)
 
     def sorteer_data(self, data):
+        """ Deze funtie sorteert de ingevoerde data."""
         quicksort = Quicksort(data)
         quicksort.quicksortRecusrive(data, 0, len(data) - 1)
-        """ Deze funtie sorteert de ingevoerde data."""
+
 
     def treeview_sort_column(self):
+        """Deze functie sorteert de koppen van de treeview als er op de kop is gedrukt"""
         koppenlijst = []
         for kop in self.treeview.get_children(''):
             koppenlijst.append(kop)
@@ -370,6 +385,7 @@ class SteamGUI:
         self.needs2bsorted = not self.needs2bsorted
 
     def sort_column_noclick(self):
+        """ Deze fucntie sorteert de kolommen als dat nodig is en de vriendlijst wordt refreshed."""
 
         koppenlijst = []
 
@@ -383,6 +399,7 @@ class SteamGUI:
             self.treeview.move(kop, '', copylijst.index(kop))
 
     def open_statistiek(self):
+        """ Deze functie opent het statistiekscherm"""
         self.stop_sensoren(True)
         self.clear_gui(True)
         self.neopixel.lights_out()
