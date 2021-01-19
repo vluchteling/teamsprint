@@ -4,11 +4,10 @@
 Deze repository bevat de bestanden die gebruikt worden voor het project steam sprint 1 van de Hogeschool Utrecht. </br>
 
 Het doel van het project steam is om een grafische weergave te creëren die inzicht geeft in het gaming gedrag van jouw vrienden op steam, ondersteund door een netwerk waarbij 	gebruik wordt gemaakt van een Raspberry Pi.
-Om de code op een raspberry pi 4 te kunnen runnen moet eerst het command ‘git clone http://www.github.com/vluchteling/teamsprint’ worden gerund in de commandprop van de pi. Dit zorgt ervoor dat de code op de pi wordt gedownload. 
-Hierna moeten verschillende modules worden gerund in het commandprop om de code te kunnen runnen:
+Om de code op een raspberry pi 4 te kunnen runnen moet eerst het command ‘git clone http://www.github.com/vluchteling/teamsprint’ (als git ontbreekt: sudo apt install git-all) worden gerund in de commandprop van de pi. Dit zorgt ervoor dat de code op de pi wordt gedownload. 
+Hierna moeten verschillende modules worden gerund in het commandprompt om de code te kunnen runnen:
 
 1.  sudo apt-get install python3-pil python3-pil.imagetk
-2.	sudo apt install git-all
 3.	sudo apt-get install libatlas-base-dev
 4.	pip3 install steam[client] matplotlib pandas 
 
