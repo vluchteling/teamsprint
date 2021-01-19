@@ -118,7 +118,7 @@ class Statistiek:
         self.sorteer_data(toplijst)
         self.sorteer_data(floplijst)
 
-        text += "De top 10 meest gespeelde spellen zijn: \n(Als het er minder dan 10 zijn is het de top 25%.)\n"
+        text += "De top 10 meest gespeelde spellen zijn: \n"
         counter = 0
         for x in range(len(toplijst) - 1, 0, -1):
             if counter < 10:

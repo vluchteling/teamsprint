@@ -322,7 +322,6 @@ class SteamGUI:
         self.client.open_client()
         self.favoriet = "begin"
         self.afsluitButton.forget()
-        self.toon_friendlist()
         self.open_gui(True)
         self.start_sensoren(False)
 
