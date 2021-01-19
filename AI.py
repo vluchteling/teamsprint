@@ -203,7 +203,7 @@ class DataScherm:
             self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
             dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie", grid=True)
             subplot.set_title(
-                'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
+                'Staafdiagram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
             self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
 
         else:
