@@ -19,13 +19,13 @@ class SteamClientAPI:
         self.Label = None
         self.beginscherm = None
 
-    def open_client(self, root=None, guirequired=False, beginscherm=None, emailkey=None, twofakey=None):
+    def open_client(self, root=None, guirequired=False, beginscherm=None):
         self.beginscherm = beginscherm
 
         self.client = SteamClient()
         self.client.set_credential_location(".")  # where to store sentry files and other stuff
         try:
-            result = self.client.login(username=self.username, password=self.password, auth_code=emailkey, two_factor_code=twofakey)
+            result = self.client.login(username=self.username, password=self.password, auth_code=self.email_key)
 
             if result == EResult.OK:
                 if guirequired:
@@ -45,9 +45,8 @@ class SteamClientAPI:
                     root.destroy()
                 self.open_keyscherm()
             if result == EResult.AccountLoginDeniedNeedTwoFactor:
-                if root is not None:
-                    root.destroy()
-                self.open_keyscherm()
+                print("2fa codes helaas niet gesupport, sorry.")
+                raise SystemExit
 
             else:
                 print("Failed to login: %s" % repr(result))
@@ -106,27 +105,10 @@ class SteamClientAPI:
         self.root.eval('tk::PlaceWindow . center')
         self.root.mainloop()
 
-    def open_keyscherm2(self, extra_text=""):
-        self.root = Tk()
-        self.Label = Label(text=f"{extra_text}\nVoer hier de code in: ")
-        self.Entry = Entry()
-        bevestigButton = Button(text="Bevestig", command=self.confirm_key2)
-        stopButton = Button(text="Sluit", command=self.quit)
-        self.Label.pack()
-        self.Entry.pack()
-        bevestigButton.pack(fill=X)
-
-        stopButton.pack(fill=X)
-        self.root.eval('tk::PlaceWindow . center')
-        self.root.mainloop()
-
     def confirm_key(self):
-        self.open_client(guirequired=True, beginscherm=self.beginscherm, emailkey=self.Entry.get())
+        self.email_key = self.Entry.get()
         self.root.destroy()
-
-    def confirm_key2(self):
-        self.root.destroy()
-        self.open_client(guirequired=True, beginscherm=self.beginscherm, twofakey=self.Entry.get())
+        self.open_client(guirequired=True, beginscherm=self.beginscherm)
 
     def message(self):
         pass
