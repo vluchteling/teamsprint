@@ -85,7 +85,8 @@ class DataScherm:
                 for game in games:
                     counter += 1
                     totaaltijd += game['playtime_forever']
-                    grote_tijdslijst.append(game['playtime_forever'])
+                    if game['playtime_forever'] > 0:
+                        grote_tijdslijst.append(game['playtime_forever'])
                 gemtijdlist.append([friendsdict[friend], totaaltijd / counter])
                 totaaltijdlist.append([friendsdict[friend], totaaltijd])
                 aantalgameslist.append([friendsdict[friend], counter])
@@ -165,6 +166,7 @@ class DataScherm:
         self.gui.start_sensoren(True)
 
     def maak_histogram(self, data):
+
         hoogste = 0
         laagste = None
         for tijd in data:
@@ -172,9 +174,12 @@ class DataScherm:
                 hoogste = tijd
             if laagste is None or tijd < laagste:
                 laagste = tijd
+        totale_breedte = hoogste - laagste
 
         interkwartielrange = self.rekenmachine.q3(data) - self.rekenmachine.q1(data)
+
         klassengrootte = (2 * interkwartielrange) / len(data) ** (1 / 3)
+
         klassenlijst = []
         vorige_x = laagste
         for x in range(int(laagste), int(hoogste) + int(klassengrootte), int(klassengrootte)):
@@ -183,17 +188,32 @@ class DataScherm:
                 vorige_x = x
             else:
                 vorige_x = x
+
         frequentiedict = {}
         for klasse in klassenlijst:
             for punt in data:
                 if klasse[0] <= punt < klasse[1]:
                     frequentiedict[f"{klasse[0]}-{klasse[1]}"] = frequentiedict.get(f"{klasse[0]}-{klasse[1]}", 0) + 1
 
-        dataframe = DataFrame.from_dict(frequentiedict, orient='index')
-        plot = plt.Figure(figsize=(5, 3.5))
-        subplot = plot.add_subplot(211)
-        self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
-        dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie")
-        subplot.set_title(
-            'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, nul uitgesloten voor leesbaarheid.)')
-        self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
+        if len(frequentiedict.keys()) <= 20:  # hierna is het niet meer leesbaar
+
+            dataframe = DataFrame.from_dict(frequentiedict, orient='index')
+            plot = plt.Figure(figsize=(5, 3.5))
+            subplot = plot.add_subplot(211)
+            self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
+            dataframe.plot(kind='bar', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", ylabel="frequentie")
+            subplot.set_title(
+                'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
+            self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
+
+        else:
+            dataframe = DataFrame(data)
+            dataframe.hist()
+            plot = plt.Figure(figsize=(5, 3.5))
+
+            subplot = plot.add_subplot(111)
+            self.hist = FigureCanvasTkAgg(plot, self.linkerframe)
+            dataframe.plot(kind='hist', legend=False, ax=subplot, xlabel="Speeltijd in minuten.", )
+            subplot.set_title(
+                'Histogram van de speeltijden van jou en je vrienden.\n (x-as: tijd in minuten, niet gespeelde spellen uitgesloten.)')
+            self.hist.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1, pady=1, padx=1)
