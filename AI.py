@@ -174,7 +174,6 @@ class DataScherm:
                 hoogste = tijd
             if laagste is None or tijd < laagste:
                 laagste = tijd
-        totale_breedte = hoogste - laagste
 
         interkwartielrange = self.rekenmachine.q3(data) - self.rekenmachine.q1(data)
 
