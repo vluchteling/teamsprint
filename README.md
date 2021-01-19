@@ -7,7 +7,7 @@ Het doel van het project steam is om een grafische weergave te creëren die inzi
 Om de code op een raspberry pi 4 te kunnen runnen moet eerst het command ‘git clone http://www.github.com/vluchteling/teamsprint’ worden gerund in de commandprop van de pi. Dit zorgt ervoor dat de code op de pi wordt gedownload. 
 Hierna moeten verschillende modules worden gerund in het commandprop om de code te kunnen runnen:
 
-1. sudo apt-get install python3-pil python3-pil.imagetk
+1.  sudo apt-get install python3-pil python3-pil.imagetk
 2.	sudo apt install git-all
 3.	sudo apt-get install libatlas-base-dev
 4.	pip3 install steam[client] gevent matplotlib pandas 
