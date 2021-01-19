@@ -147,5 +147,5 @@ class Statistiek:
 
     def sorteer_data(self, data):
         quicksort = Quicksort(data)
-        quicksort.quickSortIterative(data, 0, len(data) - 1)
+        quicksort.quicksortRecusrive(data, 0, len(data) - 1)
         """ Deze funtie sorteert de ingevoerde data."""
