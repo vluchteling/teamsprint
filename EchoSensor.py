@@ -2,6 +2,7 @@ import multiprocessing
 import time
 
 import RPi.GPIO as GPIO
+import gevent
 
 
 class Sr04:
@@ -38,7 +39,7 @@ class Sr04:
                 GPIO.setup(trig, GPIO.OUT)
                 GPIO.setup(echo, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
                 GPIO.output(trig, True)
-                time.sleep(0.00001)
+                gevent.sleep(0.00001)
                 GPIO.output(trig, False)
 
                 StartTime = time.time()
@@ -51,19 +52,21 @@ class Sr04:
                 afstand = (Time * 34300) / 2
                 if afstand >= 20:
                     counter = 0
-                    self.client.change_personastate("aanwezig")
+
                     if not terugberichtverstuurd:
+                        self.client.change_personastate("aanwezig")
                         self.neopixel.speel_pickup_animatie()
                         terugberichtverstuurd = True
                         wegberichtverstuurd = False
                 else:
                     if counter >= 5:
-                        self.client.change_personastate("afwezig")
+
                         if not wegberichtverstuurd:
+                            self.client.change_personastate("afwezig")
                             self.neopixel.speel_afk_animatie()
                             wegberichtverstuurd = True
                             terugberichtverstuurd = False
                     counter += 1
-                time.sleep(1)
+                gevent.sleep(1)
             except (KeyboardInterrupt, SystemExit):
                 break
