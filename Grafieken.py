@@ -51,7 +51,7 @@ class DataScherm:
         self.buttonframe.pack(side=BOTTOM, expand=True)
 
     def haal_friendlist_data_op(self):
-        """ Deze functie mhaalt de friendlist van de gebruiker op, en maak een lijst met id nummers van de vrienden
+        """ Deze functie haalt de friendlist van de gebruiker op, en maak een lijst met id nummers van de vrienden
         en een dict om ze terug te kunnen koppelen aan de naam"""
         steamid = self.client.get_client().steam_id.as_64
         data = self.api.get_friend_list(steamid)
